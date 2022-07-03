@@ -1,0 +1,21 @@
+{
+  "name": "iframepage",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --port 4001",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "antd": "^4.21.3",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^1.3.0",
+    "vite": "^2.9.9"
+  }
+}
