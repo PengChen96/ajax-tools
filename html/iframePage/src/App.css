@@ -29,6 +29,7 @@
   padding: 12px 12px 20px;
   height: calc(100vh - 35px - 40px);
   overflow: auto;
+  background: #fff;
 }
 
 .ajax-tools-iframe-body-header {

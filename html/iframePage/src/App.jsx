@@ -114,6 +114,15 @@ function App() {
 
   // interfaceList值变化
   const onInterfaceListChange = (index1, index2, key, value) => {
+    if (key === 'responseText') {
+      try {
+        const lastValue = ajaxDataList[index1].interfaceList[index2][key];
+        const formattedValue = JSON.stringify(JSON.parse(value), null, 4);
+        value = lastValue === formattedValue ? value : formattedValue;
+      } catch (e) {
+        value = value;
+      }
+    }
     ajaxDataList[index1].interfaceList[index2][key] = value;
     setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ajaxDataList}, function () {
@@ -173,7 +182,10 @@ function App() {
           }}
         />
       </div>
-      <div className="ajax-tools-iframe-body">
+      <div
+        className="ajax-tools-iframe-body"
+        style={{filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)'}}
+      >
         {
           ajaxDataList.map((item, index) => {
             const {summaryText, headerClass, interfaceList = []} = item;
