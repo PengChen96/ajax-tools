@@ -18,6 +18,7 @@ function App() {
   const defaultInterface = {
     open: true,
     request: '',
+    requestDes: '',
     responseText: ''
   };
   const [ajaxToolsSwitchOn, setAjaxToolsSwitchOn] = useState(true); // 默认开启
@@ -31,6 +32,7 @@ function App() {
         {
           open: true,
           request: '/ptsweb/calculate/pageSalaryOverview',
+          requestDes: '',
           responseText: '{"head":{"code":"00000000","description":"成功","msg":"成功","time":"2022-06-27 20:12:37","status":"Y"},"body":{"list":[{"customerId":1888146079963,"customerNo":null,"name":"王周秦测试","taxNo":null,"areaCode":null,"accessible":true,"multiDept":false,"label":null,"virtual":false,"auditStatus":3,"empCount":0,"totalIncome":0,"totalRefundTax":0,"totalActualIncome":0,"uploadState":"1","uploadCount":null,"completeState":"1","deptList":null}],"total":1}}'
         }
       ]
@@ -91,7 +93,7 @@ function App() {
   const onGroupAdd = () => {
     let len = ajaxDataList.length;
     const newAjaxDataList = [...ajaxDataList, {
-      summaryText: '分组名称',
+      summaryText: '分组名称（可编辑）',
       collapseActiveKeys: [],
       headerClass: colorMap[len % 9],
       interfaceList: [{...defaultInterface}]
@@ -103,6 +105,11 @@ function App() {
     const newAjaxDataList = ajaxDataList.filter((_, i) => i !== index);
     setAjaxDataList([...newAjaxDataList]);
     chrome.storage.local.set({ajaxDataList: newAjaxDataList});
+  }
+  const onGroupSummaryTextChange = (e, index) => {
+    ajaxDataList[index].summaryText = e.target.value;
+    setAjaxDataList([...ajaxDataList]);
+    chrome.storage.local.set({ajaxDataList});
   }
 
   // 收缩分组
@@ -191,7 +198,11 @@ function App() {
             const {summaryText, headerClass, interfaceList = []} = item;
             return <>
               <div className={`ajax-tools-iframe-body-header ${headerClass}`}>
-                <div>{summaryText}</div>
+                <Input
+                  value={summaryText}
+                  className={`ajax-tools-iframe-body-header-input ${headerClass}`}
+                  onChange={(e) => onGroupSummaryTextChange(e, index)}
+                />
                 <CloseOutlined
                   title="删除分组"
                   style={{fontSize: 12}}
@@ -199,6 +210,7 @@ function App() {
                 />
               </div>
               <Collapse
+                className="ajax-tools-iframe-collapse"
                 defaultActiveKey={['1']}
                 activeKey={item.collapseActiveKeys}
                 onChange={(keys) => onCollapseChange(index, keys)}
@@ -210,13 +222,22 @@ function App() {
                       key={String(i + 1)}
                       header={
                         <div onClick={e => e.stopPropagation()}>
-                          <Input
-                            value={v.request}
-                            onChange={(e) => onInterfaceListChange(index, i, 'request', e.target.value)}
-                            placeholder="请输入匹配接口"
-                            size="small"
-                            style={{width: 280}}
-                          />
+                          <div style={{display: "inline-grid"}}>
+                            <Input
+                              value={v.request}
+                              onChange={(e) => onInterfaceListChange(index, i, 'request', e.target.value)}
+                              placeholder="请输入匹配接口"
+                              size="small"
+                              style={{width: 280}}
+                            />
+                            <Input
+                              value={v.requestDes}
+                              onChange={(e) => onInterfaceListChange(index, i, 'requestDes', e.target.value)}
+                              placeholder="备注（可编辑）"
+                              size="small"
+                              className="ajax-tools-iframe-request-des-input"
+                            />
+                          </div>
                           <Switch
                             checked={v.open}
                             onChange={(value) => onInterfaceListChange(index, i, 'open', value)}

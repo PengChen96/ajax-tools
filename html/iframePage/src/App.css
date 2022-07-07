@@ -44,6 +44,29 @@
   align-items: center;
 }
 
+.ajax-tools-iframe-body-header-input {
+  border: none;
+  outline: none;
+  box-shadow: none !important;
+  padding: 0 8px 0 0;
+}
+
+.ajax-tools-iframe-collapse .ant-collapse-header {
+  padding: 8px 16px 4px !important;
+}
+
+.ajax-tools-iframe-request-des-input {
+  height: 18px;
+  line-height: 18px;
+  font-size: 12px;
+  background: #fafafa;
+  color: #999;
+  border: none;
+  outline: none;
+  box-shadow: none !important;
+  padding: 0 8px;
+}
+
 .ajax-tools-iframe-body-footer {
   margin-bottom: 12px;
   display: flex;
