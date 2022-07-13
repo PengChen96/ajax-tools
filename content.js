@@ -55,11 +55,17 @@ if (window.self === window.top) {
         }
         if (type === 'iframeZoom') {
           if (iframeZoom === 'out') { // 缩小
-            iframe.style.setProperty('width', '60px', 'important');
             iframe.style.setProperty('height', '35px', 'important');
+            let timer = setTimeout(() => {
+              iframe.style.setProperty('width', '60px', 'important');
+              clearTimeout(timer);
+            }, 400);
           } else if (iframeZoom === 'in') { // 放大
             iframe.style.setProperty('width', '470px', 'important');
-            iframe.style.setProperty('height', '100%', 'important');
+            let timer = setTimeout(() => {
+              iframe.style.setProperty('height', '100%', 'important');
+              clearTimeout(timer);
+            }, 400);
           }
           sendResponse();
         }
