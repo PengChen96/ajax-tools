@@ -8,11 +8,12 @@ script.setAttribute('type', 'text/javascript');
 script.setAttribute('src', chrome.runtime.getURL('pageScripts/index.js'));
 document.documentElement.appendChild(script);
 script.addEventListener('load', () => {
-  chrome.storage.local.get(['iframeVisible', 'ajaxToolsSwitchOn', 'ajaxDataList'], (result) => {
+  chrome.storage.local.get(['iframeVisible', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxDataList'], (result) => {
     console.log('【ajaxTools content.js】【storage】', result);
-    const {ajaxToolsSwitchOn = true, ajaxDataList = []} = result;
+    const {ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxDataList = []} = result;
     postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxDataList', value: ajaxDataList});
     postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxToolsSwitchOn', value: ajaxToolsSwitchOn});
+    postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxToolsSwitchOnNot200', value: ajaxToolsSwitchOnNot200});
   });
 });
 
@@ -77,7 +78,11 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
     //   newValue,
     //   oldValue
     // })
-    if (key === 'ajaxDataList' || key === 'ajaxToolsSwitchOn') {
+    if (
+      key === 'ajaxDataList'
+      || key === 'ajaxToolsSwitchOn'
+      || key === 'ajaxToolsSwitchOnNot200'
+    ) {
       // 发送到pageScript/index
       postMessage({
         type: 'ajaxTools',

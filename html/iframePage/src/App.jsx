@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {Button, Collapse, Input, Switch} from "antd";
+import {Button, Checkbox, Collapse, Input, Switch} from "antd";
 import {CloseOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, SettingOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './App.css'
@@ -22,18 +22,19 @@ function App() {
     responseText: ''
   };
   const [ajaxToolsSwitchOn, setAjaxToolsSwitchOn] = useState(true); // 默认开启
+  const [ajaxToolsSwitchOnNot200, setAjaxToolsSwitchOnNot200] = useState(true); // 默认开启
   const [zoom, setZoom] = useState('out'); // 默认缩小
   const [ajaxDataList, setAjaxDataList] = useState([
     {
-      summaryText: '登录相关',
+      summaryText: '分组名称（可编辑）',
       collapseActiveKeys: ['1'],
       headerClass: 'ajax-tools-color-volcano',
       interfaceList: [
         {
           open: true,
-          request: '/ptsweb/calculate/pageSalaryOverview',
+          request: '',
           requestDes: '',
-          responseText: '{"head":{"code":"00000000","description":"成功","msg":"成功","time":"2022-06-27 20:12:37","status":"Y"},"body":{"list":[{"customerId":1888146079963,"customerNo":null,"name":"王周秦测试","taxNo":null,"areaCode":null,"accessible":true,"multiDept":false,"label":null,"virtual":false,"auditStatus":3,"empCount":0,"totalIncome":0,"totalRefundTax":0,"totalActualIncome":0,"uploadState":"1","uploadCount":null,"completeState":"1","deptList":null}],"total":1}}'
+          responseText: ''
         }
       ]
     },
@@ -41,12 +42,13 @@ function App() {
 
   useEffect(() => {
     if (chrome.storage) {
-      chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn'], (result) => {
+      chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200'], (result) => {
         const {ajaxDataList = [], ajaxToolsSwitchOn = true} = result;
         if (ajaxDataList.length > 0) {
           setAjaxDataList(ajaxDataList);
         }
         setAjaxToolsSwitchOn(ajaxToolsSwitchOn);
+        setAjaxToolsSwitchOnNot200(ajaxToolsSwitchOnNot200);
       });
     }
   }, []);
@@ -178,16 +180,28 @@ function App() {
       </div>
       <div className="ajax-tools-iframe-action">
         <Button size="small" type="primary" onClick={onGroupAdd}>新增分组</Button>
-        <Switch
-          defaultChecked
-          checkedChildren="开启"
-          unCheckedChildren="关闭"
-          checked={ajaxToolsSwitchOn}
-          onChange={(value) => {
-            setAjaxToolsSwitchOn(value);
-            chrome.storage.local.set({ajaxToolsSwitchOn: value});
-          }}
-        />
+        <div>
+          <Checkbox
+            defaultChecked
+            checked={ajaxToolsSwitchOnNot200}
+            onChange={(e) => {
+              setAjaxToolsSwitchOnNot200(e.target.checked);
+              chrome.storage.local.set({ajaxToolsSwitchOnNot200: e.target.checked});
+            }}
+          >
+            非200
+          </Checkbox>
+          <Switch
+            defaultChecked
+            checkedChildren="开启"
+            unCheckedChildren="关闭"
+            checked={ajaxToolsSwitchOn}
+            onChange={(value) => {
+              setAjaxToolsSwitchOn(value);
+              chrome.storage.local.set({ajaxToolsSwitchOn: value});
+            }}
+          />
+        </div>
       </div>
       <div
         className="ajax-tools-iframe-body"

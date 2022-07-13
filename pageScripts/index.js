@@ -1,6 +1,7 @@
 
 const ajax_tools_space = {
   ajaxToolsSwitchOn: true,
+  ajaxToolsSwitchOnNot200: true,
   ajaxDataList: [],
   originalXHR: window.XMLHttpRequest,
   myXHR: function () {
@@ -18,6 +19,9 @@ const ajax_tools_space = {
           if (matched && responseText) {
             this.responseText = responseText;
             this.response = responseText;
+            if (ajax_tools_space.ajaxToolsSwitchOnNot200) { // 非200请求如404，改写status
+              this.status = 200;
+            }
             // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
             console.groupCollapsed(`%c XHR匹配路径/规则：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
             console.info(`%c接口路径：`, 'background-color: #ff8040; color: white;', this.responseURL);
@@ -52,12 +56,11 @@ const ajax_tools_space = {
         // }
         // continue;
       }
-
       if (typeof xhr[attr] === 'function') {
         this[attr] = xhr[attr].bind(xhr);
       } else {
         // responseText和response不是writeable的，但拦截时需要修改它，所以修改就存储在this[`_${attr}`]上
-        if (attr === 'responseText' || attr === 'response') {
+        if (attr === 'responseText' || attr === 'response' || attr === 'status') {
           Object.defineProperty(this, attr, {
             get: () => this[`_${attr}`] == undefined ? xhr[attr] : this[`_${attr}`],
             set: (val) => this[`_${attr}`] = val,
@@ -143,7 +146,10 @@ window.addEventListener("message", function (event) {
     console.log('【pageScripts/index.js】', data);
     ajax_tools_space[data.key] = data.value;
     //
-    if (data.key === 'ajaxToolsSwitchOn') {
+    if (
+      data.key === 'ajaxToolsSwitchOn'
+      || data.key === 'ajaxToolsSwitchOnNot200'
+    ) {
       if (ajax_tools_space.ajaxToolsSwitchOn) {
         window.XMLHttpRequest = ajax_tools_space.myXHR;
         window.fetch = ajax_tools_space.myFetch;
