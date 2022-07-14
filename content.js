@@ -55,9 +55,9 @@ if (window.self === window.top) {
         }
         if (type === 'iframeZoom') {
           if (iframeZoom === 'out') { // 缩小
-            iframe.style.setProperty('height', '35px', 'important');
+            iframe.style.setProperty('height', '40px', 'important');
             let timer = setTimeout(() => {
-              iframe.style.setProperty('width', '60px', 'important');
+              iframe.style.setProperty('width', '100px', 'important');
               clearTimeout(timer);
             }, 400);
           } else if (iframeZoom === 'in') { // 放大

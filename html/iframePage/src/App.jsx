@@ -1,6 +1,13 @@
 import {useEffect, useState} from 'react'
 import {Button, Checkbox, Collapse, Input, Switch} from "antd";
-import {CloseOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, SettingOutlined} from '@ant-design/icons';
+import {
+  CloseOutlined,
+  CodeOutlined,
+  FullscreenOutlined,
+  MinusOutlined,
+  PlusOutlined,
+  SettingOutlined
+} from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './App.css'
 
@@ -53,6 +60,11 @@ function App() {
     }
   }, []);
 
+  const openTabs = () => {
+    chrome.tabs.create({
+      url: 'html/iframePage/dist/index.html'
+    });
+  }
   // 关闭
   const onCloseClick = () => {
     chrome.storage.local.get("iframeVisible", ({iframeVisible}) => {
@@ -164,18 +176,25 @@ function App() {
   return (
     <div className="ajax-tools-iframe-container">
       <div className="ajax-tools-iframe-header">
-        {
-          zoom === 'out' ? <MinusOutlined
-            title="缩小"
-            onClick={onZoomClick}
-          /> : <FullscreenOutlined
-            title="放大"
-            onClick={onZoomClick}
+        <div>
+          <CloseOutlined
+            title="关闭"
+            onClick={onCloseClick}
+            style={{marginRight: 12}}
           />
-        }
-        <CloseOutlined
-          title="关闭"
-          onClick={onCloseClick}
+          {
+            zoom === 'out' ? <MinusOutlined
+              title="缩小"
+              onClick={onZoomClick}
+            /> : <FullscreenOutlined
+              title="放大"
+              onClick={onZoomClick}
+            />
+          }
+        </div>
+        <CodeOutlined
+          title="打开标签页"
+          onClick={openTabs}
         />
       </div>
       <div className="ajax-tools-iframe-action">
@@ -188,6 +207,7 @@ function App() {
               setAjaxToolsSwitchOnNot200(e.target.checked);
               chrome.storage.local.set({ajaxToolsSwitchOnNot200: e.target.checked});
             }}
+            style={{filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)'}}
           >
             非200
           </Checkbox>
