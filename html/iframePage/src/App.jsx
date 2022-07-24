@@ -1,13 +1,6 @@
 import {useEffect, useState} from 'react'
 import {Button, Checkbox, Collapse, Input, Switch} from "antd";
-import {
-  CloseOutlined,
-  CodeOutlined,
-  FullscreenOutlined,
-  MinusOutlined,
-  PlusOutlined,
-  SettingOutlined
-} from '@ant-design/icons';
+import {CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './App.css'
 
@@ -164,13 +157,30 @@ function App() {
     chrome.storage.local.set({ajaxDataList});
   }
 
-  const genExtra = () => (
-    <SettingOutlined
-      onClick={(event) => {
-        // If you don't want click extra trigger collapse, you can prevent this:
-        event.stopPropagation();
-      }}
-    />
+  const genExtra = (index, v, i) => (
+    <div onClick={(event) => event.stopPropagation()}>
+      <Switch
+        checked={v.open}
+        onChange={(value) => onInterfaceListChange(index, i, 'open', value)}
+        size="small"
+        style={{margin: "0 4px"}}
+      />
+      <Button
+        size="small"
+        type="primary"
+        shape="circle"
+        icon={<MinusOutlined/>}
+        title="删除接口"
+        onClick={() => onInterfaceListDelete(index, i)}
+        style={{minWidth: 16, width: 16, height: 16}}
+      />
+      {/*<SettingOutlined*/}
+      {/*  onClick={(event) => {*/}
+      {/*    // If you don't want click extra trigger collapse, you can prevent this:*/}
+      {/*    event.stopPropagation();*/}
+      {/*  }}*/}
+      {/*/>*/}
+    </div>
   );
 
   return (
@@ -256,13 +266,16 @@ function App() {
                       key={String(i + 1)}
                       header={
                         <div onClick={e => e.stopPropagation()}>
-                          <div style={{display: "inline-grid"}}>
+                          <div style={{
+                            display: "inline-grid",
+                            width: "calc(100vw - 150px)"
+                          }}>
                             <Input
                               value={v.request}
                               onChange={(e) => onInterfaceListChange(index, i, 'request', e.target.value)}
                               placeholder="请输入匹配接口"
                               size="small"
-                              style={{width: 280}}
+                              // style={{minWidth: 280}}
                             />
                             <Input
                               value={v.requestDes}
@@ -272,24 +285,24 @@ function App() {
                               className="ajax-tools-iframe-request-des-input"
                             />
                           </div>
-                          <Switch
-                            checked={v.open}
-                            onChange={(value) => onInterfaceListChange(index, i, 'open', value)}
-                            size="small"
-                            style={{margin: "0 4px"}}
-                          />
-                          <Button
-                            size="small"
-                            type="primary"
-                            shape="circle"
-                            icon={<MinusOutlined/>}
-                            title="删除接口"
-                            onClick={() => onInterfaceListDelete(index, i)}
-                            style={{minWidth: 16, width: 16, height: 16}}
-                          />
+                          {/*<Switch*/}
+                          {/*  checked={v.open}*/}
+                          {/*  onChange={(value) => onInterfaceListChange(index, i, 'open', value)}*/}
+                          {/*  size="small"*/}
+                          {/*  style={{margin: "0 4px"}}*/}
+                          {/*/>*/}
+                          {/*<Button*/}
+                          {/*  size="small"*/}
+                          {/*  type="primary"*/}
+                          {/*  shape="circle"*/}
+                          {/*  icon={<MinusOutlined/>}*/}
+                          {/*  title="删除接口"*/}
+                          {/*  onClick={() => onInterfaceListDelete(index, i)}*/}
+                          {/*  style={{minWidth: 16, width: 16, height: 16}}*/}
+                          {/*/>*/}
                         </div>
                       }
-                      extra={genExtra()}
+                      extra={genExtra(index, v, i)}
                     >
                       <TextArea
                         rows={4}
