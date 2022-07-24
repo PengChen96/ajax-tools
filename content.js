@@ -8,7 +8,7 @@ script.setAttribute('type', 'text/javascript');
 script.setAttribute('src', chrome.runtime.getURL('pageScripts/index.js'));
 document.documentElement.appendChild(script);
 script.addEventListener('load', () => {
-  chrome.storage.local.get(['iframeVisible', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxDataList'], (result) => {
+  chrome.storage.local.get(['iframeVisible', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxToolsSkin', 'ajaxDataList'], (result) => {
     console.log('【ajaxTools content.js】【storage】', result);
     const {ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxDataList = []} = result;
     postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxDataList', value: ajaxDataList});

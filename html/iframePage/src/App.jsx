@@ -21,6 +21,7 @@ function App() {
     requestDes: '',
     responseText: ''
   };
+  const [ajaxToolsSkin, setAjaxToolsSkin] = useState(false);
   const [ajaxToolsSwitchOn, setAjaxToolsSwitchOn] = useState(true); // 默认开启
   const [ajaxToolsSwitchOnNot200, setAjaxToolsSwitchOnNot200] = useState(true); // 默认开启
   const [zoom, setZoom] = useState('out'); // 默认缩小
@@ -42,13 +43,14 @@ function App() {
 
   useEffect(() => {
     if (chrome.storage) {
-      chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200'], (result) => {
-        const {ajaxDataList = [], ajaxToolsSwitchOn = true} = result;
+      chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxToolsSkin'], (result) => {
+        const {ajaxDataList = [], ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxToolsSkin = false} = result;
         if (ajaxDataList.length > 0) {
           setAjaxDataList(ajaxDataList);
         }
         setAjaxToolsSwitchOn(ajaxToolsSwitchOn);
         setAjaxToolsSwitchOnNot200(ajaxToolsSwitchOnNot200);
+        setAjaxToolsSkin(ajaxToolsSkin);
       });
     }
   }, []);
@@ -184,7 +186,12 @@ function App() {
   );
 
   return (
-    <div className="ajax-tools-iframe-container">
+    <div
+      className="ajax-tools-iframe-container"
+      style={{
+        filter: ajaxToolsSkin ? 'invert(1)' : undefined
+      }}
+    >
       <div className="ajax-tools-iframe-header">
         <div>
           <CloseOutlined
@@ -202,10 +209,22 @@ function App() {
             />
           }
         </div>
-        <CodeOutlined
-          title="打开标签页"
-          onClick={openTabs}
-        />
+        <div style={{display: "flex", alignItems: 'center'}}>
+          <Switch
+            checkedChildren="黑夜"
+            unCheckedChildren="白天"
+            checked={ajaxToolsSkin}
+            onChange={(value) => {
+              setAjaxToolsSkin(value);
+              chrome.storage.local.set({ajaxToolsSkin: value});
+            }}
+          />
+          <CodeOutlined
+            title="打开标签页"
+            onClick={openTabs}
+            style={{marginLeft: 8}}
+          />
+        </div>
       </div>
       <div className="ajax-tools-iframe-action">
         <Button size="small" type="primary" onClick={onGroupAdd}>新增分组</Button>
