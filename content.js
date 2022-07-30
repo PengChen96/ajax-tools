@@ -19,11 +19,9 @@ script.addEventListener('load', () => {
 
 
 let iframe;
-let iframeLoaded = false;
 
 // 只在最顶层页面嵌入iframe
 if (window.self === window.top) {
-
   document.onreadystatechange = () => {
     if (document.readyState === 'complete') {
       iframe = document.createElement('iframe');
@@ -43,7 +41,6 @@ if (window.self === window.top) {
       iframe.frameBorder = "none";
       // iframe.src = "http://localhost:4001/";
       iframe.src = chrome.runtime.getURL("html/iframePage/dist/index.html");
-      // iframe.src = chrome.runtime.getURL("html/sidebar.html");
       document.body.appendChild(iframe);
 
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -71,19 +68,12 @@ if (window.self === window.top) {
         }
         return true;
       });
-
     }
   }
 }
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {
   for (let [key, {oldValue, newValue}] of Object.entries(changes)) {
-    // console.table({
-    //   namespace,
-    //   key,
-    //   newValue,
-    //   oldValue
-    // })
     if (
       key === 'ajaxDataList'
       || key === 'ajaxToolsSwitchOn'
