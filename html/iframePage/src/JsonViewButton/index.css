@@ -1,0 +1,11 @@
+
+.ajax-tools-iframe-resp-textarea-edit {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    opacity: 0.5;
+}
+
+.ajax-tools-iframe-resp-textarea-edit:hover {
+    opacity: 1;
+}

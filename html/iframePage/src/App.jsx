@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
-import {Button, Checkbox, Collapse, Input, Switch} from "antd";
+import {Button, Checkbox, Collapse, Input, Switch} from 'antd';
 import {CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons';
+import JsonViewButton from './JsonViewButton'
 import 'antd/dist/antd.css';
 import './App.css'
 
@@ -176,12 +177,6 @@ function App() {
         onClick={() => onInterfaceListDelete(index, i)}
         style={{minWidth: 16, width: 16, height: 16}}
       />
-      {/*<SettingOutlined*/}
-      {/*  onClick={(event) => {*/}
-      {/*    // If you don't want click extra trigger collapse, you can prevent this:*/}
-      {/*    event.stopPropagation();*/}
-      {/*  }}*/}
-      {/*/>*/}
     </div>
   );
 
@@ -238,7 +233,7 @@ function App() {
             }}
             style={{filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)'}}
           >
-            非200
+            <span title="将404、500等请求状态改成200">非200</span>
           </Checkbox>
           <Switch
             defaultChecked
@@ -304,31 +299,23 @@ function App() {
                               className="ajax-tools-iframe-request-des-input"
                             />
                           </div>
-                          {/*<Switch*/}
-                          {/*  checked={v.open}*/}
-                          {/*  onChange={(value) => onInterfaceListChange(index, i, 'open', value)}*/}
-                          {/*  size="small"*/}
-                          {/*  style={{margin: "0 4px"}}*/}
-                          {/*/>*/}
-                          {/*<Button*/}
-                          {/*  size="small"*/}
-                          {/*  type="primary"*/}
-                          {/*  shape="circle"*/}
-                          {/*  icon={<MinusOutlined/>}*/}
-                          {/*  title="删除接口"*/}
-                          {/*  onClick={() => onInterfaceListDelete(index, i)}*/}
-                          {/*  style={{minWidth: 16, width: 16, height: 16}}*/}
-                          {/*/>*/}
                         </div>
                       }
                       extra={genExtra(index, v, i)}
                     >
-                      <TextArea
-                        rows={4}
-                        value={v.responseText}
-                        onChange={(e) => onInterfaceListChange(index, i, 'responseText', e.target.value)}
-                        placeholder="response text"
-                      />
+                      <div style={{position: 'relative'}}>
+                        <TextArea
+                          rows={4}
+                          value={v.responseText}
+                          onChange={(e) => onInterfaceListChange(index, i, 'responseText', e.target.value)}
+                          placeholder="response text"
+                        />
+                        <JsonViewButton
+                          request={v.request}
+                          responseText={v.responseText}
+                          onInterfaceListChange={(value) => onInterfaceListChange(index, i, 'responseText', value)}
+                        />
+                      </div>
                     </Panel>
                   })
                 }

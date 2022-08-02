@@ -10,7 +10,8 @@
   "dependencies": {
     "antd": "^4.21.3",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "react-json-view": "^1.21.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

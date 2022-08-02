@@ -34,8 +34,8 @@ if (window.self === window.top) {
       iframe.style.setProperty('right', '0', 'important');
       iframe.style.setProperty('left', 'auto', 'important');
       iframe.style.setProperty('bottom', 'auto', 'important');
-      iframe.style.setProperty('z-index', '9999999999999', 'important');
-      iframe.style.setProperty('transform', 'translateX(470px)', 'important'); // 470px
+      iframe.style.setProperty('z-index', '2147483647', 'important');
+      iframe.style.setProperty('transform', 'translateX(calc(100% + 20px))', 'important'); // 470px
       iframe.style.setProperty('transition', 'all .4s', 'important');
       iframe.style.setProperty('box-shadow', '0 0 15px 2px rgba(0,0,0,0.12)', 'important');
       iframe.frameBorder = "none";
@@ -47,7 +47,7 @@ if (window.self === window.top) {
         console.log('【ajax-tools-iframe-show】接收消息popup->content', request);
         const {type, iframeVisible, iframeZoom} = request;
         if (type === 'iframeToggle') {
-          iframe.style.setProperty('transform', iframeVisible ? 'translateX(0)' : 'translateX(470px)', 'important');
+          iframe.style.setProperty('transform', iframeVisible ? 'translateX(0)' : 'translateX(calc(100% + 20px))', 'important');
           sendResponse({nextIframeVisible: !iframeVisible}); // 返回信息到popup.js / App.jsx
         }
         if (type === 'iframeZoom') {
