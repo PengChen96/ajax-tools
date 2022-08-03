@@ -27,7 +27,7 @@ if (window.self === window.top) {
       iframe = document.createElement('iframe');
       iframe.className = "ajax-tools";
       iframe.style.setProperty('height', '100%', 'important');
-      iframe.style.setProperty('width', '450px', 'important');
+      iframe.style.setProperty('width', '580px', 'important');
       iframe.style.setProperty('min-width', '1px', 'important');
       iframe.style.setProperty('position', 'fixed', 'important');
       iframe.style.setProperty('top', '0', 'important');
@@ -58,7 +58,7 @@ if (window.self === window.top) {
               clearTimeout(timer);
             }, 400);
           } else if (iframeZoom === 'in') { // 放大
-            iframe.style.setProperty('width', '470px', 'important');
+            iframe.style.setProperty('width', '580px', 'important');
             let timer = setTimeout(() => {
               iframe.style.setProperty('height', '100%', 'important');
               clearTimeout(timer);

@@ -37,7 +37,7 @@ export default (props) => {
       className="ajax-tools-iframe-resp-textarea-edit"
     />
     <Modal
-      title={`匹配接口：${request}`}
+      title={<span style={{fontSize: 12}}>匹配：{request}</span>}
       visible={visible}
       onOk={handleOk}
       onCancel={() => setVisible(false)}
@@ -46,7 +46,7 @@ export default (props) => {
     >
       <ReactJson
         src={value}
-        collapsed
+        collapsed={1}
         displayDataTypes={false}
         collapseStringsAfterLength={12}
         onAdd={(v) => setValue(v.updated_src)}
