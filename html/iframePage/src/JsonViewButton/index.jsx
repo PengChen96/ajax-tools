@@ -1,10 +1,12 @@
 import {Modal} from 'antd';
-import ReactJson from 'react-json-view';
+// import ReactJson from 'react-json-view';
 import {FormOutlined} from '@ant-design/icons';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import './index.css';
+import MonacoEditor from "../MonacoEditor";
 
 export default (props) => {
+  let monacoEditorRef = useRef(null);
   const {
     request, responseText, onInterfaceListChange = () => {
     }
@@ -25,7 +27,8 @@ export default (props) => {
   }, [responseText]);
 
   const handleOk = () => {
-    onInterfaceListChange(JSON.stringify(value));
+    const editorValue = monacoEditorRef.current.editorInstance.getValue();
+    onInterfaceListChange(editorValue);
     setVisible(false);
   }
   return <>
@@ -38,20 +41,25 @@ export default (props) => {
     />
     <Modal
       title={<span style={{fontSize: 12}}>匹配：{request}</span>}
+      width={"98%"}
       visible={visible}
       onOk={handleOk}
       onCancel={() => setVisible(false)}
-      okText="确定"
+      okText="保存"
       cancelText="取消"
     >
-      <ReactJson
-        src={value}
-        collapsed={1}
-        displayDataTypes={false}
-        collapseStringsAfterLength={12}
-        onAdd={(v) => setValue(v.updated_src)}
-        onDelete={(v) => setValue(v.updated_src)}
-        onEdit={(v) => setValue(v.updated_src)}
+      {/*<ReactJson*/}
+      {/*  src={value}*/}
+      {/*  collapsed={1}*/}
+      {/*  displayDataTypes={false}*/}
+      {/*  collapseStringsAfterLength={12}*/}
+      {/*  onAdd={(v) => setValue(v.updated_src)}*/}
+      {/*  onDelete={(v) => setValue(v.updated_src)}*/}
+      {/*  onEdit={(v) => setValue(v.updated_src)}*/}
+      {/*/>*/}
+      <MonacoEditor
+        ref={monacoEditorRef}
+        text={JSON.stringify(value)}
       />
     </Modal>
   </>;
