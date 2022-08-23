@@ -1,3 +1,26 @@
+
+chrome.action.onClicked.addListener(() => {
+
+  chrome.storage.local.get("iframeVisible", ({iframeVisible}) => {
+    console.table({iframeVisible});
+    chrome.tabs.query(
+      {active: true, currentWindow: true},
+      function (tabs) {
+        // 发送消息到content.js
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          {type: 'iframeToggle', iframeVisible},
+          function (response) {
+            console.log('【background.js】【ajax-tools-iframe-show】返回消息content->popup', response);
+            chrome.storage.local.set({iframeVisible: response.nextIframeVisible});
+          }
+        );
+      }
+    );
+  });
+
+});
+
 chrome.storage.local.get(['ajaxToolsSwitchOn'], (result) => {
   const {ajaxToolsSwitchOn = true} = result;
   chrome.action.setBadgeText({text: ajaxToolsSwitchOn ? 'ON' : 'OFF'});
