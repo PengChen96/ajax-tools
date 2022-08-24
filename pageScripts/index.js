@@ -1,3 +1,17 @@
+/*
+ * 字符串 转 正则表达式
+ * "/^t.*$/" or "^t.*$" => new RegExp
+ */
+const strToRegExp = (regStr) => {
+  let regexp = '';
+  const regParts = regStr.match(new RegExp('^/(.*?)/([gims]*)$'));
+  if (regParts) {
+    regexp = new RegExp(regParts[1], regParts[2]);
+  } else {
+    regexp = new RegExp(regStr);
+  }
+  return regexp;
+};
 
 const ajax_tools_space = {
   ajaxToolsSwitchOn: true,
@@ -10,10 +24,12 @@ const ajax_tools_space = {
       ajax_tools_space.ajaxDataList.forEach((item) => {
         interfaceList.push(...(item.interfaceList || []));
       });
-      interfaceList.forEach(({open = true, request, responseText}) => {
+      interfaceList.forEach(({open = true, matchType = 'normal', request, responseText}) => {
         if (open) {
           let matched = false;
-          if (request && this.responseURL.includes(request)) {
+          if (matchType === 'normal' && request && this.responseURL.includes(request)) {
+            matched = true;
+          } else if (matchType === 'regex' && request && this.responseURL.match(strToRegExp(request))) {
             matched = true;
           }
           if (matched && responseText) {
@@ -47,11 +63,8 @@ const ajax_tools_space = {
         continue;
       } else if (attr === 'onload') {
         // xhr.onload = (...args) => {
-        //   // 请求成功
-        //   // if (ajax_interceptor_qoweifjqon.settings.ajaxInterceptor_switchOn) {
-        //     // 开启拦截
-        //     modifyResponse();
-        //   // }
+        //   // 开启拦截
+        //   modifyResponse();
         //   this.onload && this.onload.apply(this, args);
         // }
         // continue;
@@ -85,10 +98,12 @@ const ajax_tools_space = {
       ajax_tools_space.ajaxDataList.forEach((item) => {
         interfaceList.push(...(item.interfaceList || []));
       });
-      interfaceList.forEach(({open = true, request, responseText}) => {
+      interfaceList.forEach(({open = true, matchType = 'normal', request, responseText}) => {
         if (open) {
           let matched = false;
-          if (request && response.url.includes(request)) {
+          if (matchType === 'normal' && request && response.url.includes(request)) {
+            matched = true;
+          } else if (matchType === 'regex' && request && response.url.match(strToRegExp(request))) {
             matched = true;
           }
           if (matched && responseText) {

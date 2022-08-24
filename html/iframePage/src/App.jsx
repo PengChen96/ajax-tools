@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {Button, Checkbox, Collapse, Input, Switch} from 'antd';
+import {Button, Checkbox, Collapse, Input, Switch, Select} from 'antd';
 import {CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import JsonViewButton from './JsonViewButton'
 import 'antd/dist/antd.css';
@@ -18,6 +18,7 @@ const colorMap = [
 function App() {
   const defaultInterface = {
     open: true,
+    matchType: 'normal', // normal regex
     request: '',
     requestDes: '',
     responseText: ''
@@ -32,12 +33,7 @@ function App() {
       collapseActiveKeys: ['1'],
       headerClass: 'ajax-tools-color-volcano',
       interfaceList: [
-        {
-          open: true,
-          request: '',
-          requestDes: '',
-          responseText: ''
-        }
+        { ...defaultInterface },
       ]
     },
   ]);
@@ -159,6 +155,13 @@ function App() {
     setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ajaxDataList});
   }
+
+  const selectBefore = (
+    <Select defaultValue="match" className="select-before">
+      <Select.Option value="match">模糊匹配</Select.Option>
+      <Select.Option value="regex">正则匹配</Select.Option>
+    </Select>
+  );
 
   const genExtra = (index, v, i) => (
     <div onClick={(event) => event.stopPropagation()}>
@@ -289,7 +292,15 @@ function App() {
                               onChange={(e) => onInterfaceListChange(index, i, 'request', e.target.value)}
                               placeholder="请输入匹配接口"
                               size="small"
-                              // style={{minWidth: 280}}
+                              addonBefore={
+                                <Select
+                                  value={v.matchType}
+                                  onChange={(value) => onInterfaceListChange(index, i, 'matchType', value)}
+                                >
+                                  <Select.Option value="normal">普通匹配</Select.Option>
+                                  <Select.Option value="regex">正则匹配</Select.Option>
+                                </Select>
+                              }
                             />
                             <Input
                               value={v.requestDes}
