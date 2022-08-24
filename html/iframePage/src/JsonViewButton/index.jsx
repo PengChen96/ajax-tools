@@ -7,13 +7,17 @@ import './index.css';
 export default (props) => {
   let monacoEditorRef = useRef(null);
   const {
-    request, responseText = "", onInterfaceListChange = () => {}
+    language, request, responseText = "",
+    onInterfaceListChange = () => {}
   } = props;
   const [visible, setVisible] = useState(false);
 
   const handleOk = () => {
-    const editorValue = monacoEditorRef.current.editorInstance.getValue();
-    onInterfaceListChange(editorValue);
+    const { editorInstance } = monacoEditorRef.current;
+    const editorValue = editorInstance.getValue();
+    const language = editorInstance.getModel().getLanguageId();
+    onInterfaceListChange('responseText', editorValue);
+    onInterfaceListChange('language', language);
     setVisible(false);
   }
   return <>
@@ -25,6 +29,7 @@ export default (props) => {
       className="ajax-tools-iframe-resp-textarea-edit"
     />
     <Modal
+      centered
       title={<span style={{fontSize: 12}}>匹配：{request}</span>}
       width={"98%"}
       visible={visible}
@@ -32,10 +37,14 @@ export default (props) => {
       onCancel={() => setVisible(false)}
       okText="保存"
       cancelText="取消"
+      bodyStyle={{
+        padding: 12
+      }}
     >
       <MonacoEditor
         ref={monacoEditorRef}
         text={responseText}
+        language={language}
       />
     </Modal>
   </>;

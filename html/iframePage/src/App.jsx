@@ -21,7 +21,8 @@ function App() {
     matchType: 'normal', // normal regex
     request: '',
     requestDes: '',
-    responseText: ''
+    responseText: '',
+    language: 'json', // json javascript
   };
   const [ajaxToolsSkin, setAjaxToolsSkin] = useState(false);
   const [ajaxToolsSwitchOn, setAjaxToolsSwitchOn] = useState(true); // 默认开启
@@ -322,9 +323,10 @@ function App() {
                           placeholder="response text"
                         />
                         <JsonViewButton
+                          language={v.language}
                           request={v.request}
                           responseText={v.responseText}
-                          onInterfaceListChange={(value) => onInterfaceListChange(index, i, 'responseText', value)}
+                          onInterfaceListChange={(key, value) => onInterfaceListChange(index, i, key, value)}
                         />
                       </div>
                     </Panel>
