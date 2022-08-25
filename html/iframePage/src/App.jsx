@@ -157,13 +157,6 @@ function App() {
     chrome.storage.local.set({ajaxDataList});
   }
 
-  const selectBefore = (
-    <Select defaultValue="match" className="select-before">
-      <Select.Option value="match">模糊匹配</Select.Option>
-      <Select.Option value="regex">正则匹配</Select.Option>
-    </Select>
-  );
-
   const genExtra = (index, v, i) => (
     <div onClick={(event) => event.stopPropagation()}>
       <Switch

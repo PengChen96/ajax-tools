@@ -13,6 +13,22 @@ const strToRegExp = (regStr) => {
   return regexp;
 };
 
+const getOverrideText = (responseText) => {
+  let overrideText = responseText;
+  try {
+    const data = JSON.parse(responseText);
+    if (typeof data === 'object') {
+      overrideText = responseText;
+    }
+  } catch (e) {
+    const returnText = (new Function(responseText))();
+    if (returnText) {
+      overrideText = typeof returnText === 'object' ? JSON.stringify(returnText) : returnText;
+    }
+  }
+  return overrideText;
+}
+
 const ajax_tools_space = {
   ajaxToolsSwitchOn: true,
   ajaxToolsSwitchOnNot200: true,
@@ -24,7 +40,7 @@ const ajax_tools_space = {
       ajax_tools_space.ajaxDataList.forEach((item) => {
         interfaceList.push(...(item.interfaceList || []));
       });
-      interfaceList.forEach(({open = true, matchType = 'normal', request, responseText}) => {
+      interfaceList.forEach(({open = true, matchType = 'normal', request, responseText, language = 'json'}) => {
         if (open) {
           let matched = false;
           if (matchType === 'normal' && request && this.responseURL.includes(request)) {
@@ -33,15 +49,16 @@ const ajax_tools_space = {
             matched = true;
           }
           if (matched && responseText) {
-            this.responseText = responseText;
-            this.response = responseText;
+            const overrideText = getOverrideText(responseText);
+            this.responseText = overrideText;
+            this.response = overrideText;
             if (ajax_tools_space.ajaxToolsSwitchOnNot200) { // 非200请求如404，改写status
               this.status = 200;
             }
             // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
             console.groupCollapsed(`%c XHR匹配路径/规则：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
             console.info(`%c接口路径：`, 'background-color: #ff8040; color: white;', this.responseURL);
-            console.info('%c返回出参：', 'background-color: #ff5500; color: white;', JSON.parse(responseText));
+            console.info('%c返回出参：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
             console.groupEnd();
             // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
           }
@@ -107,11 +124,11 @@ const ajax_tools_space = {
             matched = true;
           }
           if (matched && responseText) {
-            text = responseText;
+            text = getOverrideText(responseText);
             // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
             console.groupCollapsed(`%c Fetch匹配路径/规则：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
             console.info(`%c接口路径：`, 'background-color: #ff8040; color: white;', response.url);
-            console.info('%c返回出参：', 'background-color: #ff5500; color: white;', JSON.parse(responseText));
+            console.info('%c返回出参：', 'background-color: #ff5500; color: white;', text);
             console.groupEnd();
             // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
           }

@@ -37,7 +37,6 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "html/sidebar.html",
         "html/iframePage/dist/index.html",
         "pageScripts/index.js"
       ],
