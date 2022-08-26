@@ -21,6 +21,8 @@ const getOverrideText = (responseText) => {
       overrideText = responseText;
     }
   } catch (e) {
+    // const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+    // const returnText = await (new AsyncFunction(responseText))();
     const returnText = (new Function(responseText))();
     if (returnText) {
       overrideText = typeof returnText === 'object' ? JSON.stringify(returnText) : returnText;
