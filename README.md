@@ -1,10 +1,10 @@
 # ajax-tools
 
-一个修改ajax请求返回结果的chrome插件。
-**主要功能：** 
-[x] 支持XMLHttpRequest、fetch
-[x] 支持正则表达式匹配
-[x] 支持返回结果Json、JavaScript方式
+一个修改ajax请求返回结果的chrome插件。  
+**主要功能：**   
+- [x] 支持XMLHttpRequest、fetch  
+- [x] 支持正则表达式匹配  
+- [x] 支持返回结果Json、JavaScript方式  
 
 ## 安装
 
