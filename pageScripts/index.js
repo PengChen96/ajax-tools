@@ -40,7 +40,7 @@ const ajax_tools_space = {
       ajax_tools_space.ajaxDataList.forEach((item) => {
         interfaceList.push(...(item.interfaceList || []));
       });
-      interfaceList.forEach(({open = true, matchType = 'normal', request, responseText, language = 'json'}) => {
+      interfaceList.forEach(({open = true, matchType = 'normal', request, responseText}) => {
         if (open) {
           let matched = false;
           if (matchType === 'normal' && request && this.responseURL.includes(request)) {
@@ -110,7 +110,7 @@ const ajax_tools_space = {
   originalFetch: window.fetch.bind(window),
   myFetch: function (...args) {
     return ajax_tools_space.originalFetch(...args).then((response) => {
-      let text = undefined;
+      let overrideText = undefined;
       const interfaceList = [];
       ajax_tools_space.ajaxDataList.forEach((item) => {
         interfaceList.push(...(item.interfaceList || []));
@@ -124,20 +124,20 @@ const ajax_tools_space = {
             matched = true;
           }
           if (matched && responseText) {
-            text = getOverrideText(responseText);
+            overrideText = getOverrideText(responseText);
             // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
             console.groupCollapsed(`%c Fetch匹配路径/规则：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
             console.info(`%c接口路径：`, 'background-color: #ff8040; color: white;', response.url);
-            console.info('%c返回出参：', 'background-color: #ff5500; color: white;', text);
+            console.info('%c返回出参：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
             console.groupEnd();
             // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
           }
         }
       });
-      if (text !== undefined) {
+      if (overrideText !== undefined) {
         const stream = new ReadableStream({
           start(controller) {
-            controller.enqueue(new TextEncoder().encode(text));
+            controller.enqueue(new TextEncoder().encode(overrideText));
             controller.close();
           }
         });
