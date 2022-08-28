@@ -10,7 +10,8 @@
 
 
 ## 使用
-
+![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fe0e0fd0944943cdb1797151e213070c~tplv-k3u1fbpfcp-watermark.image?)  
+![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c095879e59f742e6a1996ac9a47427a8~tplv-k3u1fbpfcp-watermark.image?)  
 
 ### 通过JS编辑返回结果
 代码是通过`new Function(responseText)`生成函数然后执行，所以JS方式返回结果就是return的值。
