@@ -36,12 +36,7 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
   }
 });
 
-
-let color = '#3aa757';
-
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({color});
-  // chrome.storage.local.set({ iframeVisible });
   console.log('%c Ajax Tools onInstalled', `color: #3aa757`);
 });
 
