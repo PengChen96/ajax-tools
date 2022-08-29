@@ -38,7 +38,8 @@
     {
       "resources": [
         "html/iframePage/dist/index.html",
-        "pageScripts/index.js"
+        "pageScripts/index.js",
+        "html/iframePage/mock.js"
       ],
       "matches": [
         "<all_urls>"

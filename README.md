@@ -16,6 +16,7 @@
 
 ### 通过JS编辑返回结果
 代码是通过`new Function(responseText)`生成函数然后执行，所以JS方式返回结果就是return的值。
+
 示例：
 ```js
 const data = [];
@@ -27,6 +28,7 @@ return {
 }
 ```
 **支持[mock.js]('https://github.com/nuysoft/Mock/wiki/Getting-Started')生成数据**
+
 示例：
 ```js
 const data = Mock.mock({

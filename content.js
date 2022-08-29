@@ -3,6 +3,12 @@ console.log('content script');
 chrome.storage.local.set({iframeVisible: true});
 
 // 在页面上插入代码
+// mock.js
+const script_mock = document.createElement('script');
+script_mock.setAttribute('type', 'text/javascript');
+script_mock.setAttribute('src', chrome.runtime.getURL('html/iframePage/mock.js'));
+document.documentElement.appendChild(script_mock);
+//
 const script = document.createElement('script');
 script.setAttribute('type', 'text/javascript');
 script.setAttribute('src', chrome.runtime.getURL('pageScripts/index.js'));
