@@ -11,7 +11,7 @@ chrome.action.onClicked.addListener(() => {
           tabs[0].id,
           {type: 'iframeToggle', iframeVisible},
           function (response) {
-            console.log('【service_worker.js】【ajax-tools-iframe-show】返回消息content->popup', response);
+            console.log('【service_worker.js】【ajax-tools-iframe-show】返回消息content->service_worker', response);
             chrome.storage.local.set({iframeVisible: response.nextIframeVisible});
           }
         );

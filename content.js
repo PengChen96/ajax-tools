@@ -1,19 +1,17 @@
-console.log('content script');
+
 // 设置iframeVisible默认值，刷新后重置storage
 chrome.storage.local.set({iframeVisible: true});
 
 // 在页面上插入代码
-// mock.js
-const script_mock = document.createElement('script');
-script_mock.setAttribute('type', 'text/javascript');
-script_mock.setAttribute('src', chrome.runtime.getURL('html/iframePage/mock.js'));
-document.documentElement.appendChild(script_mock);
-//
-const script = document.createElement('script');
-script.setAttribute('type', 'text/javascript');
-script.setAttribute('src', chrome.runtime.getURL('pageScripts/index.js'));
-document.documentElement.appendChild(script);
-script.addEventListener('load', () => {
+function injectedScript (path) {
+  const scriptNode = document.createElement('script');
+  scriptNode.setAttribute('type', 'text/javascript');
+  scriptNode.setAttribute('src', chrome.runtime.getURL(path));
+  document.documentElement.appendChild(scriptNode);
+  return scriptNode;
+}
+injectedScript('html/iframePage/mock.js');
+injectedScript('pageScripts/index.js').addEventListener('load', () => {
   chrome.storage.local.get(['iframeVisible', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxToolsSkin', 'ajaxDataList'], (result) => {
     console.log('【ajaxTools content.js】【storage】', result);
     const {ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxDataList = []} = result;
@@ -50,7 +48,7 @@ if (window.self === window.top) {
       document.body.appendChild(iframe);
 
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        console.log('【ajax-tools-iframe-show】接收消息popup->content', request);
+        console.log('【ajax-tools-iframe-show】接收消息service_worker->content', request);
         const {type, iframeVisible, iframeZoom} = request;
         if (type === 'iframeToggle') {
           iframe.style.setProperty('transform', iframeVisible ? 'translateX(0)' : 'translateX(calc(100% + 20px))', 'important');
