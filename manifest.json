@@ -1,5 +1,5 @@
 {
-  "name": "Ajax Tools",
+  "name": "Ajax Interceptor Tools",
   "version": "0.0.1",
   "description": "modify response text of ajax requests",
   "manifest_version": 3,
@@ -18,11 +18,15 @@
   ],
   "action": {
     "default_icon": {
-      "16": "./icons/tools16.png",
-      "24": "./icons/tools24.png",
-      "32": "./icons/tools32.png",
+      "16": "./icons/tools640.png",
+      "24": "./icons/tools640.png",
+      "32": "./icons/tools640.png",
       "128": "./icons/tools128.png"
     }
+  },
+  "icons": {
+    "48": "./icons/tools128.png",
+    "128": "./icons/tools128.png"
   },
   "background": {
     "service_worker": "service_worker.js"

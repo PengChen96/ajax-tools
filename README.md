@@ -11,8 +11,8 @@
 
 
 ## 使用
-![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fe0e0fd0944943cdb1797151e213070c~tplv-k3u1fbpfcp-watermark.image?)  
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1cbe3740b84b46d6b21fc1f4973d6f40~tplv-k3u1fbpfcp-watermark.image?) 
+![o1.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a88c304eadc54915bd7a75ea2fe3ee86~tplv-k3u1fbpfcp-watermark.image?)  
+![t1.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1b77784824d4c0bbc14f0b7daae5d7f~tplv-k3u1fbpfcp-watermark.image?)  
 
 ### 通过JS编辑返回结果
 代码是通过`new Function(responseText)`生成函数然后执行，所以JS方式返回结果就是return的值。
