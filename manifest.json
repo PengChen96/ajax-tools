@@ -18,10 +18,9 @@
   ],
   "action": {
     "default_icon": {
-      "16": "./icons/tools640.png",
-      "24": "./icons/tools640.png",
-      "32": "./icons/tools640.png",
-      "128": "./icons/tools128.png"
+      "16": "./icons/tools16.png",
+      "24": "./icons/tools24.png",
+      "32": "./icons/tools32.png"
     }
   },
   "icons": {
