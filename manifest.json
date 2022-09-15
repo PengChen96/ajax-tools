@@ -5,16 +5,11 @@
   "manifest_version": 3,
   "permissions": [
     "storage",
-    "tabs",
-    "activeTab",
-    "scripting"
+    "tabs"
   ],
   "host_permissions": [
     "http://*/*",
     "https://*/*"
-  ],
-  "optional_host_permissions": [
-    "*://*/*"
   ],
   "action": {
     "default_icon": {
