@@ -4,8 +4,7 @@
   "description": "modify response text of ajax requests",
   "manifest_version": 3,
   "permissions": [
-    "storage",
-    "tabs"
+    "storage"
   ],
   "host_permissions": [
     "http://*/*",
