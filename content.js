@@ -45,7 +45,7 @@ if (window.self === window.top) {
       iframe.frameBorder = "none";
       // iframe.src = "http://localhost:4001/";
       iframe.src = chrome.runtime.getURL("html/iframePage/dist/index.html");
-      document.body.appendChild(iframe);
+      if (document.body) document.body.appendChild(iframe);
 
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log('【ajax-tools-iframe-show】接收消息service_worker->content', request);

@@ -177,6 +177,7 @@ function App() {
     </div>
   );
 
+  const inIframe = top.location !== self.location;
   return (
     <div
       className="ajax-tools-iframe-container"
@@ -186,19 +187,23 @@ function App() {
     >
       <div className="ajax-tools-iframe-header">
         <div>
-          <CloseOutlined
-            title="关闭"
-            onClick={onCloseClick}
-            style={{marginRight: 12}}
-          />
           {
-            zoom === 'out' ? <MinusOutlined
-              title="缩小"
-              onClick={onZoomClick}
-            /> : <FullscreenOutlined
-              title="放大"
-              onClick={onZoomClick}
-            />
+            inIframe && <>
+              <CloseOutlined
+                title="关闭"
+                onClick={onCloseClick}
+                style={{marginRight: 12}}
+              />
+              {
+                zoom === 'out' ? <MinusOutlined
+                  title="缩小"
+                  onClick={onZoomClick}
+                /> : <FullscreenOutlined
+                  title="放大"
+                  onClick={onZoomClick}
+                />
+              }
+            </>
           }
         </div>
         <div style={{display: "flex", alignItems: 'center'}}>
