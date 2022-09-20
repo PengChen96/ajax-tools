@@ -1,5 +1,5 @@
 # ajax-tools
-
+[![](https://img.shields.io/chrome-web-store/v/kphegobalneikdjnboeiheiklpbbhncm.svg?logo=Google%20Chrome&logoColor=white&color=blue&style=flat-square)](https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm)   
 一个修改ajax请求返回结果的chrome插件。  
 
 **主要功能：**   
@@ -8,7 +8,7 @@
 - [x] 支持返回结果Json、JavaScript方式  
 
 ## 安装
-
+谷歌商店：https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm
 
 ## 使用
 ![o1.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a88c304eadc54915bd7a75ea2fe3ee86~tplv-k3u1fbpfcp-watermark.image?)  
