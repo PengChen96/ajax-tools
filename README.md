@@ -1,5 +1,7 @@
 # ajax-tools
-![ajax-tools.png](./icons/ajax-tools.png)  
+
+<img src="https://github.com/PengChen96/ajax-tools/blob/master/icons/ajax-tools.png" width="300">  
+
 [![](https://img.shields.io/chrome-web-store/v/kphegobalneikdjnboeiheiklpbbhncm.svg?logo=Google%20Chrome&logoColor=white&color=blue&style=flat-square)](https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm)   
 一个修改ajax请求返回结果的chrome插件。  
 
