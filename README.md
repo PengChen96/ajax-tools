@@ -8,7 +8,8 @@
 - [x] 支持返回结果Json、JavaScript方式  
 
 ## 安装
-谷歌商店：https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm
+谷歌商店：https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm  
+直接下载：https://github.com/PengChen96/ajax-tools/blob/master/kphegobalneikdjnboeiheiklpbbhncm.crx
 
 ## 使用
 ![o1.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a88c304eadc54915bd7a75ea2fe3ee86~tplv-k3u1fbpfcp-watermark.image?)  
