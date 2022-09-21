@@ -28,7 +28,7 @@ return {
   data
 }
 ```
-**支持[mock.js]('https://github.com/nuysoft/Mock/wiki/Getting-Started')生成数据**
+**支持 [mock.js]('https://github.com/nuysoft/Mock/wiki/Getting-Started') 生成数据**
 
 示例：
 ```js
