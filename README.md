@@ -13,7 +13,7 @@
 
 ## 使用
 ![o1.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a88c304eadc54915bd7a75ea2fe3ee86~tplv-k3u1fbpfcp-watermark.image?)  
-![t1.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1b77784824d4c0bbc14f0b7daae5d7f~tplv-k3u1fbpfcp-watermark.image?)  
+![o2.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bc051954c02946148e4dc750c9fb3ace~tplv-k3u1fbpfcp-watermark.image?)  
 
 ### 通过JS编辑返回结果
 代码是通过`new Function(responseText)`生成函数然后执行，所以JS方式返回结果就是return的值。
