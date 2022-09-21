@@ -1,4 +1,5 @@
 # ajax-tools
+![ajax-tools.png](./icons/ajax-tools.png)  
 [![](https://img.shields.io/chrome-web-store/v/kphegobalneikdjnboeiheiklpbbhncm.svg?logo=Google%20Chrome&logoColor=white&color=blue&style=flat-square)](https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm)   
 一个修改ajax请求返回结果的chrome插件。  
 
@@ -28,7 +29,7 @@ return {
   data
 }
 ```
-**支持 [mock.js]('https://github.com/nuysoft/Mock/wiki/Getting-Started') 生成数据**
+**支持 [mock.js](https://github.com/nuysoft/Mock/wiki/Getting-Started) 生成数据**
 
 示例：
 ```js
@@ -44,3 +45,5 @@ return {
 }
 ```
 
+## License
+ajax-tools is available under the MIT License.
