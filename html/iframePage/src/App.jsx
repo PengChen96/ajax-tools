@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {Button, Checkbox, Collapse, Input, Switch, Select} from 'antd';
+import {Button, Checkbox, Collapse, Input, Select, Switch} from 'antd';
 import {CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import JsonViewButton from './JsonViewButton'
 import 'antd/dist/antd.css';
@@ -19,6 +19,7 @@ function App() {
   const defaultInterface = {
     open: true,
     matchType: 'normal', // normal regex
+    matchMethod: '', // GET、POST、PUT、DELETE、HEAD、OPTIONS、CONNECT、TRACE、PATCH
     request: '',
     requestDes: '',
     responseText: '',
@@ -292,13 +293,30 @@ function App() {
                               placeholder="请输入匹配接口"
                               size="small"
                               addonBefore={
-                                <Select
-                                  value={v.matchType}
-                                  onChange={(value) => onInterfaceListChange(index, i, 'matchType', value)}
-                                >
-                                  <Select.Option value="normal">普通匹配</Select.Option>
-                                  <Select.Option value="regex">正则匹配</Select.Option>
-                                </Select>
+                                <Input.Group compact>
+                                  <Select
+                                    value={v.matchType}
+                                    onChange={(value) => onInterfaceListChange(index, i, 'matchType', value)}
+                                  >
+                                    <Select.Option value="normal">普通匹配</Select.Option>
+                                    <Select.Option value="regex">正则匹配</Select.Option>
+                                  </Select>
+                                  <Select
+                                    value={v.matchMethod}
+                                    onChange={(value) => onInterfaceListChange(index, i, 'matchMethod', value)}
+                                  >
+                                    <Select.Option value="">ALL</Select.Option>
+                                    <Select.Option value="GET">GET</Select.Option>
+                                    <Select.Option value="POST">POST</Select.Option>
+                                    <Select.Option value="PUT">PUT</Select.Option>
+                                    <Select.Option value="DELETE">DELETE</Select.Option>
+                                    <Select.Option value="HEAD">HEAD</Select.Option>
+                                    <Select.Option value="OPTIONS">OPTIONS</Select.Option>
+                                    <Select.Option value="CONNECT">CONNECT</Select.Option>
+                                    <Select.Option value="TRACE">TRACE</Select.Option>
+                                    <Select.Option value="PATCH">PATCH</Select.Option>
+                                  </Select>
+                                </Input.Group>
                               }
                             />
                             <Input

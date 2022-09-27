@@ -42,8 +42,10 @@ const ajax_tools_space = {
       ajax_tools_space.ajaxDataList.forEach((item) => {
         interfaceList.push(...(item.interfaceList || []));
       });
-      interfaceList.forEach(({open = true, matchType = 'normal', request, responseText}) => {
-        if (open) {
+      const method = this._openArgs[0];
+      interfaceList.forEach(({open = true, matchType = 'normal', matchMethod, request, responseText}) => {
+        const matchedMethod = !matchMethod || matchMethod === method.toUpperCase();
+        if (open && matchedMethod) {
           let matched = false;
           if (matchType === 'normal' && request && this.responseURL.includes(request)) {
             matched = true;
@@ -87,6 +89,12 @@ const ajax_tools_space = {
         //   this.onload && this.onload.apply(this, args);
         // }
         // continue;
+      } else if (attr === 'open') {
+        this.open = (...args) => {
+          this._openArgs = args;
+          xhr.open && xhr.open.apply(xhr, args);
+        }
+        continue;
       }
       if (typeof xhr[attr] === 'function') {
         this[attr] = xhr[attr].bind(xhr);
@@ -117,8 +125,10 @@ const ajax_tools_space = {
       ajax_tools_space.ajaxDataList.forEach((item) => {
         interfaceList.push(...(item.interfaceList || []));
       });
-      interfaceList.forEach(({open = true, matchType = 'normal', request, responseText}) => {
-        if (open) {
+      const {method = 'GET'} = args[1] || {};
+      interfaceList.forEach(({open = true, matchType = 'normal', matchMethod, request, responseText}) => {
+        const matchedMethod = !matchMethod || matchMethod === method.toUpperCase();
+        if (open && matchedMethod) {
           let matched = false;
           if (matchType === 'normal' && request && response.url.includes(request)) {
             matched = true;
