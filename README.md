@@ -7,8 +7,9 @@
 
 **主要功能：**   
 - [x] 支持XMLHttpRequest、fetch  
-- [x] 支持正则表达式匹配  
-- [x] 支持返回结果Json、JavaScript方式  
+- [x] 支持正则表达式、HTTP请求方法匹配  
+- [x] 支持返回结果Json、JavaScript方式编辑（内置mock.js）  
+- [x] 支持拦截404请求  
 
 ## 安装
 谷歌商店：https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm  
