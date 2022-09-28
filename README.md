@@ -1,6 +1,6 @@
 # ajax-tools
 
-<img src="https://raw.githubusercontent.com/PengChen96/ajax-tools/master/icons/ajax-tools.png" width="300">  
+<img src="./icons/ajax-tools.png" width="300">  
 
 [![](https://img.shields.io/chrome-web-store/v/kphegobalneikdjnboeiheiklpbbhncm.svg?logo=Google%20Chrome&logoColor=white&color=blue&style=flat-square)](https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm)   
 一个拦截ajax请求并修改返回结果的chrome插件。  
