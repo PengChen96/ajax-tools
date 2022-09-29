@@ -49,7 +49,7 @@ return {
 ```
 
 **支持通过arguments拿到原始接口信息**
-
+![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25494da9e62d4e34ba66fce28987124a~tplv-k3u1fbpfcp-watermark.image?)  
 示例：
 ```js
 let { method, originalResponse } = arguments[0];
