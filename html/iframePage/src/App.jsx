@@ -122,7 +122,6 @@ function App() {
 
   // 收缩分组
   const onCollapseChange = (index, keys) => {
-    console.log(keys);
     ajaxDataList[index].collapseActiveKeys = keys;
     setAjaxDataList([...ajaxDataList]);
   };
@@ -151,7 +150,6 @@ function App() {
     setAjaxDataList([...ajaxDataList]);
   }
   const onInterfaceListDelete = (index1, index2) => {
-    console.log(index1, ajaxDataList);
     ajaxDataList[index1].collapseActiveKeys = ajaxDataList[index1].collapseActiveKeys.filter((_, i) => i !== index2 + 1);
     ajaxDataList[index1].interfaceList = ajaxDataList[index1].interfaceList.filter((_, i) => i !== index2);
     setAjaxDataList([...ajaxDataList]);

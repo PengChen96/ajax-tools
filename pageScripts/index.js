@@ -13,7 +13,7 @@ const strToRegExp = (regStr) => {
   return regexp;
 };
 
-const getOverrideText = (responseText) => {
+const getOverrideText = (responseText, args) => {
   let overrideText = responseText;
   try {
     const data = JSON.parse(responseText);
@@ -23,7 +23,7 @@ const getOverrideText = (responseText) => {
   } catch (e) {
     // const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
     // const returnText = await (new AsyncFunction(responseText))();
-    const returnText = (new Function(responseText))();
+    const returnText = (new Function(responseText))(args);
     if (returnText) {
       overrideText = typeof returnText === 'object' ? JSON.stringify(returnText) : returnText;
     }
@@ -53,7 +53,10 @@ const ajax_tools_space = {
             matched = true;
           }
           if (matched && responseText) {
-            const overrideText = getOverrideText(responseText);
+            const args = {
+              originalResponse: JSON.parse(this.responseText)
+            };
+            const overrideText = getOverrideText(responseText, args);
             this.responseText = overrideText;
             this.response = overrideText;
             if (ajax_tools_space.ajaxToolsSwitchOnNot200) { // 非200请求如404，改写status
@@ -119,14 +122,30 @@ const ajax_tools_space = {
   },
   originalFetch: window.fetch.bind(window),
   myFetch: function (...args) {
-    return ajax_tools_space.originalFetch(...args).then((response) => {
+    const getOriginalResponse = async (stream) => {
+      let text = '';
+      const decoder = new TextDecoder('utf-8');
+      const reader = stream.getReader();
+      const processData = (result) => {
+        if (result.done) {
+          return JSON.parse(text);
+        }
+        const value = result.value; // Uint8Array
+        text += decoder.decode(value, {stream: true});
+        // 读取下一个文件片段，重复处理步骤
+        return reader.read().then(processData);
+      };
+      return await reader.read().then(processData);
+    }
+    return ajax_tools_space.originalFetch(...args).then(async (response) => {
       let overrideText = undefined;
       const interfaceList = [];
       ajax_tools_space.ajaxDataList.forEach((item) => {
         interfaceList.push(...(item.interfaceList || []));
       });
       const {method = 'GET'} = args[1] || {};
-      interfaceList.forEach(({open = true, matchType = 'normal', matchMethod, request, responseText}) => {
+      for (let i = 0; i < interfaceList.length; i++) {
+        const {open = true, matchType = 'normal', matchMethod, request, responseText} = interfaceList[i];
         const matchedMethod = !matchMethod || matchMethod === method.toUpperCase();
         if (open && matchedMethod) {
           let matched = false;
@@ -136,7 +155,11 @@ const ajax_tools_space = {
             matched = true;
           }
           if (matched && responseText) {
-            overrideText = getOverrideText(responseText);
+            const originalResponse = await getOriginalResponse(response.body);
+            const args = {
+              originalResponse: originalResponse
+            };
+            overrideText = getOverrideText(responseText, args);
             // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
             console.groupCollapsed(`%c Fetch匹配路径/规则：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
             console.info(`%c接口路径：`, 'background-color: #ff8040; color: white;', response.url);
@@ -145,7 +168,7 @@ const ajax_tools_space = {
             // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
           }
         }
-      });
+      }
       if (overrideText !== undefined) {
         const stream = new ReadableStream({
           start(controller) {
