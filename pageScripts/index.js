@@ -53,10 +53,11 @@ const ajax_tools_space = {
             matched = true;
           }
           if (matched && responseText) {
-            const args = {
+            const funcArgs = {
+              method,
               originalResponse: JSON.parse(this.responseText)
             };
-            const overrideText = getOverrideText(responseText, args);
+            const overrideText = getOverrideText(responseText, funcArgs);
             this.responseText = overrideText;
             this.response = overrideText;
             if (ajax_tools_space.ajaxToolsSwitchOnNot200) { // 非200请求如404，改写status
@@ -156,10 +157,11 @@ const ajax_tools_space = {
           }
           if (matched && responseText) {
             const originalResponse = await getOriginalResponse(response.body);
-            const args = {
-              originalResponse: originalResponse
+            const funcArgs = {
+              method,
+              originalResponse
             };
-            overrideText = getOverrideText(responseText, args);
+            overrideText = getOverrideText(responseText, funcArgs);
             // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
             console.groupCollapsed(`%c Fetch匹配路径/规则：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
             console.info(`%c接口路径：`, 'background-color: #ff8040; color: white;', response.url);

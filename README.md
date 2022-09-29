@@ -48,5 +48,14 @@ return {
 }
 ```
 
+**支持通过arguments拿到原始接口信息**
+
+示例：
+```js
+let { method, originalResponse } = arguments[0];
+// do something
+return originalResponse;
+```
+
 ## License
 MIT License.
