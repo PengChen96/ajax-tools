@@ -8,8 +8,9 @@
 **主要功能：**   
 - [x] 支持XMLHttpRequest、fetch  
 - [x] 支持正则表达式、HTTP请求方法匹配  
-- [x] 支持返回结果Json、JavaScript方式编辑（内置mock.js）  
-- [x] 支持拦截404请求  
+- [x] 支持拦截404请求，修改响应结果 
+- [x] 支持返回结果Json、JavaScript方式编辑（内置mock.js） 
+- [x] 支持JavaScript方式时通过arguments拿到原始接口信息，简单编程增加mock场景  
 
 ## 安装
 谷歌商店：https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm  
@@ -48,7 +49,7 @@ return {
 }
 ```
 
-**支持通过arguments拿到原始接口信息**
+**支持通过arguments拿到原始接口信息，可以简单编程增加mock场景**
 ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25494da9e62d4e34ba66fce28987124a~tplv-k3u1fbpfcp-watermark.image?)  
 示例：
 ```js
