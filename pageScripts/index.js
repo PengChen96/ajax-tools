@@ -1,41 +1,37 @@
-/*
- * 字符串 转 正则表达式
- * "/^t.*$/" or "^t.*$" => new RegExp
- */
-const strToRegExp = (regStr) => {
-  let regexp = '';
-  const regParts = regStr.match(new RegExp('^/(.*?)/([gims]*)$'));
-  if (regParts) {
-    regexp = new RegExp(regParts[1], regParts[2]);
-  } else {
-    regexp = new RegExp(regStr);
-  }
-  return regexp;
-};
-
-const getOverrideText = (responseText, args) => {
-  let overrideText = responseText;
-  try {
-    const data = JSON.parse(responseText);
-    if (typeof data === 'object') {
-      overrideText = responseText;
-    }
-  } catch (e) {
-    // const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-    // const returnText = await (new AsyncFunction(responseText))();
-    const returnText = (new Function(responseText))(args);
-    if (returnText) {
-      overrideText = typeof returnText === 'object' ? JSON.stringify(returnText) : returnText;
-    }
-  }
-  return overrideText;
-}
 
 const ajax_tools_space = {
   ajaxToolsSwitchOn: true,
   ajaxToolsSwitchOnNot200: true,
   ajaxDataList: [],
   originalXHR: window.XMLHttpRequest,
+  // "/^t.*$/" or "^t.*$" => new RegExp
+  strToRegExp: (regStr) => {
+    let regexp = '';
+    const regParts = regStr.match(new RegExp('^/(.*?)/([gims]*)$'));
+    if (regParts) {
+      regexp = new RegExp(regParts[1], regParts[2]);
+    } else {
+      regexp = new RegExp(regStr);
+    }
+    return regexp;
+  },
+  getOverrideText: (responseText, args) => {
+    let overrideText = responseText;
+    try {
+      const data = JSON.parse(responseText);
+      if (typeof data === 'object') {
+        overrideText = responseText;
+      }
+    } catch (e) {
+      // const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+      // const returnText = await (new AsyncFunction(responseText))();
+      const returnText = (new Function(responseText))(args);
+      if (returnText) {
+        overrideText = typeof returnText === 'object' ? JSON.stringify(returnText) : returnText;
+      }
+    }
+    return overrideText;
+  },
   getRequestParams: (requestUrl) => {
     if (!requestUrl) {
       return null;
@@ -66,7 +62,7 @@ const ajax_tools_space = {
           let matched = false;
           if (matchType === 'normal' && request && this.responseURL.includes(request)) {
             matched = true;
-          } else if (matchType === 'regex' && request && this.responseURL.match(strToRegExp(request))) {
+          } else if (matchType === 'regex' && request && this.responseURL.match(ajax_tools_space.strToRegExp(request))) {
             matched = true;
           }
           if (matched && responseText) {
@@ -78,7 +74,7 @@ const ajax_tools_space = {
               },
               originalResponse: JSON.parse(this.responseText)
             };
-            const overrideText = getOverrideText(responseText, funcArgs);
+            const overrideText = ajax_tools_space.getOverrideText(responseText, funcArgs);
             this.responseText = overrideText;
             this.response = overrideText;
             if (ajax_tools_space.ajaxToolsSwitchOnNot200) { // 非200请求如404，改写status
@@ -179,7 +175,7 @@ const ajax_tools_space = {
           let matched = false;
           if (matchType === 'normal' && request && response.url.includes(request)) {
             matched = true;
-          } else if (matchType === 'regex' && request && response.url.match(strToRegExp(request))) {
+          } else if (matchType === 'regex' && request && response.url.match(ajax_tools_space.strToRegExp(request))) {
             matched = true;
           }
           if (matched && responseText) {
@@ -194,7 +190,7 @@ const ajax_tools_space = {
               },
               originalResponse
             };
-            overrideText = getOverrideText(responseText, funcArgs);
+            overrideText = ajax_tools_space.getOverrideText(responseText, funcArgs);
             // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
             console.groupCollapsed(`%c Fetch匹配路径/规则：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
             console.info(`%c接口路径：`, 'background-color: #ff8040; color: white;', response.url);
