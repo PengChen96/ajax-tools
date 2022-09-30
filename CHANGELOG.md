@@ -1,6 +1,6 @@
 
 ## 0.0.3
-1、支持JavaScript方式时，能通过arguments拿到原始接口信息（比如method、originalResponse）
+1、支持JavaScript方式时，能通过arguments拿到原始接口信息（比如method、payload、originalResponse）
 
 ## 0.0.2
 1、支持匹配HTTP请求方法（GET、POST、PUT、DELETE、HEAD、OPTIONS、CONNECT、TRACE、PATCH）

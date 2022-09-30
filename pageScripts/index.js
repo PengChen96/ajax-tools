@@ -36,13 +36,30 @@ const ajax_tools_space = {
   ajaxToolsSwitchOnNot200: true,
   ajaxDataList: [],
   originalXHR: window.XMLHttpRequest,
+  getRequestParams: (requestUrl) => {
+    if (!requestUrl) {
+      return null;
+    }
+    const paramStr = requestUrl.split('?').pop();
+    const keyValueArr = paramStr.split('&');
+    let keyValueObj = {};
+    keyValueArr.forEach((item) => {
+      // 保证中间不会把=给忽略掉
+      const itemArr = item.replace('=', '〓').split('〓');
+      const itemObj = {[itemArr[0]]: itemArr[1]};
+      keyValueObj = Object.assign(keyValueObj, itemObj);
+    });
+    return keyValueObj;
+  },
   myXHR: function () {
     const modifyResponse = () => {
       const interfaceList = [];
       ajax_tools_space.ajaxDataList.forEach((item) => {
         interfaceList.push(...(item.interfaceList || []));
       });
-      const method = this._openArgs[0];
+      const [method, requestUrl] = this._openArgs;
+      const queryStringParameters = ajax_tools_space.getRequestParams(requestUrl);
+      const [requestPayload] = this._sendArgs;
       interfaceList.forEach(({open = true, matchType = 'normal', matchMethod, request, responseText}) => {
         const matchedMethod = !matchMethod || matchMethod === method.toUpperCase();
         if (open && matchedMethod) {
@@ -55,6 +72,10 @@ const ajax_tools_space = {
           if (matched && responseText) {
             const funcArgs = {
               method,
+              payload: {
+                queryStringParameters,
+                requestPayload
+              },
               originalResponse: JSON.parse(this.responseText)
             };
             const overrideText = getOverrideText(responseText, funcArgs);
@@ -97,6 +118,12 @@ const ajax_tools_space = {
         this.open = (...args) => {
           this._openArgs = args;
           xhr.open && xhr.open.apply(xhr, args);
+        }
+        continue;
+      } else if (attr === 'send') {
+        this.send = (...args) => {
+          this._sendArgs = args;
+          xhr.send && xhr.send.apply(xhr, args);
         }
         continue;
       }
@@ -156,9 +183,15 @@ const ajax_tools_space = {
             matched = true;
           }
           if (matched && responseText) {
+            const queryStringParameters = ajax_tools_space.getRequestParams(response.url);
+            const [_, data] = args;
             const originalResponse = await getOriginalResponse(response.body);
             const funcArgs = {
               method,
+              payload: {
+                queryStringParameters,
+                requestPayload: data.body
+              },
               originalResponse
             };
             overrideText = getOverrideText(responseText, funcArgs);

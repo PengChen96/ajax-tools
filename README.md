@@ -52,8 +52,13 @@ return {
 ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25494da9e62d4e34ba66fce28987124a~tplv-k3u1fbpfcp-watermark.image?)  
 示例：
 ```js
-let { method, originalResponse } = arguments[0];
-// do something
+let { method, payload, originalResponse } = arguments[0];
+if (method === 'get') { // 请求方式
+  // do something
+}
+if (payload) { // 入参 { queryStringParameters，requestPayload }
+  // do something
+}
 return originalResponse;
 ```
 
