@@ -72,7 +72,7 @@ const ajax_tools_space = {
                 queryStringParameters,
                 requestPayload
               },
-              originalResponse: JSON.parse(this.responseText)
+              originalResponse: this.responseText
             };
             const overrideText = ajax_tools_space.getOverrideText(responseText, funcArgs);
             this.responseText = overrideText;
@@ -152,7 +152,7 @@ const ajax_tools_space = {
       const reader = stream.getReader();
       const processData = (result) => {
         if (result.done) {
-          return JSON.parse(text);
+          return text;
         }
         const value = result.value; // Uint8Array
         text += decoder.decode(value, {stream: true});
