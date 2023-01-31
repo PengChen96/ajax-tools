@@ -36,6 +36,7 @@
       "all_frames": true
     }
   ],
+  "devtools_page": "devtoolsPage/index.html",
   "web_accessible_resources": [
     {
       "resources": [
