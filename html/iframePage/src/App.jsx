@@ -51,6 +51,14 @@ function App() {
         setAjaxToolsSwitchOnNot200(ajaxToolsSwitchOnNot200);
         setAjaxToolsSkin(ajaxToolsSkin);
       });
+      // 在uNetWork面板中可以添加拦截数据更新页面
+      chrome.storage.onChanged.addListener(function (changes, namespace) {
+        for (let [key, {oldValue, newValue}] of Object.entries(changes)) {
+          if (key === 'ajaxDataList') {
+            setAjaxDataList(newValue);
+          }
+        }
+      });
     }
   }, []);
 
@@ -71,7 +79,6 @@ function App() {
             {type: 'iframeToggle', iframeVisible},
             function (response) {
               console.log('【App.jsx】【ajax-tools-iframe-show】返回消息content->popup', response);
-              // iframeVisible = response.nextIframeVisible;
               chrome.storage.local.set({iframeVisible: response.nextIframeVisible});
             }
           );
@@ -106,24 +113,25 @@ function App() {
       headerClass: colorMap[len % 9],
       interfaceList: [{...defaultInterface}]
     }];
-    setAjaxDataList([...newAjaxDataList]);
+    // setAjaxDataList([...newAjaxDataList]); // 通过storage.onChange去触发更新
     chrome.storage.local.set({ajaxDataList: newAjaxDataList});
   }
   const onGroupDelete = (index) => {
     const newAjaxDataList = ajaxDataList.filter((_, i) => i !== index);
-    setAjaxDataList([...newAjaxDataList]);
+    // setAjaxDataList([...newAjaxDataList]);
     chrome.storage.local.set({ajaxDataList: newAjaxDataList});
   }
   const onGroupSummaryTextChange = (e, index) => {
     ajaxDataList[index].summaryText = e.target.value;
-    setAjaxDataList([...ajaxDataList]);
+    // setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ajaxDataList});
   }
 
   // 收缩分组
   const onCollapseChange = (index, keys) => {
     ajaxDataList[index].collapseActiveKeys = keys;
-    setAjaxDataList([...ajaxDataList]);
+    // setAjaxDataList([...ajaxDataList]);
+    chrome.storage.local.set({ajaxDataList});
   };
 
   // interfaceList值变化
@@ -138,10 +146,8 @@ function App() {
       }
     }
     ajaxDataList[index1].interfaceList[index2][key] = value;
-    setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ajaxDataList}, function () {
-      // console.log(`${key}: ${value}`);
-    });
+    // setAjaxDataList([...ajaxDataList]);
+    chrome.storage.local.set({ajaxDataList});
   }
   const onInterfaceListAdd = (index1) => {
     const length = ajaxDataList[index1].interfaceList.length;
@@ -152,7 +158,7 @@ function App() {
   const onInterfaceListDelete = (index1, index2) => {
     ajaxDataList[index1].collapseActiveKeys = ajaxDataList[index1].collapseActiveKeys.filter((_, i) => i !== index2 + 1);
     ajaxDataList[index1].interfaceList = ajaxDataList[index1].interfaceList.filter((_, i) => i !== index2);
-    setAjaxDataList([...ajaxDataList]);
+    // setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ajaxDataList});
   }
 

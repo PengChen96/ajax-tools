@@ -1296,10 +1296,10 @@ update-browserslist-db@^1.0.0:
     escalade "^3.1.1"
     picocolors "^1.0.0"
 
-virtualized-table@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.npmjs.org/virtualized-table/-/virtualized-table-0.2.5.tgz#ea5808231aeefc74b75a057e2e1a239b9088fbc9"
-  integrity sha512-GKCzvByhQ6KYxblxikjZS3VMDsFQUuRgdkenitZkWKtdRQ+3BK+yvE0bylkplQmbdtLXsJTDDoO9uUDKcWks8Q==
+virtualized-table@^0.2.10:
+  version "0.2.10"
+  resolved "https://registry.npmjs.org/virtualized-table/-/virtualized-table-0.2.10.tgz#30d9e1b448a48f46570cac60c428e4724d10c7bb"
+  integrity sha512-vEfTChM2srEnyigHcBi3oX6yb/XlmtwepLD5ga7o/jG8H456BbWxziDUTQjJyXRtImzsC0pBf2QCK8pwpmk2JA==
   dependencies:
     prop-types "^15.7.2"
 
