@@ -17,6 +17,7 @@ const colorMap = [
 
 function App() {
   const defaultInterface = {
+    key: '1',
     open: true,
     matchType: 'normal', // normal regex
     matchMethod: '', // GET、POST、PUT、DELETE、HEAD、OPTIONS、CONNECT、TRACE、PATCH
@@ -150,23 +151,26 @@ function App() {
     chrome.storage.local.set({ajaxDataList});
   }
   const onInterfaceListAdd = (index1) => {
-    const length = ajaxDataList[index1].interfaceList.length;
-    ajaxDataList[index1].collapseActiveKeys.push(String(length + 1));
-    ajaxDataList[index1].interfaceList.push({...defaultInterface});
-    setAjaxDataList([...ajaxDataList]);
+    const key = String(Date.now());
+    ajaxDataList[index1].collapseActiveKeys.push(key);
+    const interfaceItem = {...defaultInterface};
+    interfaceItem.key = key;
+    ajaxDataList[index1].interfaceList.push(interfaceItem);
+    // setAjaxDataList([...ajaxDataList]);
+    chrome.storage.local.set({ajaxDataList});
   }
-  const onInterfaceListDelete = (index1, index2) => {
-    ajaxDataList[index1].collapseActiveKeys = ajaxDataList[index1].collapseActiveKeys.filter((_, i) => i !== index2 + 1);
-    ajaxDataList[index1].interfaceList = ajaxDataList[index1].interfaceList.filter((_, i) => i !== index2);
+  const onInterfaceListDelete = (groupIndex, key) => {
+    ajaxDataList[groupIndex].collapseActiveKeys = ajaxDataList[groupIndex].collapseActiveKeys.filter((activeKey) => activeKey !== key);
+    ajaxDataList[groupIndex].interfaceList = ajaxDataList[groupIndex].interfaceList.filter((v) => v.key !== key);
     // setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ajaxDataList});
   }
 
-  const genExtra = (index, v, i) => (
+  const genExtra = (groupIndex, v, i) => (
     <div onClick={(event) => event.stopPropagation()}>
       <Switch
         checked={v.open}
-        onChange={(value) => onInterfaceListChange(index, i, 'open', value)}
+        onChange={(value) => onInterfaceListChange(groupIndex, i, 'open', value)}
         size="small"
         style={{margin: "0 4px"}}
       />
@@ -176,7 +180,7 @@ function App() {
         shape="circle"
         icon={<MinusOutlined/>}
         title="删除接口"
-        onClick={() => onInterfaceListDelete(index, i)}
+        onClick={() => onInterfaceListDelete(groupIndex, v.key)}
         style={{minWidth: 16, width: 16, height: 16}}
       />
     </div>
@@ -284,7 +288,7 @@ function App() {
                 {
                   interfaceList.map((v, i) => {
                     return <Panel
-                      key={String(i + 1)}
+                      key={v.key}
                       header={
                         <div onClick={e => e.stopPropagation()}>
                           <div style={{

@@ -183,9 +183,10 @@ export default () => {
     }
   }
   const addInterceptor = ({ajaxDataList, groupIndex = 0, request, responseText}) => {
-    const length = ajaxDataList[groupIndex].interfaceList.length;
-    ajaxDataList[groupIndex].collapseActiveKeys.push(String(length + 1));
+    const key = String(Date.now());
+    ajaxDataList[groupIndex].collapseActiveKeys.push(key);
     const interfaceObj = {
+      key,
       open: true,
       matchType: 'normal', // normal regex
       matchMethod: '', // GET、POST、PUT、DELETE、HEAD、OPTIONS、CONNECT、TRACE、PATCH
