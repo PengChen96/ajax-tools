@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {VTablePro} from 'virtualized-table';
-import {Modal, Radio, Space} from 'antd';
-import {FilterOutlined} from '@ant-design/icons';
+import {Button, Modal, Radio, Space} from 'antd';
+import {FilterOutlined, PauseCircleFilled, PlayCircleTwoTone, StopOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './app.css';
 
@@ -63,7 +63,7 @@ const getColumns = ({onAddInterceptorClick}) => {
       render: (value, record) => {
         return <>
           <FilterOutlined
-            title="添加拦截请求"
+            title="Add requests to be intercepted"
             onClick={() => onAddInterceptorClick(record)}
           />
         </>
@@ -159,7 +159,7 @@ export default () => {
     }
     let _groupIndex = 0;
     Modal.confirm({
-      title: '添加到哪个分组',
+      title: 'Which group to add to',
       content: <SelectGroupContent onChange={(value) => _groupIndex = value}/>,
       onOk: () => resolve(_groupIndex),
     });
@@ -205,9 +205,26 @@ export default () => {
   }
 
   return <div>
-    <button onClick={() => setRecording(!recording)}>{recording ? '记录中' : '记录'}</button>
-    <button onClick={() => console.log(uNetwork)}>打印</button>
-    <button onClick={() => setUNetwork([])}>清空</button>
+    <div className="ajax-tools-devtools-action-bar">
+      <Button
+        type="text"
+        shape="circle"
+        // size="small"
+        danger={recording}
+        title={recording ? 'Stop recording network log' : 'Record network log'}
+        icon={recording ? <PauseCircleFilled style={{fontSize: 16}}/> : <PlayCircleTwoTone/>}
+        onClick={() => setRecording(!recording)}
+      />
+      <Button
+        type="text"
+        shape="circle"
+        size="small"
+        title="Clear"
+        icon={<StopOutlined/>}
+        onClick={() => setUNetwork([])}
+      />
+      {/*<button onClick={() => console.log(uNetwork)}>打印</button>*/}
+    </div>
     <VTablePro
       bordered
       headerNotSticky
@@ -216,6 +233,12 @@ export default () => {
       visibleHeight={window.innerHeight - 50}
       rowHeight={24}
       estimatedRowHeight={24}
+      locale={{
+        emptyText: <div style={{textAlign: 'center'}}>
+          <p>Recording network activity... </p>
+          <p>Click Record, and then Perform a request or hit <strong>⌘ R</strong> to record the load.</p>
+        </div>
+      }}
     />
   </div>;
 }

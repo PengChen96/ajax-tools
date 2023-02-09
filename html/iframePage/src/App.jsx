@@ -189,7 +189,6 @@ function App() {
     </div>
   );
 
-  console.log('update');
   const inIframe = top.location !== self.location;
   return (
     <div
