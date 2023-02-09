@@ -102,6 +102,7 @@ const ajax_tools_space = {
           }
           this.onreadystatechange && this.onreadystatechange.apply(this, args);
         }
+        this.onreadystatechange = null;
         continue;
       } else if (attr === 'onload') {
         // xhr.onload = (...args) => {
@@ -109,6 +110,7 @@ const ajax_tools_space = {
         //   modifyResponse();
         //   this.onload && this.onload.apply(this, args);
         // }
+        // this.onload = null;
         // continue;
       } else if (attr === 'open') {
         this.open = (...args) => {
@@ -243,19 +245,13 @@ window.addEventListener("message", function (event) {
   if (data.type === 'ajaxTools' && data.to === 'pageScript') {
     console.log('【pageScripts/index.js】', data);
     ajax_tools_space[data.key] = data.value;
-    //
-    if (
-      data.key === 'ajaxToolsSwitchOn'
-      || data.key === 'ajaxToolsSwitchOnNot200'
-    ) {
-      if (ajax_tools_space.ajaxToolsSwitchOn) {
-        window.XMLHttpRequest = ajax_tools_space.myXHR;
-        window.fetch = ajax_tools_space.myFetch;
-      } else {
-        window.XMLHttpRequest = ajax_tools_space.originalXHR;
-        window.fetch = ajax_tools_space.originalFetch;
-      }
-    }
+  }
+  if (ajax_tools_space.ajaxToolsSwitchOn) {
+    window.XMLHttpRequest = ajax_tools_space.myXHR;
+    window.fetch = ajax_tools_space.myFetch;
+  } else {
+    window.XMLHttpRequest = ajax_tools_space.originalXHR;
+    window.fetch = ajax_tools_space.originalFetch;
   }
 
 }, false);
