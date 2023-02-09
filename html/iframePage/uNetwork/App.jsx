@@ -196,7 +196,12 @@ export default () => {
       language: 'json', // json javascript
     }
     ajaxDataList[groupIndex].interfaceList.push(interfaceObj);
-    chrome.storage.local.set({ajaxDataList});
+    // 发送给iframe(src/App.jsx)侧边页面，更新ajaxDataList
+    chrome.runtime.sendMessage(chrome.runtime.id, {
+      type: 'ajaxTools_updatePage',
+      to: 'mainSettingSidePage',
+      ajaxDataList
+    });
   }
 
   return <div>
