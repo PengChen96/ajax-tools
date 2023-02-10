@@ -1,0 +1,9 @@
+.ajax-tools-devtools-text {
+  font-size: 12px;
+  word-break: break-all;
+  padding: 0 12px;
+}
+
+.ajax-tools-devtools-text:hover {
+  background: #ebf5ff;
+}

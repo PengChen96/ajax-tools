@@ -4,3 +4,8 @@
   background: #f4f6f9;
   border-bottom: 1px solid #d1d3d8;
 }
+
+.ajax-tools-devtools-text-btn:hover {
+  color: #2C85D9;
+  cursor: pointer;
+}

@@ -1,11 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {VTablePro} from 'virtualized-table';
-import {Button, Modal, Radio, Space} from 'antd';
+import {Button, Input, Modal, Radio, Space} from 'antd';
 import {FilterOutlined, PauseCircleFilled, PlayCircleTwoTone, StopOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css';
-import './app.css';
+import './App.css';
+import RequestDrawer from "./RequestDrawer";
 
-const getColumns = ({onAddInterceptorClick}) => {
+const getColumns = ({
+                      onAddInterceptorClick,
+                      onRequestUrlClick
+                    }) => {
   return [
     {
       title: 'Index',
@@ -19,9 +23,14 @@ const getColumns = ({onAddInterceptorClick}) => {
       dataIndex: 'name',
       width: 200,
       ellipsis: true,
+      style: {padding: '0 4px'},
       render: (value, record) => {
         let name = record.request.url.match('[^/]+(?!.*/)');
-        return <span title={record.request.url}>
+        return <span
+          className="ajax-tools-devtools-text-btn"
+          title={record.request.url}
+          onClick={() => onRequestUrlClick(record)}
+        >
           {name && name[0]}
         </span>
       }
@@ -63,6 +72,7 @@ const getColumns = ({onAddInterceptorClick}) => {
       render: (value, record) => {
         return <>
           <FilterOutlined
+            className="ajax-tools-devtools-text-btn"
             title="Add requests to be intercepted"
             onClick={() => onAddInterceptorClick(record)}
           />
@@ -73,9 +83,12 @@ const getColumns = ({onAddInterceptorClick}) => {
 };
 
 export default () => {
+  const requestFinishedRef = useRef(null);
   const [recording, setRecording] = useState(false);
   const [uNetwork, setUNetwork] = useState([]);
-  const requestFinishedRef = useRef(null);
+  const [filterKey, setFilterKey] = useState('');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [currRecord, setCurrRecord] = useState(null);
 
   const setUNetworkData = function (request) {
     if (['fetch', 'xhr'].includes(request._resourceType)) {
@@ -203,7 +216,14 @@ export default () => {
       ajaxDataList
     });
   }
-
+  const onRequestUrlClick = (record) => {
+    setCurrRecord(record);
+    setDrawerOpen(true);
+  }
+  const columns = getColumns({
+    onAddInterceptorClick,
+    onRequestUrlClick,
+  });
   return <div>
     <div className="ajax-tools-devtools-action-bar">
       <Button
@@ -212,24 +232,30 @@ export default () => {
         // size="small"
         danger={recording}
         title={recording ? 'Stop recording network log' : 'Record network log'}
-        icon={recording ? <PauseCircleFilled style={{fontSize: 16}}/> : <PlayCircleTwoTone/>}
+        icon={recording ? <PauseCircleFilled/> : <PlayCircleTwoTone/>}
         onClick={() => setRecording(!recording)}
       />
       <Button
         type="text"
         shape="circle"
-        size="small"
+        // size="small"
         title="Clear"
         icon={<StopOutlined/>}
         onClick={() => setUNetwork([])}
+      />
+      <Input
+        placeholder="Filter"
+        size="small"
+        style={{width: 160, marginLeft: 16}}
+        onChange={(e) => setFilterKey(e.target.value)}
       />
       {/*<button onClick={() => console.log(uNetwork)}>打印</button>*/}
     </div>
     <VTablePro
       bordered
       headerNotSticky
-      columns={getColumns({onAddInterceptorClick})}
-      dataSource={uNetwork}
+      columns={columns}
+      dataSource={uNetwork.filter((v) => v.request.url.includes(filterKey))}
       visibleHeight={window.innerHeight - 50}
       rowHeight={24}
       estimatedRowHeight={24}
@@ -239,6 +265,11 @@ export default () => {
           <p>Click Record, and then Perform a request or hit <strong>⌘ R</strong> to record the load.</p>
         </div>
       }}
+    />
+    <RequestDrawer
+      record={currRecord}
+      drawerOpen={drawerOpen}
+      onClose={() => setDrawerOpen(false)}
     />
   </div>;
 }
