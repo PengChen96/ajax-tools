@@ -16,7 +16,7 @@ export default (props) => {
     width="80%"
     placement="right"
     mask={false}
-    headerStyle={{padding: '8px 12px', fontSize: '14px'}}
+    headerStyle={{padding: '8px 12px', fontSize: '14px', wordBreak: 'break-all'}}
     bodyStyle={{padding: '12px 24px'}}
   >
     <h4><strong>General</strong></h4>

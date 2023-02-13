@@ -229,7 +229,6 @@ export default () => {
       <Button
         type="text"
         shape="circle"
-        // size="small"
         danger={recording}
         title={recording ? 'Stop recording network log' : 'Record network log'}
         icon={recording ? <PauseCircleFilled/> : <PlayCircleTwoTone/>}
@@ -238,7 +237,6 @@ export default () => {
       <Button
         type="text"
         shape="circle"
-        // size="small"
         title="Clear"
         icon={<StopOutlined/>}
         onClick={() => setUNetwork([])}
@@ -249,13 +247,12 @@ export default () => {
         style={{width: 160, marginLeft: 16}}
         onChange={(e) => setFilterKey(e.target.value)}
       />
-      {/*<button onClick={() => console.log(uNetwork)}>打印</button>*/}
     </div>
     <VTablePro
       bordered
       headerNotSticky
       columns={columns}
-      dataSource={uNetwork.filter((v) => v.request.url.includes(filterKey))}
+      dataSource={uNetwork.filter((v) => v.request.url.toLocaleLowerCase().includes(filterKey.toLocaleLowerCase()))}
       visibleHeight={window.innerHeight - 50}
       rowHeight={24}
       estimatedRowHeight={24}
