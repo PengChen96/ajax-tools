@@ -1,5 +1,5 @@
 import {Divider, Drawer, Input, Tabs} from "antd";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "./RequestDrawer.css";
 
 const {TextArea} = Input;
@@ -64,18 +64,17 @@ export default (props) => {
       }
     </>
   }
+  const formatText = (value) => {
+    let text = '';
+    try {
+      text = JSON.stringify(JSON.parse(value), null, 4);
+    } catch (e) {
+      text = value;
+    }
+    return text;
+  }
   const Payload = () => {
     const postData = record.request.postData || {};
-    const getPostDataText = (value) => {
-      let text = value;
-      try {
-        text = JSON.stringify(JSON.parse(value), null, 4);
-      } catch (e) {
-        text = value;
-      }
-      return text;
-    }
-
     return <>
       <h4><strong>Query String Parameters</strong></h4>
       {
@@ -92,19 +91,17 @@ export default (props) => {
         <strong>mimeType:&nbsp;</strong>
         <span>{postData.mimeType}</span>
       </div>
-      <div className="ajax-tools-devtools-text">
-        <strong>text:&nbsp;</strong>
+      <div className="ajax-tools-devtools-text" style={{display: 'flex'}}>
+        <strong style={{flex: "none"}}>text:&nbsp;</strong>
         <TextArea
-          value={getPostDataText(postData.text)}
+          value={formatText(postData.text)}
           bordered={false}
-          placeholder="response text"
           autoSize={{
-            minRows: 3,
-            maxRows: 5,
+            minRows: 1,
+            // maxRows: 10,
           }}
         />
       </div>
-
       {
         postData.params && <div className="ajax-tools-devtools-text">
           <strong>Params:&nbsp;</strong>
@@ -119,6 +116,26 @@ export default (props) => {
         </div>
       }
     </>
+  }
+  const Response = () => {
+    const [response, setResponse] = useState('');
+    useEffect(() => {
+      if (drawerOpen) {
+        record.getContent((content) => {
+          setResponse(content);
+        })
+      }
+    }, []);
+    return <>
+      <TextArea
+        value={formatText(response)}
+        bordered={false}
+        autoSize={{
+          minRows: 1,
+          maxRows: Math.floor((window.innerHeight - 180) / 22),
+        }}
+      />
+    </>;
   }
 
   const Wrapper = (props) => {
@@ -156,7 +173,7 @@ export default (props) => {
         {
           label: `Response`,
           key: '3',
-          children: `Content of Tab Pane 3`,
+          children: <Wrapper><Response/></Wrapper>,
         },
       ]}
     />
