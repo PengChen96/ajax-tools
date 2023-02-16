@@ -1,11 +1,16 @@
 import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
+import {visualizer} from "rollup-plugin-visualizer";
 
 const path = require('path');
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), visualizer({
+    emitFile: false,
+    file: "stats.html", //分析图生成的文件名
+    // open:true
+  })],
   base: './',
   build: {
     // 输出路径

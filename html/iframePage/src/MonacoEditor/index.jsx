@@ -1,11 +1,21 @@
 import React, {useEffect, useImperativeHandle, useRef, useState} from "react";
 import {Select} from "antd";
-import * as monaco from 'monaco-editor';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 // import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 // import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
 // import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+// editor.all中可查看完整的
+import "monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution"; // 代码高亮&提示
+import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution"; // 代码高亮&提示
+import "monaco-editor/esm/vs/language/typescript/monaco.contribution"; // 代码高亮&提示
+import "monaco-editor/esm/vs/language/json/monaco.contribution"; // 代码高亮&提示
+import 'monaco-editor/esm/vs/editor/contrib/contextmenu/browser/contextmenu.js'; // 右键显示菜单
+import 'monaco-editor/esm/vs/editor/contrib/folding/browser/folding.js'; // 折叠
+import 'monaco-editor/esm/vs/editor/contrib/format/browser/formatActions.js'; // 格式化代码
+import 'monaco-editor/esm/vs/editor/contrib/suggest/browser/suggestController.js'; // 代码联想提示
+import 'monaco-editor/esm/vs/editor/contrib/tokenization/browser/tokenization.js'; // 代码联想提示
 
 self.MonacoEnvironment = {
   getWorker: function (workerId, label) {
@@ -13,15 +23,15 @@ self.MonacoEnvironment = {
     switch (label) {
       case 'json':
         return new jsonWorker()
-    //   case 'css':
-    //   case 'scss':
-    //   case 'less':
+      //   case 'css':
+      //   case 'scss':
+      //   case 'less':
     //     return new cssWorker();
     //   case 'html':
     //   case 'handlebars':
     //   case 'razor':
     //     return new htmlWorker();
-    //   case 'typescript':
+      case 'typescript':
       case 'javascript':
         return new tsWorker();
     //   default:
@@ -35,6 +45,7 @@ const MonacoEditor = (props, ref) => {
   useImperativeHandle(ref, () => ({
     editorInstance: editor,
   }));
+  const {languageSelectVisible = true, editorHeight = 400} = props;
   const [editor, setEditor] = useState(null);
   const [language, setLanguage] = useState(props.language || 'json');
   useEffect(() => {
@@ -70,21 +81,23 @@ const MonacoEditor = (props, ref) => {
     }
   }
   return <>
-    <Select
-      value={language}
-      onChange={onLanguageChange}
-      style={{
-        width: 160,
-        marginBottom: 8
-      }}
-    >
-      <Select.Option value="json">json</Select.Option>
-      <Select.Option value="javascript">javascript</Select.Option>
-    </Select>
+    {
+      languageSelectVisible && <Select
+        value={language}
+        onChange={onLanguageChange}
+        style={{
+          width: 160,
+          marginBottom: 8
+        }}
+      >
+        <Select.Option value="json">json</Select.Option>
+        <Select.Option value="javascript">javascript</Select.Option>
+      </Select>
+    }
     <div
       ref={editorRef}
       style={{
-        height: 400
+        height: editorHeight
       }}
     />
   </>
