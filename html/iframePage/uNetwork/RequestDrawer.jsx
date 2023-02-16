@@ -1,10 +1,11 @@
 import {Divider, Drawer, Input, Tabs} from "antd";
 import React, {useEffect, useState} from "react";
+import {FilterOutlined} from '@ant-design/icons';
 import "./RequestDrawer.css";
 
 const {TextArea} = Input;
 export default (props) => {
-  const {drawerOpen, record, onClose} = props;
+  const {drawerOpen, record, onClose, onAddInterceptorClick} = props;
   if (!record) {
     return;
   }
@@ -159,6 +160,13 @@ export default (props) => {
       defaultActiveKey="1"
       size="small"
       // onChange={onChange}
+      tabBarExtraContent={{
+        right: <FilterOutlined
+          className="ajax-tools-devtools-text-btn"
+          title="Add requests to be intercepted"
+          onClick={() => onAddInterceptorClick(record)}
+        />
+      }}
       items={[
         {
           label: `Headers`,

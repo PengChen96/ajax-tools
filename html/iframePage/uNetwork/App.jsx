@@ -138,7 +138,7 @@ export default () => {
         if (ajaxDataList.length > 1) { // 有多个分组，展示勾选分组弹框
           const groupIndex = await showGroupModal({ajaxDataList});
           showSidePage(iframeVisible);
-          addInterceptor({ajaxDataList, groupIndex, request, responseText}); // todo 展示分组弹框
+          addInterceptor({ajaxDataList, groupIndex, request, responseText});
         } else if (ajaxDataList.length === 1) { // 存在一个分组
           showSidePage(iframeVisible);
           addInterceptor({ajaxDataList, request, responseText});
@@ -266,6 +266,7 @@ export default () => {
     <RequestDrawer
       record={currRecord}
       drawerOpen={drawerOpen}
+      onAddInterceptorClick={onAddInterceptorClick}
       onClose={() => setDrawerOpen(false)}
     />
   </div>;
