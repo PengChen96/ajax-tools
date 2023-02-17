@@ -1,7 +1,7 @@
 import React, {useEffect, useImperativeHandle, useRef, useState} from "react";
 import {Select} from "antd";
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-// import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 // import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
 // import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
@@ -19,7 +19,6 @@ import 'monaco-editor/esm/vs/editor/contrib/tokenization/browser/tokenization.js
 
 self.MonacoEnvironment = {
   getWorker: function (workerId, label) {
-    // return new jsonWorker();
     switch (label) {
       case 'json':
         return new jsonWorker()
@@ -34,8 +33,8 @@ self.MonacoEnvironment = {
       case 'typescript':
       case 'javascript':
         return new tsWorker();
-    //   default:
-    //     return new editorWorker();
+      default:
+        return new editorWorker();
     }
   }
 };
