@@ -73,7 +73,7 @@ const getColumns = ({
         return <>
           <FilterOutlined
             className="ajax-tools-devtools-text-btn"
-            title="Add requests to be intercepted"
+            title="Add request to be intercepted"
             onClick={() => onAddInterceptorClick(record)}
           />
         </>
@@ -144,7 +144,7 @@ export default () => {
           addInterceptor({ajaxDataList, request, responseText});
         } else { // 首次，未添加过拦截接口
           const defAjaxDataList = [{
-            summaryText: '分组名称（可编辑）',
+            summaryText: 'Group Name（Editable）',
             collapseActiveKeys: [],
             headerClass: 'ajax-tools-color-volcano',
             interfaceList: []
@@ -166,7 +166,7 @@ export default () => {
         }}
       >
         <Space direction="vertical">
-          {ajaxDataList.map((v, index) => <Radio value={index}>第{index + 1}组：{v.summaryText}</Radio>)}
+          {ajaxDataList.map((v, index) => <Radio value={index}>Group {index + 1}：{v.summaryText}</Radio>)}
         </Space>
       </Radio.Group>
     }
@@ -187,7 +187,7 @@ export default () => {
             tabs[0].id,
             {type: 'iframeToggle', iframeVisible},
             function (response) {
-              console.log('【App.jsx】【ajax-tools-iframe-show】返回消息content->popup', response);
+              console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
               chrome.storage.local.set({iframeVisible: response.nextIframeVisible});
             }
           );

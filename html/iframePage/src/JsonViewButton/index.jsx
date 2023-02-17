@@ -30,13 +30,13 @@ export default (props) => {
     />
     <Modal
       centered
-      title={<span style={{fontSize: 12}}>匹配：{request}</span>}
+      title={<span style={{fontSize: 12}}>Matched URL：{request}</span>}
       width={"98%"}
       visible={visible}
       onOk={handleOk}
       onCancel={() => setVisible(false)}
-      okText="保存"
-      cancelText="取消"
+      okText="Save"
+      cancelText="Cancel"
       bodyStyle={{
         padding: 12
       }}

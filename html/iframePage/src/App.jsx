@@ -32,7 +32,7 @@ function App() {
   const [zoom, setZoom] = useState('out'); // 默认缩小
   const [ajaxDataList, setAjaxDataList] = useState([
     {
-      summaryText: '分组名称（可编辑）',
+      summaryText: 'Group Name (Editable)',
       collapseActiveKeys: ['1'],
       headerClass: 'ajax-tools-color-volcano',
       interfaceList: [
@@ -56,7 +56,7 @@ function App() {
     if (chrome.runtime) {
       // 接收uNetwork/App.jsx发来的数据（在uNetWork面板中可以添加拦截数据更新页面）
       chrome.runtime.onMessage.addListener((request) => {
-        console.log('【src/App.jsx】接收消息uNetwork->src/App.jsx', request);
+        console.log('【src/App.jsx】Receive message: uNetwork->src/App.jsx', request);
         const {type, to, ajaxDataList} = request;
         if (type === 'ajaxTools_updatePage' && to === 'mainSettingSidePage') {
           setAjaxDataList(ajaxDataList);
@@ -82,7 +82,7 @@ function App() {
             tabs[0].id,
             {type: 'iframeToggle', iframeVisible},
             function (response) {
-              console.log('【App.jsx】【ajax-tools-iframe-show】返回消息content->popup', response);
+              console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
               chrome.storage.local.set({iframeVisible: response.nextIframeVisible});
             }
           );
@@ -100,7 +100,7 @@ function App() {
           tabs[0].id,
           {type: 'iframeZoom', iframeZoom: zoom},
           function (response) {
-            console.log('【App.jsx】【ajax-tools-iframe-show】返回消息content->popup', response);
+            console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
             setZoom(zoom === 'out' ? 'in' : 'out');
           }
         );
@@ -112,7 +112,7 @@ function App() {
   const onGroupAdd = () => {
     let len = ajaxDataList.length;
     const newAjaxDataList = [...ajaxDataList, {
-      summaryText: '分组名称（可编辑）',
+      summaryText: 'Group Name (Editable)',
       collapseActiveKeys: [],
       headerClass: colorMap[len % 9],
       interfaceList: [{...defaultInterface}]
@@ -182,7 +182,7 @@ function App() {
         type="primary"
         shape="circle"
         icon={<MinusOutlined/>}
-        title="删除接口"
+        title="Delete Interface"
         onClick={() => onInterfaceListDelete(groupIndex, v.key)}
         style={{minWidth: 16, width: 16, height: 16}}
       />
@@ -202,16 +202,16 @@ function App() {
           {
             inIframe && <>
               <CloseOutlined
-                title="关闭"
+                title="Close"
                 onClick={onCloseClick}
                 style={{marginRight: 12}}
               />
               {
                 zoom === 'out' ? <MinusOutlined
-                  title="缩小"
+                  title="Zoom Out"
                   onClick={onZoomClick}
                 /> : <FullscreenOutlined
-                  title="放大"
+                  title="Zoom In"
                   onClick={onZoomClick}
                 />
               }
@@ -220,8 +220,8 @@ function App() {
         </div>
         <div style={{display: "flex", alignItems: 'center'}}>
           <Switch
-            checkedChildren="黑夜"
-            unCheckedChildren="白天"
+            checkedChildren="Light Mode"
+            unCheckedChildren="Dark Mode"
             checked={ajaxToolsSkin}
             onChange={(value) => {
               setAjaxToolsSkin(value);
@@ -229,14 +229,14 @@ function App() {
             }}
           />
           <CodeOutlined
-            title="打开标签页"
+            title="Open a new tab"
             onClick={openTabs}
             style={{marginLeft: 8}}
           />
         </div>
       </div>
       <div className="ajax-tools-iframe-action">
-        <Button size="small" type="primary" onClick={onGroupAdd}>新增分组</Button>
+        <Button size="small" type="primary" onClick={onGroupAdd}>Add Group</Button>
         <div>
           <Checkbox
             defaultChecked
@@ -247,12 +247,12 @@ function App() {
             }}
             style={{filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)'}}
           >
-            <span title="将404、500等请求状态改成200">非200</span>
+            <span title="Change the request status from 404/500 to 200">Non-200</span>
           </Checkbox>
           <Switch
             defaultChecked
-            checkedChildren="开启"
-            unCheckedChildren="关闭"
+            checkedChildren="Turn on"
+            unCheckedChildren="Turn off"
             checked={ajaxToolsSwitchOn}
             onChange={(value) => {
               setAjaxToolsSwitchOn(value);
@@ -276,7 +276,7 @@ function App() {
                   onChange={(e) => onGroupSummaryTextChange(e, index)}
                 />
                 <CloseOutlined
-                  title="删除分组"
+                  title="Delete group"
                   style={{fontSize: 12}}
                   onClick={() => onGroupDelete(index)}
                 />
@@ -301,7 +301,7 @@ function App() {
                             <Input
                               value={v.request}
                               onChange={(e) => onInterfaceListChange(index, i, 'request', e.target.value)}
-                              placeholder="请输入匹配接口"
+                              placeholder="Please enter the matching interface"
                               size="small"
                               addonBefore={
                                 <Input.Group compact>
@@ -309,8 +309,8 @@ function App() {
                                     value={v.matchType}
                                     onChange={(value) => onInterfaceListChange(index, i, 'matchType', value)}
                                   >
-                                    <Select.Option value="normal">普通匹配</Select.Option>
-                                    <Select.Option value="regex">正则匹配</Select.Option>
+                                    <Select.Option value="normal">Normal Match</Select.Option>
+                                    <Select.Option value="regex">Regex Match</Select.Option>
                                   </Select>
                                   <Select
                                     value={v.matchMethod}
@@ -333,7 +333,7 @@ function App() {
                             <Input
                               value={v.requestDes}
                               onChange={(e) => onInterfaceListChange(index, i, 'requestDes', e.target.value)}
-                              placeholder="备注（可编辑）"
+                              placeholder="Remark（Editable）"
                               size="small"
                               className="ajax-tools-iframe-request-des-input"
                             />
@@ -347,7 +347,7 @@ function App() {
                           rows={4}
                           value={v.responseText}
                           onChange={(e) => onInterfaceListChange(index, i, 'responseText', e.target.value)}
-                          placeholder="response text"
+                          placeholder="Response Text"
                         />
                         <JsonViewButton
                           language={v.language}
@@ -366,7 +366,7 @@ function App() {
                   type="primary"
                   shape="circle"
                   icon={<PlusOutlined/>}
-                  title="新增接口"
+                  title="Add Interface"
                   onClick={() => onInterfaceListAdd(index)}
                 />
               </div>

@@ -81,9 +81,9 @@ const ajax_tools_space = {
               this.status = 200;
             }
             // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
-            console.groupCollapsed(`%c XHR匹配路径/规则：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
-            console.info(`%c接口路径：`, 'background-color: #ff8040; color: white;', this.responseURL);
-            console.info('%c返回出参：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
+            console.groupCollapsed(`%c Matched XHR Path/Rule：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
+            console.info(`%cRequest Url：`, 'background-color: #ff8040; color: white;', this.responseURL);
+            console.info('%cResponse Text：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
             console.groupEnd();
             // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
           }
@@ -194,9 +194,9 @@ const ajax_tools_space = {
             };
             overrideText = ajax_tools_space.getOverrideText(responseText, funcArgs);
             // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
-            console.groupCollapsed(`%c Fetch匹配路径/规则：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
-            console.info(`%c接口路径：`, 'background-color: #ff8040; color: white;', response.url);
-            console.info('%c返回出参：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
+            console.groupCollapsed(`%c Matched Fetch Path/Rule：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
+            console.info(`%cRequest Url：`, 'background-color: #ff8040; color: white;', response.url);
+            console.info('%cResponse Text：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
             console.groupEnd();
             // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
           }
