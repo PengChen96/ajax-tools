@@ -1,3 +1,5 @@
+## 0.0.4
+1、在DevTools中新增U-Network面板，快速实现请求拦截和响应结果修改
 
 ## 0.0.3
 1、支持JavaScript方式时，能通过arguments拿到原始接口信息（比如method、payload、originalResponse）
