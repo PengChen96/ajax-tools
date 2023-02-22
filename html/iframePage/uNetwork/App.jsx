@@ -114,6 +114,15 @@ export default () => {
     }
   }, [uNetwork]);
 
+  const getChromeLocalStorage = (keys) => new Promise((resolve, reject) => {
+    chrome.storage.local.get(keys, (result) => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(result);
+      }
+    });
+  });
   const onAddInterceptorClick = (record) => {
     const requestUrl = record.request.url.split('?')[0];
     const matchUrl = requestUrl.match('(?<=//.*/).+');
@@ -131,29 +140,42 @@ export default () => {
       })
     }
   }
-  const handleAddInterceptor = ({request, responseText}) => {
-    if (chrome.storage) {
-      chrome.storage.local.get(['iframeVisible', 'ajaxDataList'], async (result) => {
-        const {ajaxDataList = [], iframeVisible} = result;
-        if (ajaxDataList.length > 1) { // 有多个分组，展示勾选分组弹框
-          const groupIndex = await showGroupModal({ajaxDataList});
-          showSidePage(iframeVisible);
-          addInterceptor({ajaxDataList, groupIndex, request, responseText});
-        } else if (ajaxDataList.length === 1) { // 存在一个分组
-          showSidePage(iframeVisible);
-          addInterceptor({ajaxDataList, request, responseText});
-        } else { // 首次，未添加过拦截接口
-          const defAjaxDataList = [{
-            summaryText: 'Group Name（Editable）',
-            collapseActiveKeys: [],
-            headerClass: 'ajax-tools-color-volcano',
-            interfaceList: []
-          }];
-          showSidePage(iframeVisible);
-          addInterceptor({ajaxDataList: defAjaxDataList, request, responseText});
+  const handleAddInterceptor = async ({request, responseText}) => {
+    try {
+      const {ajaxDataList = [], iframeVisible} = await getChromeLocalStorage(['iframeVisible', 'ajaxDataList']);
+      const interfaceList = ajaxDataList.flatMap((item) => item.interfaceList || []);
+      const hasIntercepted = interfaceList.some((v) => v.request === request);
+      if (hasIntercepted) {
+        const confirmed = await new Promise((resolve) => {
+          Modal.confirm({
+            title: 'Request Already Intercepted',
+            content: 'This request has already been intercepted. Do you want to add another interceptor?',
+            onOk: () => resolve(true),
+            onCancel: () => resolve(false),
+          });
+        });
+        if (confirmed) {
+          await addInterceptorIfNeeded({ ajaxDataList, iframeVisible, request, responseText });
         }
-      });
+      } else {
+        await addInterceptorIfNeeded({ajaxDataList, iframeVisible, request, responseText})
+      }
+    } catch(error) {
+      console.error(error);
     }
+  }
+  const addInterceptorIfNeeded = async ({ajaxDataList, iframeVisible, request, responseText}) => {
+    if (ajaxDataList.length === 0) { // 首次，未添加过拦截接口
+      ajaxDataList = [{
+        summaryText: 'Group Name（Editable）',
+        collapseActiveKeys: [],
+        headerClass: 'ajax-tools-color-volcano',
+        interfaceList: []
+      }];
+    }
+    const groupIndex = ajaxDataList.length > 1 ? await showGroupModal({ajaxDataList}) : 0;
+    showSidePage(iframeVisible);
+    addInterceptor({ajaxDataList, groupIndex, request, responseText});
   }
   const showGroupModal = ({ajaxDataList}) => new Promise((resolve) => {
     const SelectGroupContent = (props) => {
