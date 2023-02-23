@@ -1,16 +1,19 @@
-import React, {useEffect, useImperativeHandle, useRef, useState} from "react";
-import {Select} from "antd";
+import React, { ForwardedRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { Select } from 'antd';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+// @ts-ignore
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+// @ts-ignore
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+// @ts-ignore
+import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 // import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
 // import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
-import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 // editor.all中可查看完整的
-import "monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution"; // 代码高亮&提示
-import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution"; // 代码高亮&提示
-import "monaco-editor/esm/vs/language/typescript/monaco.contribution"; // 代码高亮&提示
-import "monaco-editor/esm/vs/language/json/monaco.contribution"; // 代码高亮&提示
+import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution'; // 代码高亮&提示
+import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution'; // 代码高亮&提示
+import 'monaco-editor/esm/vs/language/typescript/monaco.contribution'; // 代码高亮&提示
+import 'monaco-editor/esm/vs/language/json/monaco.contribution'; // 代码高亮&提示
 import 'monaco-editor/esm/vs/editor/contrib/contextmenu/browser/contextmenu.js'; // 右键显示菜单
 import 'monaco-editor/esm/vs/editor/contrib/folding/browser/folding.js'; // 折叠
 import 'monaco-editor/esm/vs/editor/contrib/format/browser/formatActions.js'; // 格式化代码
@@ -21,15 +24,15 @@ self.MonacoEnvironment = {
   getWorker: function (workerId, label) {
     switch (label) {
       case 'json':
-        return new jsonWorker()
+        return new jsonWorker();
       //   case 'css':
       //   case 'scss':
       //   case 'less':
-    //     return new cssWorker();
-    //   case 'html':
-    //   case 'handlebars':
-    //   case 'razor':
-    //     return new htmlWorker();
+        //     return new cssWorker();
+        //   case 'html':
+        //   case 'handlebars':
+        //   case 'razor':
+        //     return new htmlWorker();
       case 'typescript':
       case 'javascript':
         return new tsWorker();
@@ -39,17 +42,23 @@ self.MonacoEnvironment = {
   }
 };
 
-const MonacoEditor = (props, ref) => {
-  let editorRef = useRef(null);
+interface MonacoEditorProps {
+  languageSelectVisible?: boolean;
+  editorHeight?: number;
+  language?: string;
+  text?: string;
+}
+const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstance: any }>) => {
+  const editorRef = useRef(null);
   useImperativeHandle(ref, () => ({
     editorInstance: editor,
   }));
-  const {languageSelectVisible = true, editorHeight = 400} = props;
-  const [editor, setEditor] = useState(null);
-  const [language, setLanguage] = useState(props.language || 'json');
+  const { languageSelectVisible = true, editorHeight = 400 } = props;
+  const [editor, setEditor] = useState<any>(null);
+  const [language, setLanguage] = useState<string>(props.language || 'json');
   useEffect(() => {
     if (!editor) {
-      const editor = monaco.editor.create(editorRef.current, {
+      const editor = monaco.editor.create(editorRef.current!, {
         value: '',
         language,
         theme: 'vs-dark',
@@ -73,12 +82,12 @@ const MonacoEditor = (props, ref) => {
     }
   }, [editor, props.text]);
 
-  const onLanguageChange = (_language) => {
+  const onLanguageChange = (_language: string) => {
     if (editor) {
       setLanguage(_language);
       monaco.editor.setModelLanguage(editor.getModel(), _language); // 切换语言
     }
-  }
+  };
   return <>
     {
       languageSelectVisible && <Select
@@ -99,6 +108,6 @@ const MonacoEditor = (props, ref) => {
         height: editorHeight
       }}
     />
-  </>
-}
+  </>;
+};
 export default React.memo(React.forwardRef(MonacoEditor));

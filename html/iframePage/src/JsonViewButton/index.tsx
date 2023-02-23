@@ -1,25 +1,31 @@
-import {Modal} from 'antd';
-import {FormOutlined} from '@ant-design/icons';
-import {useRef, useState} from 'react';
-import MonacoEditor from "../MonacoEditor";
+import { Modal } from 'antd';
+import { FormOutlined } from '@ant-design/icons';
+import React, { useRef, useState } from 'react';
+import MonacoEditor from '../MonacoEditor';
 import './index.css';
 
-export default (props) => {
-  let monacoEditorRef = useRef(null);
+interface JsonViewButtonProps {
+  language: string;
+  request: string;
+  responseText?: string;
+  onInterfaceListChange?: (name: string, value: string) => void;
+}
+export default (props: JsonViewButtonProps) => {
+  const monacoEditorRef = useRef<any>(null);
   const {
-    language, request, responseText = "",
-    onInterfaceListChange = () => {}
+    language, request, responseText = '',
+    onInterfaceListChange = () => {},
   } = props;
   const [visible, setVisible] = useState(false);
 
   const handleOk = () => {
-    const { editorInstance } = monacoEditorRef.current;
+    const { editorInstance } = monacoEditorRef.current!;
     const editorValue = editorInstance.getValue();
     const language = editorInstance.getModel().getLanguageId();
     onInterfaceListChange('responseText', editorValue);
     onInterfaceListChange('language', language);
     setVisible(false);
-  }
+  };
   return <>
     <FormOutlined
       onClick={(event) => {
@@ -30,8 +36,8 @@ export default (props) => {
     />
     <Modal
       centered
-      title={<span style={{fontSize: 12}}>Matched URL：{request}</span>}
-      width={"98%"}
+      title={<span style={{ fontSize: 12 }}>Matched URL：{request}</span>}
+      width={'98%'}
       visible={visible}
       onOk={handleOk}
       onCancel={() => setVisible(false)}
@@ -48,4 +54,4 @@ export default (props) => {
       />
     </Modal>
   </>;
-}
+};

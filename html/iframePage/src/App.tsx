@@ -1,12 +1,14 @@
-import {useEffect, useState} from 'react'
-import {Button, Checkbox, Collapse, Input, Select, Switch} from 'antd';
-import {CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons';
-import JsonViewButton from './JsonViewButton'
-import 'antd/dist/antd.css';
-import './App.css'
 
-const {Panel} = Collapse;
-const {TextArea} = Input;
+import React, { useEffect, useState } from 'react';
+import { Button, Checkbox, Collapse, Input, Select, Switch } from 'antd';
+import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import JsonViewButton from './JsonViewButton';
+import { defaultInterface, defaultAjaxDataList } from '../common/value';
+import 'antd/dist/antd.css';
+import './App.css';
+
+const { Panel } = Collapse;
+const { TextArea } = Input;
 const colorMap = [
   'ajax-tools-color-volcano', 'ajax-tools-color-red',
   'ajax-tools-color-orange', 'ajax-tools-color-gold',
@@ -16,35 +18,16 @@ const colorMap = [
 ];
 
 function App() {
-  const defaultInterface = {
-    key: '1',
-    open: true,
-    matchType: 'normal', // normal regex
-    matchMethod: '', // GET、POST、PUT、DELETE、HEAD、OPTIONS、CONNECT、TRACE、PATCH
-    request: '',
-    requestDes: '',
-    responseText: '',
-    language: 'json', // json javascript
-  };
   const [ajaxToolsSkin, setAjaxToolsSkin] = useState(false);
   const [ajaxToolsSwitchOn, setAjaxToolsSwitchOn] = useState(true); // 默认开启
   const [ajaxToolsSwitchOnNot200, setAjaxToolsSwitchOnNot200] = useState(true); // 默认开启
   const [zoom, setZoom] = useState('out'); // 默认缩小
-  const [ajaxDataList, setAjaxDataList] = useState([
-    {
-      summaryText: 'Group Name (Editable)',
-      collapseActiveKeys: ['1'],
-      headerClass: 'ajax-tools-color-volcano',
-      interfaceList: [
-        { ...defaultInterface },
-      ]
-    },
-  ]);
+  const [ajaxDataList, setAjaxDataList] = useState(defaultAjaxDataList);
 
   useEffect(() => {
     if (chrome.storage) {
       chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxToolsSkin'], (result) => {
-        const {ajaxDataList = [], ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxToolsSkin = false} = result;
+        const { ajaxDataList = [], ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxToolsSkin = false } = result;
         if (ajaxDataList.length > 0) {
           setAjaxDataList(ajaxDataList);
         }
@@ -57,12 +40,12 @@ function App() {
       // 接收uNetwork/App.jsx发来的数据（在uNetWork面板中可以添加拦截数据更新页面）
       chrome.runtime.onMessage.addListener((request) => {
         console.log('【src/App.jsx】Receive message: uNetwork->src/App.jsx', request);
-        const {type, to, ajaxDataList} = request;
+        const { type, to, ajaxDataList } = request;
         if (type === 'ajaxTools_updatePage' && to === 'mainSettingSidePage') {
           setAjaxDataList(ajaxDataList);
-          chrome.storage.local.set({ajaxDataList});
+          chrome.storage.local.set({ ajaxDataList });
         }
-      })
+      });
     }
   }, []);
 
@@ -70,112 +53,122 @@ function App() {
     chrome.tabs.create({
       url: 'html/iframePage/dist/index.html'
     });
-  }
+  };
   // 关闭
   const onCloseClick = () => {
-    chrome.storage.local.get("iframeVisible", ({iframeVisible}) => {
+    chrome.storage.local.get('iframeVisible', ({ iframeVisible }) => {
       chrome.tabs.query(
-        {active: true, currentWindow: true},
+        { active: true, currentWindow: true },
         function (tabs) {
-          // 发送消息到content.js
-          chrome.tabs.sendMessage(
-            tabs[0].id,
-            {type: 'iframeToggle', iframeVisible},
-            function (response) {
-              console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
-              chrome.storage.local.set({iframeVisible: response.nextIframeVisible});
-            }
-          );
+          const tabId = tabs[0]?.id;
+          if (tabId) {
+            // 发送消息到content.js
+            chrome.tabs.sendMessage(
+              tabId,
+              { type: 'iframeToggle', iframeVisible },
+              function (response) {
+                console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
+                chrome.storage.local.set({ iframeVisible: response.nextIframeVisible });
+              }
+            );
+          }
         }
       );
     });
-  }
+  };
   // 放大缩小
   const onZoomClick = () => {
     chrome.tabs.query(
-      {active: true, currentWindow: true},
+      { active: true, currentWindow: true },
       function (tabs) {
+        const tabId = tabs[0]?.id;
         // 发送消息到content.js
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          {type: 'iframeZoom', iframeZoom: zoom},
-          function (response) {
-            console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
-            setZoom(zoom === 'out' ? 'in' : 'out');
-          }
-        );
+        if (tabId != null) {
+          chrome.tabs.sendMessage(
+            tabId,
+            { type: 'iframeZoom', iframeZoom: zoom },
+            function (response) {
+              console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
+              setZoom(zoom === 'out' ? 'in' : 'out');
+            }
+          );
+        }
       }
     );
-  }
+  };
 
   // 新增分组
   const onGroupAdd = () => {
-    let len = ajaxDataList.length;
+    const len = ajaxDataList.length;
     const newAjaxDataList = [...ajaxDataList, {
       summaryText: 'Group Name (Editable)',
       collapseActiveKeys: [],
       headerClass: colorMap[len % 9],
-      interfaceList: [{...defaultInterface}]
+      interfaceList: [{ ...defaultInterface }]
     }];
     setAjaxDataList([...newAjaxDataList]);
-    chrome.storage.local.set({ajaxDataList: newAjaxDataList});
-  }
-  const onGroupDelete = (index) => {
+    chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
+  };
+  const onGroupDelete = (index: number) => {
     const newAjaxDataList = ajaxDataList.filter((_, i) => i !== index);
     setAjaxDataList([...newAjaxDataList]);
-    chrome.storage.local.set({ajaxDataList: newAjaxDataList});
-  }
-  const onGroupSummaryTextChange = (e, index) => {
+    chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
+  };
+  const onGroupSummaryTextChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     ajaxDataList[index].summaryText = e.target.value;
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ajaxDataList});
-  }
+    chrome.storage.local.set({ ajaxDataList });
+  };
 
   // 收缩分组
-  const onCollapseChange = (index, keys) => {
-    ajaxDataList[index].collapseActiveKeys = keys;
+  const onCollapseChange = (index: number, keys: string | string[]) => {
+    ajaxDataList[index].collapseActiveKeys = Array.isArray(keys) ? keys : [keys];
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ajaxDataList});
+    chrome.storage.local.set({ ajaxDataList });
   };
 
   // interfaceList值变化
-  const onInterfaceListChange = (index1, index2, key, value) => {
+  const onInterfaceListChange = (index1: number, index2: number, key: string, value: string | boolean) => {
     if (key === 'responseText') {
       try {
-        const lastValue = ajaxDataList[index1].interfaceList[index2][key];
-        const formattedValue = JSON.stringify(JSON.parse(value), null, 4);
+        const lastValue = ajaxDataList[index1]?.interfaceList?.[index2]?.[key];
+        const formattedValue = JSON.stringify(JSON.parse(value as string), null, 4);
         value = lastValue === formattedValue ? value : formattedValue;
       } catch (e) {
-        value = value;
+        // value = value;
       }
     }
-    ajaxDataList[index1].interfaceList[index2][key] = value;
+    ajaxDataList[index1].interfaceList[index2][key]! = value;
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ajaxDataList});
-  }
-  const onInterfaceListAdd = (index1) => {
+    chrome.storage.local.set({ ajaxDataList });
+  };
+  const onInterfaceListAdd = (index1: number) => {
     const key = String(Date.now());
     ajaxDataList[index1].collapseActiveKeys.push(key);
-    const interfaceItem = {...defaultInterface};
+    const interfaceItem = { ...defaultInterface };
     interfaceItem.key = key;
     ajaxDataList[index1].interfaceList.push(interfaceItem);
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ajaxDataList});
-  }
-  const onInterfaceListDelete = (groupIndex, key) => {
+    chrome.storage.local.set({ ajaxDataList });
+  };
+  const onInterfaceListDelete = (groupIndex: number, key: string) => {
     ajaxDataList[groupIndex].collapseActiveKeys = ajaxDataList[groupIndex].collapseActiveKeys.filter((activeKey) => activeKey !== key);
     ajaxDataList[groupIndex].interfaceList = ajaxDataList[groupIndex].interfaceList.filter((v) => v.key !== key);
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ajaxDataList});
-  }
+    chrome.storage.local.set({ ajaxDataList });
+  };
 
-  const genExtra = (groupIndex, v, i) => (
+  const genExtra = (
+    groupIndex: number,
+    v: { key: any; open: any; matchType?: string; matchMethod?: string; request?: string; requestDes?: string; responseText?: string; language?: string; },
+    i: number
+  ) => (
     <div onClick={(event) => event.stopPropagation()}>
       <Switch
         checked={v.open}
         onChange={(value) => onInterfaceListChange(groupIndex, i, 'open', value)}
         size="small"
-        style={{margin: "0 4px"}}
+        style={{ margin: '0 4px' }}
       />
       <Button
         size="small"
@@ -184,12 +177,12 @@ function App() {
         icon={<MinusOutlined/>}
         title="Delete Interface"
         onClick={() => onInterfaceListDelete(groupIndex, v.key)}
-        style={{minWidth: 16, width: 16, height: 16}}
+        style={{ minWidth: 16, width: 16, height: 16 }}
       />
     </div>
   );
 
-  const inIframe = top.location !== self.location;
+  const inIframe = top?.location !== self.location;
   return (
     <div
       className="ajax-tools-iframe-container"
@@ -204,7 +197,7 @@ function App() {
               <CloseOutlined
                 title="Close"
                 onClick={onCloseClick}
-                style={{marginRight: 12}}
+                style={{ marginRight: 12 }}
               />
               {
                 zoom === 'out' ? <MinusOutlined
@@ -218,20 +211,20 @@ function App() {
             </>
           }
         </div>
-        <div style={{display: "flex", alignItems: 'center'}}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <Switch
             checkedChildren="Light Mode"
             unCheckedChildren="Dark Mode"
             checked={ajaxToolsSkin}
             onChange={(value) => {
               setAjaxToolsSkin(value);
-              chrome.storage.local.set({ajaxToolsSkin: value});
+              chrome.storage.local.set({ ajaxToolsSkin: value });
             }}
           />
           <CodeOutlined
             title="Open a new tab"
             onClick={openTabs}
-            style={{marginLeft: 8}}
+            style={{ marginLeft: 8 }}
           />
         </div>
       </div>
@@ -243,9 +236,9 @@ function App() {
             checked={ajaxToolsSwitchOnNot200}
             onChange={(e) => {
               setAjaxToolsSwitchOnNot200(e.target.checked);
-              chrome.storage.local.set({ajaxToolsSwitchOnNot200: e.target.checked});
+              chrome.storage.local.set({ ajaxToolsSwitchOnNot200: e.target.checked });
             }}
-            style={{filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)'}}
+            style={{ filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)' }}
           >
             <span title="Change the request status from 404/500 to 200">Non-200</span>
           </Checkbox>
@@ -256,18 +249,18 @@ function App() {
             checked={ajaxToolsSwitchOn}
             onChange={(value) => {
               setAjaxToolsSwitchOn(value);
-              chrome.storage.local.set({ajaxToolsSwitchOn: value});
+              chrome.storage.local.set({ ajaxToolsSwitchOn: value });
             }}
           />
         </div>
       </div>
       <div
         className="ajax-tools-iframe-body"
-        style={{filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)'}}
+        style={{ filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)' }}
       >
         {
           ajaxDataList.map((item, index) => {
-            const {summaryText, headerClass, interfaceList = []} = item;
+            const { summaryText, headerClass, interfaceList = [] } = item;
             return <>
               <div className={`ajax-tools-iframe-body-header ${headerClass}`}>
                 <Input
@@ -277,7 +270,7 @@ function App() {
                 />
                 <CloseOutlined
                   title="Delete group"
-                  style={{fontSize: 12}}
+                  style={{ fontSize: 12 }}
                   onClick={() => onGroupDelete(index)}
                 />
               </div>
@@ -286,7 +279,7 @@ function App() {
                 defaultActiveKey={['1']}
                 activeKey={item.collapseActiveKeys}
                 onChange={(keys) => onCollapseChange(index, keys)}
-                style={{borderRadius: 0}}
+                style={{ borderRadius: 0 }}
               >
                 {
                   interfaceList.map((v, i) => {
@@ -295,8 +288,8 @@ function App() {
                       header={
                         <div onClick={e => e.stopPropagation()}>
                           <div style={{
-                            display: "inline-grid",
-                            width: "calc(100vw - 150px)"
+                            display: 'inline-grid',
+                            width: 'calc(100vw - 150px)'
                           }}>
                             <Input
                               value={v.request}
@@ -342,7 +335,7 @@ function App() {
                       }
                       extra={genExtra(index, v, i)}
                     >
-                      <div style={{position: 'relative'}}>
+                      <div style={{ position: 'relative' }}>
                         <TextArea
                           rows={4}
                           value={v.responseText}
@@ -356,7 +349,7 @@ function App() {
                           onInterfaceListChange={(key, value) => onInterfaceListChange(index, i, key, value)}
                         />
                       </div>
-                    </Panel>
+                    </Panel>;
                   })
                 }
               </Collapse>
@@ -370,12 +363,12 @@ function App() {
                   onClick={() => onInterfaceListAdd(index)}
                 />
               </div>
-            </>
+            </>;
           })
         }
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

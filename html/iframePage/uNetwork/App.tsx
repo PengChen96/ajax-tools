@@ -1,38 +1,51 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {VTablePro} from 'virtualized-table';
-import {Button, Input, Modal, Radio, Space} from 'antd';
-import {FilterOutlined, PauseCircleFilled, PlayCircleTwoTone, StopOutlined} from '@ant-design/icons';
+import React, { useEffect, useRef, useState } from 'react';
+// @ts-ignore
+import { VTablePro } from 'virtualized-table';
+import { Button, Input, Modal, Radio, Space } from 'antd';
+import { FilterOutlined, PauseCircleFilled, PlayCircleTwoTone, StopOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './App.css';
-import RequestDrawer from "./RequestDrawer";
+import RequestDrawer from './RequestDrawer';
+import { defaultInterface, AjaxDataListObject, DefaultInterfaceObject } from '../common/value';
+
+interface AddInterceptorParams {
+  ajaxDataList: AjaxDataListObject[],
+  iframeVisible?: boolean,
+  groupIndex?: number,
+  request: string,
+  responseText: string
+}
 
 const getColumns = ({
-                      onAddInterceptorClick,
-                      onRequestUrlClick
-                    }) => {
+  onAddInterceptorClick,
+  onRequestUrlClick
+} : {
+  onAddInterceptorClick: (record: any) => void,
+  onRequestUrlClick: (record: any) => void,
+}) => {
   return [
     {
       title: 'Index',
       dataIndex: 'Index',
       width: 60,
       align: 'center',
-      render: (value, record, index, realIndex) => realIndex + 1,
+      render: (value: any, record: any, index: any, realIndex: number) => realIndex + 1,
     },
     {
       title: 'Name',
       dataIndex: 'name',
       width: 200,
       ellipsis: true,
-      style: {padding: '0 4px'},
-      render: (value, record) => {
-        let name = record.request.url.match('[^/]+(?!.*/)');
+      style: { padding: '0 4px' },
+      render: (value: any, record: { request: { url: string }; }) => {
+        const name = record.request.url.match('[^/]+(?!.*/)');
         return <span
           className="ajax-tools-devtools-text-btn"
           title={record.request.url}
           onClick={() => onRequestUrlClick(record)}
         >
           {name && name[0]}
-        </span>
+        </span>;
       }
     },
     {
@@ -40,21 +53,21 @@ const getColumns = ({
       dataIndex: 'method',
       width: 60,
       align: 'center',
-      render: (value, record) => record.request.method,
+      render: (value: any, record: { request: { method: string }; }) => record.request.method,
     },
     {
       title: 'Status',
       dataIndex: 'status',
       width: 60,
       align: 'center',
-      render: (value, record) => record.response.status,
+      render: (value: any, record: { response: { status: string }; }) => record.response.status,
     },
     {
       title: 'Type',
       dataIndex: 'type',
       width: 60,
       align: 'center',
-      render: (value, record) => record._resourceType,
+      render: (value: any, record: { _resourceType: string; }) => record._resourceType,
     },
     // { title: 'Initiator', dataIndex: 'initiator', width: 100 },
     // {
@@ -69,33 +82,33 @@ const getColumns = ({
       dataIndex: 'action',
       width: 60,
       align: 'center',
-      render: (value, record) => {
+      render: (value: any, record: any) => {
         return <>
           <FilterOutlined
             className="ajax-tools-devtools-text-btn"
             title="Add request to be intercepted"
             onClick={() => onAddInterceptorClick(record)}
           />
-        </>
+        </>;
       }
     }
-  ]
+  ];
 };
 
 export default () => {
-  const requestFinishedRef = useRef(null);
+  const requestFinishedRef = useRef<any>(null);
   const [recording, setRecording] = useState(false);
-  const [uNetwork, setUNetwork] = useState([]);
+  const [uNetwork, setUNetwork] = useState<any>([]);
   const [filterKey, setFilterKey] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [currRecord, setCurrRecord] = useState(null);
 
-  const setUNetworkData = function (request) {
+  const setUNetworkData = function (request:any) {
     if (['fetch', 'xhr'].includes(request._resourceType)) {
       uNetwork.push(request);
       setUNetwork([...uNetwork]);
     }
-  }
+  };
   useEffect(() => {
     if (chrome.devtools) {
       if (recording) {
@@ -114,7 +127,7 @@ export default () => {
     }
   }, [uNetwork]);
 
-  const getChromeLocalStorage = (keys) => new Promise((resolve, reject) => {
+  const getChromeLocalStorage = (keys: string|string[]) => new Promise((resolve, reject) => {
     chrome.storage.local.get(keys, (result) => {
       if (chrome.runtime.lastError) {
         reject(chrome.runtime.lastError);
@@ -123,28 +136,35 @@ export default () => {
       }
     });
   });
-  const onAddInterceptorClick = (record) => {
+  const onAddInterceptorClick = (
+    record: {
+      request: { url: string; };
+      getContent: (arg0: (content: any) => void) => void;
+    }
+  ) => {
     const requestUrl = record.request.url.split('?')[0];
     const matchUrl = requestUrl.match('(?<=//.*/).+');
     if (record.getContent) {
       record.getContent((content) => {
         handleAddInterceptor({
-          request: matchUrl && matchUrl[0],
+          request: matchUrl && matchUrl[0] || '',
           responseText: content
-        })
-      })
+        });
+      });
     } else {
       handleAddInterceptor({
-        request: matchUrl && matchUrl[0],
+        request: matchUrl && matchUrl[0] || '',
         responseText: ''
-      })
+      });
     }
-  }
-  const handleAddInterceptor = async ({request, responseText}) => {
+  };
+  const handleAddInterceptor = async (
+    { request, responseText }: { request: string, responseText: string }
+  ) => {
     try {
-      const {ajaxDataList = [], iframeVisible} = await getChromeLocalStorage(['iframeVisible', 'ajaxDataList']);
-      const interfaceList = ajaxDataList.flatMap((item) => item.interfaceList || []);
-      const hasIntercepted = interfaceList.some((v) => v.request === request);
+      const { ajaxDataList = [], iframeVisible }: AddInterceptorParams|any = await getChromeLocalStorage(['iframeVisible', 'ajaxDataList']);
+      const interfaceList = ajaxDataList.flatMap((item: { interfaceList: DefaultInterfaceObject[]; }) => item.interfaceList || []);
+      const hasIntercepted = interfaceList.some((v: { request: string | null; }) => v.request === request);
       if (hasIntercepted) {
         const confirmed = await new Promise((resolve) => {
           Modal.confirm({
@@ -158,13 +178,13 @@ export default () => {
           await addInterceptorIfNeeded({ ajaxDataList, iframeVisible, request, responseText });
         }
       } else {
-        await addInterceptorIfNeeded({ajaxDataList, iframeVisible, request, responseText})
+        await addInterceptorIfNeeded({ ajaxDataList, iframeVisible, request, responseText });
       }
     } catch(error) {
       console.error(error);
     }
-  }
-  const addInterceptorIfNeeded = async ({ajaxDataList, iframeVisible, request, responseText}) => {
+  };
+  const addInterceptorIfNeeded = async ({ ajaxDataList, iframeVisible, request, responseText }: AddInterceptorParams) => {
     if (ajaxDataList.length === 0) { // 首次，未添加过拦截接口
       ajaxDataList = [{
         summaryText: 'Group Name（Editable）',
@@ -173,12 +193,12 @@ export default () => {
         interfaceList: []
       }];
     }
-    const groupIndex = ajaxDataList.length > 1 ? await showGroupModal({ajaxDataList}) : 0;
+    const groupIndex: any = ajaxDataList.length > 1 ? await showGroupModal({ ajaxDataList }) : 0;
     showSidePage(iframeVisible);
-    addInterceptor({ajaxDataList, groupIndex, request, responseText});
-  }
-  const showGroupModal = ({ajaxDataList}) => new Promise((resolve) => {
-    const SelectGroupContent = (props) => {
+    addInterceptor({ ajaxDataList, groupIndex, request, responseText });
+  };
+  const showGroupModal = ({ ajaxDataList }: { ajaxDataList: AjaxDataListObject[] }) => new Promise((resolve) => {
+    const SelectGroupContent = (props: { onChange: (arg0: any) => void; }) => {
       const [value, setValue] = useState(0);
       return <Radio.Group
         value={value}
@@ -188,48 +208,49 @@ export default () => {
         }}
       >
         <Space direction="vertical">
-          {ajaxDataList.map((v, index) => <Radio value={index}>Group {index + 1}：{v.summaryText}</Radio>)}
+          {ajaxDataList.map((v, index) => <Radio key={index} value={index}>Group {index + 1}：{v.summaryText}</Radio>)}
         </Space>
-      </Radio.Group>
-    }
+      </Radio.Group>;
+    };
     let _groupIndex = 0;
     Modal.confirm({
       title: 'Which group to add to',
       content: <SelectGroupContent onChange={(value) => _groupIndex = value}/>,
       onOk: () => resolve(_groupIndex),
     });
-  })
-  const showSidePage = (iframeVisible) => {
+  });
+  const showSidePage = (iframeVisible: undefined | boolean) => {
     if (iframeVisible) { // 当前没展示，要展示
       chrome.tabs.query(
-        {active: true, currentWindow: true},
+        { active: true, currentWindow: true },
         function (tabs) {
+          const tabId = tabs[0]?.id;
           // 发送消息到content.js
-          chrome.tabs.sendMessage(
-            tabs[0].id,
-            {type: 'iframeToggle', iframeVisible},
-            function (response) {
-              console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
-              chrome.storage.local.set({iframeVisible: response.nextIframeVisible});
-            }
-          );
+          if (tabId) {
+            chrome.tabs.sendMessage(
+              tabId,
+              { type: 'iframeToggle', iframeVisible },
+              function (response) {
+                console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
+                chrome.storage.local.set({ iframeVisible: response.nextIframeVisible });
+              }
+            );
+          }
         }
       );
     }
-  }
-  const addInterceptor = ({ajaxDataList, groupIndex = 0, request, responseText}) => {
+  };
+  const addInterceptor = (
+    { ajaxDataList, groupIndex = 0, request, responseText }: AddInterceptorParams
+  ) => {
     const key = String(Date.now());
-    ajaxDataList[groupIndex].collapseActiveKeys.push(key);
-    const interfaceObj = {
+    ajaxDataList[groupIndex]!.collapseActiveKeys.push(key);
+    const interfaceObj: DefaultInterfaceObject = {
+      ...defaultInterface,
       key,
-      open: true,
-      matchType: 'normal', // normal regex
-      matchMethod: '', // GET、POST、PUT、DELETE、HEAD、OPTIONS、CONNECT、TRACE、PATCH
       request,
-      requestDes: '',
       responseText,
-      language: 'json', // json javascript
-    }
+    };
     ajaxDataList[groupIndex].interfaceList.push(interfaceObj);
     // 发送给iframe(src/App.jsx)侧边页面，更新ajaxDataList
     chrome.runtime.sendMessage(chrome.runtime.id, {
@@ -237,11 +258,11 @@ export default () => {
       to: 'mainSettingSidePage',
       ajaxDataList
     });
-  }
-  const onRequestUrlClick = (record) => {
+  };
+  const onRequestUrlClick = (record: React.SetStateAction<null>) => {
     setCurrRecord(record);
     setDrawerOpen(true);
-  }
+  };
   const columns = getColumns({
     onAddInterceptorClick,
     onRequestUrlClick,
@@ -266,7 +287,7 @@ export default () => {
       <Input
         placeholder="Filter"
         size="small"
-        style={{width: 160, marginLeft: 16}}
+        style={{ width: 160, marginLeft: 16 }}
         onChange={(e) => setFilterKey(e.target.value)}
       />
     </div>
@@ -274,23 +295,25 @@ export default () => {
       bordered
       headerNotSticky
       columns={columns}
-      dataSource={uNetwork.filter((v) => v.request.url.toLocaleLowerCase().includes(filterKey.toLocaleLowerCase()))}
+      dataSource={uNetwork.filter((v: { request: { url: string; }; }) => v.request.url.toLocaleLowerCase().includes(filterKey.toLocaleLowerCase()))}
       visibleHeight={window.innerHeight - 50}
       rowHeight={24}
       estimatedRowHeight={24}
       locale={{
-        emptyText: <div style={{textAlign: 'center'}}>
+        emptyText: <div style={{ textAlign: 'center' }}>
           <p>Recording network activity... </p>
           <p>Click Record, and then Perform a request or hit <strong>⌘ R</strong> to record the load.</p>
         </div>
       }}
     />
-    <RequestDrawer
-      record={currRecord}
-      drawerOpen={drawerOpen}
-      onAddInterceptorClick={onAddInterceptorClick}
-      onClose={() => setDrawerOpen(false)}
-    />
+    {
+      currRecord && <RequestDrawer
+        record={currRecord}
+        drawerOpen={drawerOpen}
+        onAddInterceptorClick={onAddInterceptorClick}
+        onClose={() => setDrawerOpen(false)}
+      />
+    }
   </div>;
-}
+};
 
