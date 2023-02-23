@@ -2,7 +2,6 @@
 chrome.action.onClicked.addListener(() => {
 
   chrome.storage.local.get("iframeVisible", ({iframeVisible}) => {
-    console.table({iframeVisible});
     chrome.tabs.query(
       {active: true, currentWindow: true},
       function (tabs) {
