@@ -48,7 +48,7 @@ if (window.self === window.top) {
       if (document.body) document.body.appendChild(iframe);
 
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        console.log('【ajax-tools-iframe-show】接收消息service_worker->content', request);
+        console.log('【content】【ajax-tools-iframe-show】receive message', request);
         const {type, iframeVisible, iframeZoom} = request;
         if (type === 'iframeToggle') {
           iframe.style.setProperty('transform', iframeVisible ? 'translateX(0)' : 'translateX(calc(100% + 20px))', 'important');

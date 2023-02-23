@@ -38,7 +38,7 @@ export default (props: JsonViewButtonProps) => {
       centered
       title={<span style={{ fontSize: 12 }}>Matched URL：{request}</span>}
       width={'98%'}
-      visible={visible}
+      open={visible}
       onOk={handleOk}
       onCancel={() => setVisible(false)}
       okText="Save"

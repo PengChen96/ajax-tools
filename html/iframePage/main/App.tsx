@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Collapse, Input, Select, Switch } from 'antd';
 import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import JsonViewButton from './JsonViewButton';
-import { defaultInterface, defaultAjaxDataList } from '../common/value';
+import { defaultInterface, defaultAjaxDataList, DefaultInterfaceObject } from '../common/value';
 import 'antd/dist/antd.css';
 import './App.css';
 
@@ -39,7 +39,7 @@ function App() {
     if (chrome.runtime) {
       // 接收uNetwork/App.jsx发来的数据（在uNetWork面板中可以添加拦截数据更新页面）
       chrome.runtime.onMessage.addListener((request) => {
-        console.log('【src/App.jsx】Receive message: uNetwork->src/App.jsx', request);
+        console.log('【main/App.jsx】<-【uNetwork】Receive message:', request);
         const { type, to, ajaxDataList } = request;
         if (type === 'ajaxTools_updatePage' && to === 'mainSettingSidePage') {
           setAjaxDataList(ajaxDataList);
@@ -67,7 +67,7 @@ function App() {
               tabId,
               { type: 'iframeToggle', iframeVisible },
               function (response) {
-                console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
+                console.log('【main/App.jsx】->【content】【ajax-tools-iframe-show】Return message:', response);
                 chrome.storage.local.set({ iframeVisible: response.nextIframeVisible });
               }
             );
@@ -88,7 +88,7 @@ function App() {
             tabId,
             { type: 'iframeZoom', iframeZoom: zoom },
             function (response) {
-              console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
+              console.log('【main/App.jsx】->【content】【ajax-tools-iframe-show】Return message:', response);
               setZoom(zoom === 'out' ? 'in' : 'out');
             }
           );
@@ -160,7 +160,7 @@ function App() {
 
   const genExtra = (
     groupIndex: number,
-    v: { key: any; open: any; matchType?: string; matchMethod?: string; request?: string; requestDes?: string; responseText?: string; language?: string; },
+    v: DefaultInterfaceObject,
     i: number
   ) => (
     <div onClick={(event) => event.stopPropagation()}>
@@ -261,7 +261,7 @@ function App() {
         {
           ajaxDataList.map((item, index) => {
             const { summaryText, headerClass, interfaceList = [] } = item;
-            return <>
+            return <div key={index}>
               <div className={`ajax-tools-iframe-body-header ${headerClass}`}>
                 <Input
                   value={summaryText}
@@ -363,7 +363,7 @@ function App() {
                   onClick={() => onInterfaceListAdd(index)}
                 />
               </div>
-            </>;
+            </div>;
           })
         }
       </div>

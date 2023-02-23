@@ -1,6 +1,7 @@
-import {defineConfig} from 'vite';
+/* global require, __dirname */
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import {visualizer} from "rollup-plugin-visualizer";
+import { visualizer } from 'rollup-plugin-visualizer';
 
 const path = require('path');
 
@@ -8,7 +9,7 @@ const path = require('path');
 export default defineConfig({
   plugins: [react(), visualizer({
     emitFile: false,
-    file: "stats.html", //分析图生成的文件名
+    file: 'stats.html', //分析图生成的文件名
     // open:true
   })],
   base: './',
@@ -28,4 +29,4 @@ export default defineConfig({
       }
     },
   }
-})
+});

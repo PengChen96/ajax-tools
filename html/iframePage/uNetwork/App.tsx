@@ -231,7 +231,7 @@ export default () => {
               tabId,
               { type: 'iframeToggle', iframeVisible },
               function (response) {
-                console.log('【App.jsx】【ajax-tools-iframe-show】Return message: content->popup', response);
+                console.log('【uNetwork/App.jsx】->【content】【ajax-tools-iframe-show】Return message:', response);
                 chrome.storage.local.set({ iframeVisible: response.nextIframeVisible });
               }
             );
