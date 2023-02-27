@@ -21,6 +21,8 @@
 ![o1.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a88c304eadc54915bd7a75ea2fe3ee86~tplv-k3u1fbpfcp-watermark.image?)  
 ![o2.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bc051954c02946148e4dc750c9fb3ace~tplv-k3u1fbpfcp-watermark.image?)  
 
+视频: [https://www.youtube.com/watch?v=HPtQO0Fyb7I](https://www.youtube.com/watch?v=HPtQO0Fyb7I)
+
 ### 使用JS方式编辑返回响应结果
 使用JS方式编辑响应结果时，通过`new Function(responseText)`生成函数并执行，响应结果即为函数的返回值。
 

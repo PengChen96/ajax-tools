@@ -20,6 +20,8 @@ https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdj
 ![o1.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a88c304eadc54915bd7a75ea2fe3ee86~tplv-k3u1fbpfcp-watermark.image?)  
 ![o2.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bc051954c02946148e4dc750c9fb3ace~tplv-k3u1fbpfcp-watermark.image?)  
 
+Video: [https://www.youtube.com/watch?v=HPtQO0Fyb7I](https://www.youtube.com/watch?v=HPtQO0Fyb7I)
+
 ### Edit response results using JavaScript
 When editing the response results using JavaScript, a function is generated and executed via new Function(responseText), and the returned result is the return value of the function.
 
