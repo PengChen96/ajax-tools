@@ -9,12 +9,13 @@ interface JsonViewButtonProps {
   request: string;
   responseText?: string;
   onInterfaceListChange?: (name: string, value: string) => void;
+  onSave?: ({ editorValue, language }:{ editorValue:string, language: string }) => void;
 }
 export default (props: JsonViewButtonProps) => {
   const monacoEditorRef = useRef<any>(null);
   const {
     language, request, responseText = '',
-    onInterfaceListChange = () => {},
+    onSave = () => {},
   } = props;
   const [visible, setVisible] = useState(false);
 
@@ -22,8 +23,7 @@ export default (props: JsonViewButtonProps) => {
     const { editorInstance } = monacoEditorRef.current!;
     const editorValue = editorInstance.getValue();
     const language = editorInstance.getModel().getLanguageId();
-    onInterfaceListChange('responseText', editorValue);
-    onInterfaceListChange('language', language);
+    onSave({ editorValue, language });
     setVisible(false);
   };
   return <>

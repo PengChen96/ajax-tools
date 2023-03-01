@@ -39,9 +39,9 @@ function App() {
     if (chrome.runtime) {
       // 接收uNetwork/App.jsx发来的数据（在uNetWork面板中可以添加拦截数据更新页面）
       chrome.runtime.onMessage.addListener((request) => {
-        console.log('【main/App.jsx】<-【uNetwork】Receive message:', request);
         const { type, to, ajaxDataList } = request;
         if (type === 'ajaxTools_updatePage' && to === 'mainSettingSidePage') {
+          console.log('【main/App.jsx】<-【uNetwork】Receive message:', request);
           setAjaxDataList(ajaxDataList);
           chrome.storage.local.set({ ajaxDataList });
         }
@@ -129,7 +129,7 @@ function App() {
 
   // interfaceList值变化
   const onInterfaceListChange = (index1: number, index2: number, key: string, value: string | boolean) => {
-    if (key === 'responseText') {
+    if (key === 'headers' || key === 'responseText') {
       try {
         const lastValue = ajaxDataList[index1]?.interfaceList?.[index2]?.[key];
         const formattedValue = JSON.stringify(JSON.parse(value as string), null, 4);
@@ -335,18 +335,39 @@ function App() {
                       }
                       extra={genExtra(index, v, i)}
                     >
+
+                      <div style={{ position: 'relative', marginBottom: 8 }}>
+                        <TextArea
+                          rows={2}
+                          value={v.headers}
+                          onChange={(e) => onInterfaceListChange(index, i, 'headers', e.target.value)}
+                          placeholder='Headers. eg: { "test-header": "header xxx" }'
+                        />
+                        <JsonViewButton
+                          language={v.language}
+                          request={v.request}
+                          responseText={v.headers}
+                          onSave={({ editorValue, language }) => {
+                            onInterfaceListChange(index, i, 'headers', editorValue);
+                            onInterfaceListChange(index, i, 'language', language);
+                          }}
+                        />
+                      </div>
                       <div style={{ position: 'relative' }}>
                         <TextArea
                           rows={4}
                           value={v.responseText}
                           onChange={(e) => onInterfaceListChange(index, i, 'responseText', e.target.value)}
-                          placeholder="Response Text"
+                          placeholder='Response. eg: { "test-body": "body xxx" }'
                         />
                         <JsonViewButton
                           language={v.language}
                           request={v.request}
                           responseText={v.responseText}
-                          onInterfaceListChange={(key, value) => onInterfaceListChange(index, i, key, value)}
+                          onSave={({ editorValue, language }) => {
+                            onInterfaceListChange(index, i, 'responseText', editorValue);
+                            onInterfaceListChange(index, i, 'language', language);
+                          }}
                         />
                       </div>
                     </Panel>;

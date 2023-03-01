@@ -15,19 +15,25 @@ const ajax_tools_space = {
     }
     return regexp;
   },
-  getOverrideText: (responseText, args) => {
+  getOverrideText: (responseText, args, toJson= false) => {
     let overrideText = responseText;
     try {
-      const data = JSON.parse(responseText);
-      if (typeof data === 'object') {
-        overrideText = responseText;
-      }
+      JSON.parse(responseText);
     } catch (e) {
-      // const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-      // const returnText = await (new AsyncFunction(responseText))();
-      const returnText = (new Function(responseText))(args);
-      if (returnText) {
-        overrideText = typeof returnText === 'object' ? JSON.stringify(returnText) : returnText;
+      try {
+        // const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+        // const returnText = await (new AsyncFunction(responseText))();
+        const returnText = (new Function(responseText))(args);
+        if (returnText) {
+          overrideText = typeof returnText === 'object' ? JSON.stringify(returnText) : returnText;
+        }
+      } catch (e) {}
+    }
+    if (toJson) {
+      try {
+        overrideText = JSON.parse(overrideText);
+      } catch (e) {
+        overrideText = {};
       }
     }
     return overrideText;
@@ -47,52 +53,50 @@ const ajax_tools_space = {
     });
     return keyValueObj;
   },
+  getMatchedInterface: ({thisRequestUrl = '', thisMethod = ''}) => {
+    const interfaceList = [];
+    ajax_tools_space.ajaxDataList.forEach((item) => {
+      interfaceList.push(...(item.interfaceList || []));
+    });
+    // const interfaceList = ajax_tools_space.ajaxDataList.flatMap(item => item.interfaceList || []);
+    return interfaceList.find(({ open = true, matchType = 'normal', matchMethod, request }) => {
+      const matchedMethod = !matchMethod || matchMethod === thisMethod.toUpperCase();
+      const matchedRequest = request && (matchType === 'normal' ? thisRequestUrl.includes(request) : thisRequestUrl.match(ajax_tools_space.strToRegExp(request)));
+      return open && matchedMethod && matchedRequest;
+    });
+  },
   myXHR: function () {
     const modifyResponse = () => {
-      const interfaceList = [];
-      ajax_tools_space.ajaxDataList.forEach((item) => {
-        interfaceList.push(...(item.interfaceList || []));
-      });
       const [method, requestUrl] = this._openArgs;
       const queryStringParameters = ajax_tools_space.getRequestParams(requestUrl);
       const [requestPayload] = this._sendArgs;
-      interfaceList.forEach(({open = true, matchType = 'normal', matchMethod, request, responseText}) => {
-        const matchedMethod = !matchMethod || matchMethod === method.toUpperCase();
-        if (open && matchedMethod) {
-          let matched = false;
-          if (matchType === 'normal' && request && this.responseURL.includes(request)) {
-            matched = true;
-          } else if (matchType === 'regex' && request && this.responseURL.match(ajax_tools_space.strToRegExp(request))) {
-            matched = true;
-          }
-          if (matched && responseText) {
-            const funcArgs = {
-              method,
-              payload: {
-                queryStringParameters,
-                requestPayload
-              },
-              originalResponse: this.responseText
-            };
-            const overrideText = ajax_tools_space.getOverrideText(responseText, funcArgs);
-            this.responseText = overrideText;
-            this.response = overrideText;
-            if (ajax_tools_space.ajaxToolsSwitchOnNot200) { // 非200请求如404，改写status
-              this.status = 200;
-            }
-            // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
-            console.groupCollapsed(`%c Matched XHR Path/Rule：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
-            console.info(`%cRequest Url：`, 'background-color: #ff8040; color: white;', this.responseURL);
-            console.info('%cResponse Text：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
-            console.groupEnd();
-            // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
-          }
+      const matchedInterface = this._matchedInterface;
+      if (matchedInterface && matchedInterface.responseText) {
+        const funcArgs = {
+          method,
+          payload: {
+            queryStringParameters,
+            requestPayload
+          },
+          originalResponse: this.responseText
+        };
+        const overrideText = ajax_tools_space.getOverrideText(matchedInterface.responseText, funcArgs);
+        this.responseText = overrideText;
+        this.response = overrideText;
+        if (ajax_tools_space.ajaxToolsSwitchOnNot200 && this.status !== 200) {
+          this.status = 200;
         }
-      });
+        // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
+        console.groupCollapsed(`%c Matched XHR Path/Rule：${matchedInterface.request}`, 'background-color: #108ee9; color: white; padding: 4px');
+        console.info(`%cRequest Url：`, 'background-color: #ff8040; color: white;', this.responseURL);
+        console.info('%cResponse Text：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
+        console.groupEnd();
+        // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
+      }
     }
 
     const xhr = new ajax_tools_space.originalXHR;
-    for (let attr in xhr) {
+    for (const attr in xhr) {
       if (attr === 'onreadystatechange') {
         xhr.onreadystatechange = (...args) => {
           // 下载成功
@@ -115,13 +119,32 @@ const ajax_tools_space = {
       } else if (attr === 'open') {
         this.open = (...args) => {
           this._openArgs = args;
+          const [method, requestUrl] = args;
+          this._matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: requestUrl, thisMethod: method});
           xhr.open && xhr.open.apply(xhr, args);
         }
         continue;
       } else if (attr === 'send') {
         this.send = (...args) => {
           this._sendArgs = args;
+          const matchedInterface = this._matchedInterface;
+          if (matchedInterface && matchedInterface.headers) {
+            const overrideHeaders = ajax_tools_space.getOverrideText(matchedInterface.headers, this._openArgs, true);
+            const headers = this._headerArgs ? Object.assign(this._headerArgs, overrideHeaders) : overrideHeaders;
+            Object.keys(headers).forEach((key) => {
+              xhr.setRequestHeader && xhr.setRequestHeader.apply(xhr, [key, headers[key]]);
+            })
+          }
           xhr.send && xhr.send.apply(xhr, args);
+        }
+        continue;
+      } else if (attr === 'setRequestHeader') {
+        this.setRequestHeader = (...args) => {
+          this._headerArgs = this._headerArgs ? Object.assign(this._headerArgs, {[args[0]]: args[1]}) : {[args[0]]: args[1]};
+          const matchedInterface = this._matchedInterface;
+          if (!(matchedInterface && matchedInterface.headers)) { // 没有要拦截修改或添加的header
+            xhr.setRequestHeader && xhr.setRequestHeader.apply(xhr, args);
+          }
         }
         continue;
       }
@@ -129,7 +152,7 @@ const ajax_tools_space = {
         this[attr] = xhr[attr].bind(xhr);
       } else {
         // responseText和response不是writeable的，但拦截时需要修改它，所以修改就存储在this[`_${attr}`]上
-        if (attr === 'responseText' || attr === 'response' || attr === 'status') {
+        if (['responseText', 'response', 'status'].includes(attr)) {
           Object.defineProperty(this, attr, {
             get: () => this[`_${attr}`] == undefined ? xhr[attr] : this[`_${attr}`],
             set: (val) => this[`_${attr}`] = val,
@@ -143,7 +166,6 @@ const ajax_tools_space = {
           });
         }
       }
-
     }
   },
   originalFetch: window.fetch.bind(window),
@@ -163,44 +185,33 @@ const ajax_tools_space = {
       };
       return await reader.read().then(processData);
     }
+    const [requestUrl, data] = args;
+    const matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: requestUrl, thisMethod: data && data.method});
+    if (matchedInterface && matchedInterface.headers && args && args[1]) {
+      const overrideHeaders = ajax_tools_space.getOverrideText(matchedInterface.headers, data, true);
+      args[1].headers = Object.assign(args[1].headers, overrideHeaders);
+      // args[0] = requestUrl.replace('api.', '');
+    }
     return ajax_tools_space.originalFetch(...args).then(async (response) => {
       let overrideText = undefined;
-      const interfaceList = [];
-      ajax_tools_space.ajaxDataList.forEach((item) => {
-        interfaceList.push(...(item.interfaceList || []));
-      });
-      const {method = 'GET'} = args[1] || {};
-      for (let i = 0; i < interfaceList.length; i++) {
-        const {open = true, matchType = 'normal', matchMethod, request, responseText} = interfaceList[i];
-        const matchedMethod = !matchMethod || matchMethod === method.toUpperCase();
-        if (open && matchedMethod) {
-          let matched = false;
-          if (matchType === 'normal' && request && response.url.includes(request)) {
-            matched = true;
-          } else if (matchType === 'regex' && request && response.url.match(ajax_tools_space.strToRegExp(request))) {
-            matched = true;
-          }
-          if (matched && responseText) {
-            const queryStringParameters = ajax_tools_space.getRequestParams(response.url);
-            const [_, data] = args;
-            const originalResponse = await getOriginalResponse(response.body);
-            const funcArgs = {
-              method,
-              payload: {
-                queryStringParameters,
-                requestPayload: data.body
-              },
-              originalResponse
-            };
-            overrideText = ajax_tools_space.getOverrideText(responseText, funcArgs);
-            // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
-            console.groupCollapsed(`%c Matched Fetch Path/Rule：${request}`, 'background-color: #108ee9; color: white; padding: 4px');
-            console.info(`%cRequest Url：`, 'background-color: #ff8040; color: white;', response.url);
-            console.info('%cResponse Text：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
-            console.groupEnd();
-            // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
-          }
-        }
+      if (matchedInterface && matchedInterface.responseText) {
+        const queryStringParameters = ajax_tools_space.getRequestParams(requestUrl);
+        const originalResponse = await getOriginalResponse(response.body);
+        const funcArgs = {
+          method: data.method,
+          payload: {
+            queryStringParameters,
+            requestPayload: data.body
+          },
+          originalResponse
+        };
+        overrideText = ajax_tools_space.getOverrideText(matchedInterface.responseText, funcArgs);
+        // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
+        console.groupCollapsed(`%c Matched Fetch Path/Rule：${matchedInterface.request}`, 'background-color: #108ee9; color: white; padding: 4px');
+        console.info(`%cRequest Url：`, 'background-color: #ff8040; color: white;', response.url);
+        console.info('%cResponse Text：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
+        console.groupEnd();
+        // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
       }
       if (overrideText !== undefined) {
         const stream = new ReadableStream({

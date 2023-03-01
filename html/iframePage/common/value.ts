@@ -13,6 +13,7 @@ export interface DefaultInterfaceObject {
   requestDes: string,
   responseText: string,
   language: string, // json javascript
+  headers: string,
   [key: string]: any;
 }
 
@@ -25,6 +26,7 @@ export const defaultInterface: DefaultInterfaceObject = {
   requestDes: '',
   responseText: '',
   language: 'json',
+  headers: ''
 };
 
 export const defaultAjaxDataList: AjaxDataListObject[] = [
