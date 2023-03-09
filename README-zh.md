@@ -36,9 +36,8 @@ return {
   data
 }
 ```
-**支持 [mock.js](https://github.com/nuysoft/Mock/wiki/Getting-Started) 生成数据**
-<img width="800" src="https://user-images.githubusercontent.com/16712630/224018087-70b5433e-3fbb-46a5-ac8f-9c69b0ed7496.png">
-
+**支持 [mock.js](https://github.com/nuysoft/Mock/wiki/Getting-Started) 生成数据**  
+<img width="800" src="https://user-images.githubusercontent.com/16712630/224018087-70b5433e-3fbb-46a5-ac8f-9c69b0ed7496.png">  
 示例：
 ```js
 const data = Mock.mock({
@@ -53,7 +52,7 @@ return {
 }
 ```
 
-**使用arguments获取原始请求信息，并通过简单编程创建mock场景**
+**使用arguments获取原始请求信息，并通过简单编程创建mock场景**  
 <img width="800" src="https://user-images.githubusercontent.com/16712630/224018668-be15df22-17f8-419b-83cb-99e553972589.png">  
 示例：
 ```js
