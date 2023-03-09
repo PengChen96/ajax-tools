@@ -17,8 +17,8 @@ An extension plugin for Chrome that modifies the response of AJAX requests.
 https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm  
 
 ## Usage
-![o1.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a88c304eadc54915bd7a75ea2fe3ee86~tplv-k3u1fbpfcp-watermark.image?)  
-![o2.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bc051954c02946148e4dc750c9fb3ace~tplv-k3u1fbpfcp-watermark.image?)  
+<img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a88c304eadc54915bd7a75ea2fe3ee86~tplv-k3u1fbpfcp-watermark.image?">
+<!-- <img src="https://user-images.githubusercontent.com/16712630/224017778-c52aaa26-95ac-47b7-b653-c4c1a1975e99.png"> -->
 
 Video: [https://www.youtube.com/watch?v=HPtQO0Fyb7I](https://www.youtube.com/watch?v=HPtQO0Fyb7I)
 
@@ -35,7 +35,8 @@ return {
   data
 }
 ```
-**Support for [Mock.js](https://github.com/nuysoft/Mock/wiki/Getting-Started) syntax**
+**Support for [Mock.js](https://github.com/nuysoft/Mock/wiki/Getting-Started) syntax**  
+<img width="800" src="https://user-images.githubusercontent.com/16712630/224018087-70b5433e-3fbb-46a5-ac8f-9c69b0ed7496.png">
 
 Example：
 ```js
@@ -51,8 +52,8 @@ return {
 }
 ```
 
-**Retrieve original request information through the arguments parameter and easily create mock scenarios using simple programming**
-![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25494da9e62d4e34ba66fce28987124a~tplv-k3u1fbpfcp-watermark.image?)  
+**Retrieve original request information through the arguments parameter and easily create mock scenarios using simple programming**   
+<img width="800" src="https://user-images.githubusercontent.com/16712630/224018668-be15df22-17f8-419b-83cb-99e553972589.png">  
 Example：
 ```js
 let { method, payload, originalResponse } = arguments[0];
