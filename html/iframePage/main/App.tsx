@@ -341,7 +341,7 @@ function App() {
                           rows={2}
                           value={v.headers}
                           onChange={(e) => onInterfaceListChange(index, i, 'headers', e.target.value)}
-                          placeholder='Headers. eg: { "test-header": "header xxx" }'
+                          placeholder='Headers.  eg: { "Content-Type": "application/json" }'
                         />
                         <JsonViewButton
                           language={v.language}
@@ -358,7 +358,7 @@ function App() {
                           rows={4}
                           value={v.responseText}
                           onChange={(e) => onInterfaceListChange(index, i, 'responseText', e.target.value)}
-                          placeholder='Response. eg: { "test-body": "body xxx" }'
+                          placeholder='Response.  eg: { "status": 200, "response": "OK" }'
                         />
                         <JsonViewButton
                           language={v.language}

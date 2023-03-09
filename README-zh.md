@@ -18,8 +18,8 @@
 直接下载：https://raw.githubusercontent.com/PengChen96/ajax-tools/master/kphegobalneikdjnboeiheiklpbbhncm.crx
 
 ## 使用
-![o1.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a88c304eadc54915bd7a75ea2fe3ee86~tplv-k3u1fbpfcp-watermark.image?)  
-![o2.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bc051954c02946148e4dc750c9fb3ace~tplv-k3u1fbpfcp-watermark.image?)  
+<img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a88c304eadc54915bd7a75ea2fe3ee86~tplv-k3u1fbpfcp-watermark.image?">
+<!-- <img src="https://user-images.githubusercontent.com/16712630/224017778-c52aaa26-95ac-47b7-b653-c4c1a1975e99.png"> -->
 
 视频: [https://www.youtube.com/watch?v=HPtQO0Fyb7I](https://www.youtube.com/watch?v=HPtQO0Fyb7I)
 
@@ -37,6 +37,7 @@ return {
 }
 ```
 **支持 [mock.js](https://github.com/nuysoft/Mock/wiki/Getting-Started) 生成数据**
+<img width="800" src="https://user-images.githubusercontent.com/16712630/224018087-70b5433e-3fbb-46a5-ac8f-9c69b0ed7496.png">
 
 示例：
 ```js
@@ -53,7 +54,7 @@ return {
 ```
 
 **使用arguments获取原始请求信息，并通过简单编程创建mock场景**
-![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25494da9e62d4e34ba66fce28987124a~tplv-k3u1fbpfcp-watermark.image?)  
+<img width="800" src="https://user-images.githubusercontent.com/16712630/224018668-be15df22-17f8-419b-83cb-99e553972589.png">  
 示例：
 ```js
 let { method, payload, originalResponse } = arguments[0];

@@ -37,7 +37,6 @@ return {
 ```
 **Support for [Mock.js](https://github.com/nuysoft/Mock/wiki/Getting-Started) syntax**  
 <img width="800" src="https://user-images.githubusercontent.com/16712630/224018087-70b5433e-3fbb-46a5-ac8f-9c69b0ed7496.png">
-
 Example：
 ```js
 const data = Mock.mock({
