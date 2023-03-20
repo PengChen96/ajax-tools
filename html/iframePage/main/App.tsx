@@ -344,12 +344,15 @@ function App() {
                           placeholder='Headers.  eg: { "Content-Type": "application/json" }'
                         />
                         <JsonViewButton
+                          activeTab="Headers"
                           language={v.language}
                           request={v.request}
-                          responseText={v.headers}
-                          onSave={({ editorValue, language }) => {
-                            onInterfaceListChange(index, i, 'headers', editorValue);
-                            onInterfaceListChange(index, i, 'language', language);
+                          headersText={v.headers}
+                          responseText={v.responseText}
+                          onSave={({ headersEditorValue, responseEditorValue, language }) => {
+                            if (headersEditorValue !== undefined) onInterfaceListChange(index, i, 'headers', headersEditorValue);
+                            if (responseEditorValue !== undefined) onInterfaceListChange(index, i, 'responseText', responseEditorValue);
+                            if (language !== undefined) onInterfaceListChange(index, i, 'language', language);
                           }}
                         />
                       </div>
@@ -361,12 +364,15 @@ function App() {
                           placeholder='Response.  eg: { "status": 200, "response": "OK" }'
                         />
                         <JsonViewButton
+                          activeTab="Response"
                           language={v.language}
                           request={v.request}
+                          headersText={v.headers}
                           responseText={v.responseText}
-                          onSave={({ editorValue, language }) => {
-                            onInterfaceListChange(index, i, 'responseText', editorValue);
-                            onInterfaceListChange(index, i, 'language', language);
+                          onSave={({ headersEditorValue, responseEditorValue, language }) => {
+                            if (headersEditorValue !== undefined) onInterfaceListChange(index, i, 'headers', headersEditorValue);
+                            if (responseEditorValue !== undefined) onInterfaceListChange(index, i, 'responseText', responseEditorValue);
+                            if (language !== undefined) onInterfaceListChange(index, i, 'language', language);
                           }}
                         />
                       </div>
