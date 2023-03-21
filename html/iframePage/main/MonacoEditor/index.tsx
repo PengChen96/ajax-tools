@@ -20,6 +20,8 @@ import 'monaco-editor/esm/vs/editor/contrib/format/browser/formatActions.js'; //
 import 'monaco-editor/esm/vs/editor/contrib/suggest/browser/suggestController.js'; // 代码联想提示
 import 'monaco-editor/esm/vs/editor/contrib/tokenization/browser/tokenization.js'; // 代码联想提示
 
+import './index.css';
+
 self.MonacoEnvironment = {
   getWorker: function (workerId, label) {
     switch (label) {
@@ -43,7 +45,7 @@ self.MonacoEnvironment = {
 };
 
 interface MonacoEditorProps {
-  languageSelectVisible?: boolean;
+  languageSelectOptions?: string[];
   editorHeight?: number;
   language?: string;
   text?: string;
@@ -53,7 +55,10 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
   useImperativeHandle(ref, () => ({
     editorInstance: editor,
   }));
-  const { languageSelectVisible = true, editorHeight = 400 } = props;
+  const {
+    languageSelectOptions = ['json', 'javascript'],
+    editorHeight = document.body.offsetHeight - 300,
+  } = props;
   const [editor, setEditor] = useState<any>(null);
   const [language, setLanguage] = useState<string>(props.language || 'json');
   useEffect(() => {
@@ -65,10 +70,6 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
         scrollBeyondLastLine: false,
         tabSize: 2
       });
-      // editor.getModel().onDidChangeContent((event,a,b) => {
-      //   console.log(editor, editor.getValue());
-      //   // editor.getAction('editor.action.formatDocument').run();
-      // });
       setEditor(editor);
     }
   }, []);
@@ -88,26 +89,25 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
       monaco.editor.setModelLanguage(editor.getModel(), _language); // 切换语言
     }
   };
-  return <>
-    {
-      languageSelectVisible && <Select
+  return <div className="ajax-tools-monaco-editor-container">
+    <header className="ajax-tools-monaco-editor-header">
+      <Select
+        size="small"
         value={language}
         onChange={onLanguageChange}
-        style={{
-          width: 160,
-          marginBottom: 8
-        }}
+        className="ajax-tools-monaco-language-select"
       >
-        <Select.Option value="json">json</Select.Option>
-        <Select.Option value="javascript">javascript</Select.Option>
+        {
+          languageSelectOptions.map((lang) => <Select.Option key={lang} value={lang}>{lang}</Select.Option>)
+        }
       </Select>
-    }
+    </header>
     <div
       ref={editorRef}
       style={{
         height: editorHeight
       }}
     />
-  </>;
+  </div>;
 };
 export default React.memo(React.forwardRef(MonacoEditor));

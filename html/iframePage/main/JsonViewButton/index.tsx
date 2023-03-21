@@ -1,6 +1,6 @@
 import { Modal, Tabs } from 'antd';
 import { FormOutlined } from '@ant-design/icons';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import MonacoEditor from '../MonacoEditor';
 import './index.css';
 
@@ -65,8 +65,8 @@ export default (props: JsonViewButtonProps) => {
             key: 'Headers',
             children: <MonacoEditor
               ref={monacoEditorHeadersRef}
-              languageSelectVisible={false}
               language={'json'}
+              languageSelectOptions={['json']}
               text={headersText}
             />,
           },
@@ -81,11 +81,6 @@ export default (props: JsonViewButtonProps) => {
           },
         ]}
       />
-      {/*<MonacoEditor*/}
-      {/*  ref={monacoEditorRef}*/}
-      {/*  text={responseText}*/}
-      {/*  language={language}*/}
-      {/*/>*/}
     </Modal>
   </>;
 };
