@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Collapse, Input, Select, Switch } from 'antd';
-import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined } from '@ant-design/icons';
+import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined } from '@ant-design/icons';
 import JsonViewButton from './JsonViewButton';
 import { defaultInterface, defaultAjaxDataList, DefaultInterfaceObject } from '../common/value';
 import 'antd/dist/antd.css';
@@ -231,6 +231,9 @@ function App() {
           }
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
+          <a href="https://github.com/PengChen96/ajax-tools" target="_blank" rel="noreferrer" style={{ marginRight: 12 }}>
+            <GithubOutlined style={{ color: '#000' }} title="GitHub"/>
+          </a>
           <Switch
             checkedChildren="Light Mode"
             unCheckedChildren="Dark Mode"
