@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Collapse, Input, Select, Switch } from 'antd';
-import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined } from '@ant-design/icons';
 import JsonViewButton from './JsonViewButton';
 import { defaultInterface, defaultAjaxDataList, DefaultInterfaceObject } from '../common/value';
 import 'antd/dist/antd.css';
@@ -109,45 +109,45 @@ function App() {
     setAjaxDataList([...newAjaxDataList]);
     chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
   };
-  const onGroupDelete = (index: number) => {
-    const newAjaxDataList = ajaxDataList.filter((_, i) => i !== index);
+  const onGroupDelete = (groupIndex: number) => {
+    const newAjaxDataList = ajaxDataList.filter((_, i) => i !== groupIndex);
     setAjaxDataList([...newAjaxDataList]);
     chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
   };
-  const onGroupSummaryTextChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    ajaxDataList[index].summaryText = e.target.value;
+  const onGroupSummaryTextChange = (e: React.ChangeEvent<HTMLInputElement>, groupIndex: number) => {
+    ajaxDataList[groupIndex].summaryText = e.target.value;
     setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ ajaxDataList });
   };
 
   // 收缩分组
-  const onCollapseChange = (index: number, keys: string | string[]) => {
-    ajaxDataList[index].collapseActiveKeys = Array.isArray(keys) ? keys : [keys];
+  const onCollapseChange = (groupIndex: number, keys: string | string[]) => {
+    ajaxDataList[groupIndex].collapseActiveKeys = Array.isArray(keys) ? keys : [keys];
     setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ ajaxDataList });
   };
 
   // interfaceList值变化
-  const onInterfaceListChange = (index1: number, index2: number, key: string, value: string | boolean) => {
+  const onInterfaceListChange = (groupIndex: number, interfaceIndex: number, key: string, value: string | boolean) => {
     if (key === 'headers' || key === 'responseText') {
       try {
-        const lastValue = ajaxDataList[index1]?.interfaceList?.[index2]?.[key];
+        const lastValue = ajaxDataList[groupIndex]?.interfaceList?.[interfaceIndex]?.[key];
         const formattedValue = JSON.stringify(JSON.parse(value as string), null, 4);
         value = lastValue === formattedValue ? value : formattedValue;
       } catch (e) {
         // value = value;
       }
     }
-    ajaxDataList[index1].interfaceList[index2][key]! = value;
+    ajaxDataList[groupIndex].interfaceList[interfaceIndex][key]! = value;
     setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ ajaxDataList });
   };
-  const onInterfaceListAdd = (index1: number) => {
+  const onInterfaceListAdd = (groupIndex: number) => {
     const key = String(Date.now());
-    ajaxDataList[index1].collapseActiveKeys.push(key);
+    ajaxDataList[groupIndex].collapseActiveKeys.push(key);
     const interfaceItem = { ...defaultInterface };
     interfaceItem.key = key;
-    ajaxDataList[index1].interfaceList.push(interfaceItem);
+    ajaxDataList[groupIndex].interfaceList.push(interfaceItem);
     setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ ajaxDataList });
   };
@@ -157,16 +157,24 @@ function App() {
     setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ ajaxDataList });
   };
+  const onInterfaceListSave = (
+    { groupIndex, interfaceIndex, headersEditorValue, responseEditorValue, language } :
+    { groupIndex: number, interfaceIndex: number, headersEditorValue: string, responseEditorValue: string, language: string }
+  ) => {
+    if (headersEditorValue !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'headers', headersEditorValue);
+    if (responseEditorValue !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'responseText', responseEditorValue);
+    if (language !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'language', language);
+  };
 
   const genExtra = (
     groupIndex: number,
+    interfaceIndex: number,
     v: DefaultInterfaceObject,
-    i: number
-  ) => (
-    <div onClick={(event) => event.stopPropagation()}>
+  ) => {
+    return <div onClick={(event) => event.stopPropagation()} style={{ display: 'flex', alignItems: 'center', height: 24 }}>
       <Switch
         checked={v.open}
-        onChange={(value) => onInterfaceListChange(groupIndex, i, 'open', value)}
+        onChange={(value) => onInterfaceListChange(groupIndex, interfaceIndex, 'open', value)}
         size="small"
         style={{ margin: '0 4px' }}
       />
@@ -179,8 +187,19 @@ function App() {
         onClick={() => onInterfaceListDelete(groupIndex, v.key)}
         style={{ minWidth: 16, width: 16, height: 16 }}
       />
-    </div>
-  );
+      <JsonViewButton
+        ButtonComponent={(props:any) => <FormOutlined {...props} style={{ marginLeft: 8 }}/>}
+        activeTab="Response"
+        language={v.language}
+        request={v.request}
+        headersText={v.headers}
+        responseText={v.responseText}
+        onSave={({ headersEditorValue, responseEditorValue, language }) => {
+          onInterfaceListSave({ groupIndex, interfaceIndex, headersEditorValue, responseEditorValue, language });
+        }}
+      />
+    </div>;
+  };
 
   const inIframe = top?.location !== self.location;
   return (
@@ -289,7 +308,7 @@ function App() {
                         <div onClick={e => e.stopPropagation()}>
                           <div style={{
                             display: 'inline-grid',
-                            width: 'calc(100vw - 150px)'
+                            width: 'calc(100vw - 160px)'
                           }}>
                             <Input
                               value={v.request}
@@ -333,7 +352,7 @@ function App() {
                           </div>
                         </div>
                       }
-                      extra={genExtra(index, v, i)}
+                      extra={genExtra(index, i, v)}
                     >
 
                       <div style={{ position: 'relative', marginBottom: 8 }}>
@@ -350,9 +369,7 @@ function App() {
                           headersText={v.headers}
                           responseText={v.responseText}
                           onSave={({ headersEditorValue, responseEditorValue, language }) => {
-                            if (headersEditorValue !== undefined) onInterfaceListChange(index, i, 'headers', headersEditorValue);
-                            if (responseEditorValue !== undefined) onInterfaceListChange(index, i, 'responseText', responseEditorValue);
-                            if (language !== undefined) onInterfaceListChange(index, i, 'language', language);
+                            onInterfaceListSave({ groupIndex: index, interfaceIndex: i, headersEditorValue, responseEditorValue, language });
                           }}
                         />
                       </div>
@@ -370,9 +387,7 @@ function App() {
                           headersText={v.headers}
                           responseText={v.responseText}
                           onSave={({ headersEditorValue, responseEditorValue, language }) => {
-                            if (headersEditorValue !== undefined) onInterfaceListChange(index, i, 'headers', headersEditorValue);
-                            if (responseEditorValue !== undefined) onInterfaceListChange(index, i, 'responseText', responseEditorValue);
-                            if (language !== undefined) onInterfaceListChange(index, i, 'language', language);
+                            onInterfaceListSave({ groupIndex: index, interfaceIndex: i, headersEditorValue, responseEditorValue, language });
                           }}
                         />
                       </div>

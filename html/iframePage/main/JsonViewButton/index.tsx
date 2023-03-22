@@ -5,6 +5,7 @@ import MonacoEditor from '../MonacoEditor';
 import './index.css';
 
 interface JsonViewButtonProps {
+  ButtonComponent?: any,
   activeTab: string;
   language: string;
   request: string;
@@ -13,10 +14,12 @@ interface JsonViewButtonProps {
   onInterfaceListChange?: (name: string, value: string) => void;
   onSave?: ({ headersEditorValue, responseEditorValue, language }:{ headersEditorValue: string, responseEditorValue:string, language: string }) => void;
 }
+
 export default (props: JsonViewButtonProps) => {
   const monacoEditorHeadersRef = useRef<any>({});
   const monacoEditorResponseRef = useRef<any>({});
   const {
+    ButtonComponent = (props: any) => <FormOutlined className="ajax-tools-textarea-edit" {...props}/>,
     language, request, headersText = '', responseText = '',
     onSave = () => {},
   } = props;
@@ -33,13 +36,12 @@ export default (props: JsonViewButtonProps) => {
     setVisible(false);
   };
   return <>
-    <FormOutlined
-      onClick={(event) => {
-        event.stopPropagation();
+    <ButtonComponent
+      onClick={(event: { stopPropagation: () => void; }) => {
+        // event.stopPropagation();
         setActiveTab(props.activeTab);
         setVisible(true);
       }}
-      className="ajax-tools-iframe-resp-textarea-edit"
     />
     <Modal
       centered
