@@ -1,8 +1,8 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Checkbox, Collapse, Input, Select, Switch } from 'antd';
 import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined } from '@ant-design/icons';
-import JsonViewButton from './JsonViewButton';
+import ModifyDataModal, { ModifyDataModalOnSaveProps } from './ModifyDataModal';
 import { defaultInterface, defaultAjaxDataList, DefaultInterfaceObject } from '../common/value';
 import 'antd/dist/antd.css';
 import './App.css';
@@ -18,6 +18,8 @@ const colorMap = [
 ];
 
 function App() {
+  const modifyDataModalRef = useRef<any>({});
+
   const [ajaxToolsSkin, setAjaxToolsSkin] = useState(false);
   const [ajaxToolsSwitchOn, setAjaxToolsSwitchOn] = useState(true); // 默认开启
   const [ajaxToolsSwitchOnNot200, setAjaxToolsSwitchOnNot200] = useState(true); // 默认开启
@@ -158,8 +160,7 @@ function App() {
     chrome.storage.local.set({ ajaxDataList });
   };
   const onInterfaceListSave = (
-    { groupIndex, interfaceIndex, headersEditorValue, responseEditorValue, language } :
-    { groupIndex: number, interfaceIndex: number, headersEditorValue: string, responseEditorValue: string, language: string }
+    { groupIndex, interfaceIndex, headersEditorValue, responseEditorValue, language } : ModifyDataModalOnSaveProps
   ) => {
     if (headersEditorValue !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'headers', headersEditorValue);
     if (responseEditorValue !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'responseText', responseEditorValue);
@@ -187,16 +188,17 @@ function App() {
         onClick={() => onInterfaceListDelete(groupIndex, v.key)}
         style={{ minWidth: 16, width: 16, height: 16 }}
       />
-      <JsonViewButton
-        ButtonComponent={(props:any) => <FormOutlined {...props} style={{ marginLeft: 8 }}/>}
-        activeTab="Response"
-        language={v.language}
-        request={v.request}
-        headersText={v.headers}
-        responseText={v.responseText}
-        onSave={({ headersEditorValue, responseEditorValue, language }) => {
-          onInterfaceListSave({ groupIndex, interfaceIndex, headersEditorValue, responseEditorValue, language });
-        }}
+      <FormOutlined
+        onClick={() => modifyDataModalRef.current.openModal({
+          groupIndex,
+          interfaceIndex,
+          activeTab: 'Response',
+          request: v.request,
+          headersText: v.headers,
+          responseLanguage: v.language,
+          responseText: v.responseText
+        })}
+        style={{ marginLeft: 8 }}
       />
     </div>;
   };
@@ -209,7 +211,7 @@ function App() {
         filter: ajaxToolsSkin ? 'invert(1)' : undefined
       }}
     >
-      <div className="ajax-tools-iframe-header">
+      <header className="ajax-tools-iframe-header">
         <div>
           {
             inIframe && <>
@@ -249,8 +251,8 @@ function App() {
             style={{ marginLeft: 8 }}
           />
         </div>
-      </div>
-      <div className="ajax-tools-iframe-action">
+      </header>
+      <nav className="ajax-tools-iframe-action">
         <Button size="small" type="primary" onClick={onGroupAdd}>Add Group</Button>
         <div>
           <Checkbox
@@ -275,8 +277,8 @@ function App() {
             }}
           />
         </div>
-      </div>
-      <div
+      </nav>
+      <main
         className="ajax-tools-iframe-body"
         style={{ filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)' }}
       >
@@ -365,15 +367,17 @@ function App() {
                           onChange={(e) => onInterfaceListChange(index, i, 'headers', e.target.value)}
                           placeholder='Headers.  eg: { "Content-Type": "application/json" }'
                         />
-                        <JsonViewButton
-                          activeTab="Headers"
-                          language={v.language}
-                          request={v.request}
-                          headersText={v.headers}
-                          responseText={v.responseText}
-                          onSave={({ headersEditorValue, responseEditorValue, language }) => {
-                            onInterfaceListSave({ groupIndex: index, interfaceIndex: i, headersEditorValue, responseEditorValue, language });
-                          }}
+                        <FormOutlined
+                          className="ajax-tools-textarea-edit"
+                          onClick={() => modifyDataModalRef.current.openModal({
+                            groupIndex: index,
+                            interfaceIndex: i,
+                            activeTab: 'Headers',
+                            request: v.request,
+                            headersText: v.headers,
+                            responseLanguage: v.language,
+                            responseText: v.responseText
+                          })}
                         />
                       </div>
                       <div style={{ position: 'relative' }}>
@@ -383,15 +387,17 @@ function App() {
                           onChange={(e) => onInterfaceListChange(index, i, 'responseText', e.target.value)}
                           placeholder='Response.  eg: { "status": 200, "response": "OK" }'
                         />
-                        <JsonViewButton
-                          activeTab="Response"
-                          language={v.language}
-                          request={v.request}
-                          headersText={v.headers}
-                          responseText={v.responseText}
-                          onSave={({ headersEditorValue, responseEditorValue, language }) => {
-                            onInterfaceListSave({ groupIndex: index, interfaceIndex: i, headersEditorValue, responseEditorValue, language });
-                          }}
+                        <FormOutlined
+                          className="ajax-tools-textarea-edit"
+                          onClick={() => modifyDataModalRef.current.openModal({
+                            groupIndex: index,
+                            interfaceIndex: i,
+                            activeTab: 'Response',
+                            request: v.request,
+                            headersText: v.headers,
+                            responseLanguage: v.language,
+                            responseText: v.responseText
+                          })}
                         />
                       </div>
                     </Panel>;
@@ -411,7 +417,11 @@ function App() {
             </div>;
           })
         }
-      </div>
+      </main>
+      <ModifyDataModal
+        ref={modifyDataModalRef}
+        onSave={onInterfaceListSave}
+      />
     </div>
   );
 }
