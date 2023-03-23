@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Checkbox, Collapse, Input, Select, Switch } from 'antd';
-import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Collapse, Input, Select, Switch, Result } from 'antd';
+import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined, DropboxOutlined } from '@ant-design/icons';
 import ModifyDataModal, { ModifyDataModalOnSaveProps } from './ModifyDataModal';
 import { defaultInterface, defaultAjaxDataList, DefaultInterfaceObject } from '../common/value';
 import 'antd/dist/antd.css';
@@ -416,6 +416,15 @@ function App() {
               </div>
             </div>;
           })
+        }
+        {
+          ajaxDataList.length < 1 && <Result
+            icon={<DropboxOutlined style={{ color: '#c1d0dd' }}/>}
+            title={'Ohhh... nothing here'}
+            subTitle={<>
+                Create a rule by clicking the <Button size="small" type="primary" onClick={onGroupAdd}>Add Group</Button> button
+            </>}
+          />
         }
       </main>
       <ModifyDataModal
