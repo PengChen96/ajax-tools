@@ -46,7 +46,7 @@ self.MonacoEnvironment = {
 
 interface MonacoEditorProps {
   languageSelectOptions?: string[];
-  editorHeight?: number;
+  editorHeight?: number | string;
   language?: string;
   text?: string;
 }

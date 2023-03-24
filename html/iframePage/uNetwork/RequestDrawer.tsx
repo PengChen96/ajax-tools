@@ -11,6 +11,11 @@ interface RequestDrawerProps {
   onClose: () => void;
   onAddInterceptorClick: (record: any) => void;
 }
+const Wrapper = (props: { children: any }) => {
+  return <div style={{ height: 'calc(100vh - 160px)', overflow: 'auto' }}>
+    {props.children}
+  </div>;
+};
 export default (props: RequestDrawerProps) => {
   const { drawerOpen, record, onClose, onAddInterceptorClick } = props;
 
@@ -141,12 +146,6 @@ export default (props: RequestDrawerProps) => {
         }}
       />
     </>;
-  };
-
-  const Wrapper = (props: { children: any }) => {
-    return <div style={{ height: 'calc(100vh - 160px)', overflow: 'auto' }}>
-      {props.children}
-    </div>;
   };
 
   const title = record && record.request.url.match('[^/]+(?!.*/)');
