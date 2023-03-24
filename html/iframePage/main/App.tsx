@@ -212,7 +212,7 @@ function App() {
       }}
     >
       <header className="ajax-tools-iframe-header">
-        <div>
+        <div style={{ display: 'flex' }}>
           {
             inIframe && <>
               <CloseOutlined
@@ -233,9 +233,6 @@ function App() {
           }
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <a href="https://github.com/PengChen96/ajax-tools" target="_blank" rel="noreferrer" style={{ marginRight: 12 }}>
-            <GithubOutlined style={{ color: '#000' }} title="GitHub"/>
-          </a>
           <Switch
             checkedChildren="Light Mode"
             unCheckedChildren="Dark Mode"
@@ -427,6 +424,13 @@ function App() {
           />
         }
       </main>
+      <footer className="ajax-tools-iframe-footer">
+        Copyright © 2022-{(new Date()).getFullYear()} Ajax Interceptor Tools. ( 🌟 if you find it helpful, give me a star on
+        <a href="https://github.com/PengChen96/ajax-tools" target="_blank" rel="noreferrer" style={{ margin: '0 4px' }}>
+          <GithubOutlined style={{ color: '#333' }} title="GitHub"/>
+        </a>
+        )
+      </footer>
       <ModifyDataModal
         ref={modifyDataModalRef}
         onSave={onInterfaceListSave}

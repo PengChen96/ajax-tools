@@ -58,7 +58,7 @@ if (window.self === window.top) {
           if (iframeZoom === 'out') { // 缩小
             iframe.style.setProperty('height', '40px', 'important');
             let timer = setTimeout(() => {
-              iframe.style.setProperty('width', '170px', 'important');
+              iframe.style.setProperty('width', '200px', 'important');
               clearTimeout(timer);
             }, 400);
           } else if (iframeZoom === 'in') { // 放大
