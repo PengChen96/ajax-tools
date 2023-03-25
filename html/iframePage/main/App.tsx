@@ -1,9 +1,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Checkbox, Collapse, Input, Select, Switch, Result } from 'antd';
-import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined, DropboxOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Collapse, Input, Select, Switch, Result, Dropdown, Space, MenuProps } from 'antd';
+import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined, DropboxOutlined, MoreOutlined } from '@ant-design/icons';
 import ModifyDataModal, { ModifyDataModalOnSaveProps } from './ModifyDataModal';
-import { defaultInterface, defaultAjaxDataList, DefaultInterfaceObject } from '../common/value';
+import { defaultInterface, defaultAjaxDataList, DefaultInterfaceObject, HTTP_METHOD_MAP } from '../common/value';
 import 'antd/dist/antd.css';
 import './App.css';
 
@@ -160,8 +160,10 @@ function App() {
     chrome.storage.local.set({ ajaxDataList });
   };
   const onInterfaceListSave = (
-    { groupIndex, interfaceIndex, headersEditorValue, responseEditorValue, language } : ModifyDataModalOnSaveProps
+    { groupIndex, interfaceIndex, replacementMethod, replacementUrl, headersEditorValue, responseEditorValue, language } : ModifyDataModalOnSaveProps
   ) => {
+    if (replacementMethod !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'replacementMethod', replacementMethod);
+    if (replacementUrl !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'replacementUrl', replacementUrl);
     if (headersEditorValue !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'headers', headersEditorValue);
     if (responseEditorValue !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'responseText', responseEditorValue);
     if (language !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'language', language);
@@ -172,6 +174,24 @@ function App() {
     interfaceIndex: number,
     v: DefaultInterfaceObject,
   ) => {
+    const items: MenuProps['items'] = [
+      {
+        key: '0',
+        label: 'Edit Data',
+        icon: <FormOutlined />,
+        onClick: () => modifyDataModalRef.current.openModal({
+          groupIndex,
+          interfaceIndex,
+          activeTab: 'Request',
+          request: v.request,
+          replacementMethod: v.replacementMethod,
+          replacementUrl: v.replacementUrl,
+          headersText: v.headers,
+          responseLanguage: v.language,
+          responseText: v.responseText
+        })
+      },
+    ];
     return <div onClick={(event) => event.stopPropagation()} style={{ display: 'flex', alignItems: 'center', height: 24 }}>
       <Switch
         checked={v.open}
@@ -180,6 +200,7 @@ function App() {
         style={{ margin: '0 4px' }}
       />
       <Button
+        danger
         size="small"
         type="primary"
         shape="circle"
@@ -188,18 +209,12 @@ function App() {
         onClick={() => onInterfaceListDelete(groupIndex, v.key)}
         style={{ minWidth: 16, width: 16, height: 16 }}
       />
-      <FormOutlined
-        onClick={() => modifyDataModalRef.current.openModal({
-          groupIndex,
-          interfaceIndex,
-          activeTab: 'Response',
-          request: v.request,
-          headersText: v.headers,
-          responseLanguage: v.language,
-          responseText: v.responseText
-        })}
-        style={{ marginLeft: 8 }}
-      />
+      <Dropdown
+        menu={{ items }}
+        trigger={['click']}
+      >
+        <MoreOutlined style={{ marginLeft: 4, fontSize: 18 }}/>
+      </Dropdown>
     </div>;
   };
 
@@ -318,30 +333,23 @@ function App() {
                               placeholder="Please enter the matching interface"
                               size="small"
                               addonBefore={
-                                <Input.Group compact>
+                                <Space.Compact>
                                   <Select
                                     value={v.matchType}
                                     onChange={(value) => onInterfaceListChange(index, i, 'matchType', value)}
                                   >
-                                    <Select.Option value="normal">Normal Match</Select.Option>
-                                    <Select.Option value="regex">Regex Match</Select.Option>
+                                    <Select.Option value="normal">Normal</Select.Option>
+                                    <Select.Option value="regex">Regex</Select.Option>
                                   </Select>
                                   <Select
+                                    dropdownMatchSelectWidth={false}
                                     value={v.matchMethod}
                                     onChange={(value) => onInterfaceListChange(index, i, 'matchMethod', value)}
                                   >
-                                    <Select.Option value="">ALL</Select.Option>
-                                    <Select.Option value="GET">GET</Select.Option>
-                                    <Select.Option value="POST">POST</Select.Option>
-                                    <Select.Option value="PUT">PUT</Select.Option>
-                                    <Select.Option value="DELETE">DELETE</Select.Option>
-                                    <Select.Option value="HEAD">HEAD</Select.Option>
-                                    <Select.Option value="OPTIONS">OPTIONS</Select.Option>
-                                    <Select.Option value="CONNECT">CONNECT</Select.Option>
-                                    <Select.Option value="TRACE">TRACE</Select.Option>
-                                    <Select.Option value="PATCH">PATCH</Select.Option>
+                                    <Select.Option value="">*(any)</Select.Option>
+                                    { HTTP_METHOD_MAP.map((method) => <Select.Option key={method} value={method}>{method}</Select.Option>) }
                                   </Select>
-                                </Input.Group>
+                                </Space.Compact>
                               }
                             />
                             <Input
@@ -357,26 +365,26 @@ function App() {
                       extra={genExtra(index, i, v)}
                     >
 
-                      <div style={{ position: 'relative', marginBottom: 8 }}>
-                        <TextArea
-                          rows={2}
-                          value={v.headers}
-                          onChange={(e) => onInterfaceListChange(index, i, 'headers', e.target.value)}
-                          placeholder='Headers.  eg: { "Content-Type": "application/json" }'
-                        />
-                        <FormOutlined
-                          className="ajax-tools-textarea-edit"
-                          onClick={() => modifyDataModalRef.current.openModal({
-                            groupIndex: index,
-                            interfaceIndex: i,
-                            activeTab: 'Headers',
-                            request: v.request,
-                            headersText: v.headers,
-                            responseLanguage: v.language,
-                            responseText: v.responseText
-                          })}
-                        />
-                      </div>
+                      {/*<div style={{ position: 'relative', marginBottom: 8 }}>*/}
+                      {/*  <TextArea*/}
+                      {/*    rows={2}*/}
+                      {/*    value={v.headers}*/}
+                      {/*    onChange={(e) => onInterfaceListChange(index, i, 'headers', e.target.value)}*/}
+                      {/*    placeholder='Request Headers.  eg: { "Content-Type": "application/json" }'*/}
+                      {/*  />*/}
+                      {/*  <FormOutlined*/}
+                      {/*    className="ajax-tools-textarea-edit"*/}
+                      {/*    onClick={() => modifyDataModalRef.current.openModal({*/}
+                      {/*      groupIndex: index,*/}
+                      {/*      interfaceIndex: i,*/}
+                      {/*      activeTab: 'RequestHeaders',*/}
+                      {/*      request: v.request,*/}
+                      {/*      headersText: v.headers,*/}
+                      {/*      responseLanguage: v.language,*/}
+                      {/*      responseText: v.responseText*/}
+                      {/*    })}*/}
+                      {/*  />*/}
+                      {/*</div>*/}
                       <div style={{ position: 'relative' }}>
                         <TextArea
                           rows={4}
@@ -391,6 +399,8 @@ function App() {
                             interfaceIndex: i,
                             activeTab: 'Response',
                             request: v.request,
+                            replacementMethod: v.replacementMethod,
+                            replacementUrl: v.replacementUrl,
                             headersText: v.headers,
                             responseLanguage: v.language,
                             responseText: v.responseText

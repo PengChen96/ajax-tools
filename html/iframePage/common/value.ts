@@ -1,3 +1,4 @@
+
 export interface AjaxDataListObject {
   summaryText: string,
   collapseActiveKeys: string [],
@@ -9,11 +10,14 @@ export interface DefaultInterfaceObject {
   open: boolean,
   matchType: string, // normal regex
   matchMethod: string, // GET、POST、PUT、DELETE、HEAD、OPTIONS、CONNECT、TRACE、PATCH
-  request: string,
+  request: string, // matched url
   requestDes: string,
+  // modify ⬇️
+  replacementMethod: string,
+  replacementUrl: string,
+  headers: string,
   responseText: string,
   language: string, // json javascript
-  headers: string,
   [key: string]: any;
 }
 
@@ -24,9 +28,12 @@ export const defaultInterface: DefaultInterfaceObject = {
   matchMethod: '',
   request: '',
   requestDes: '',
+  // modify ⬇️
+  replacementMethod: '',
+  replacementUrl: '',
+  headers: '',
   responseText: '',
   language: 'json',
-  headers: ''
 };
 
 export const defaultAjaxDataList: AjaxDataListObject[] = [
@@ -38,4 +45,16 @@ export const defaultAjaxDataList: AjaxDataListObject[] = [
       { ...defaultInterface },
     ]
   },
+];
+
+export const HTTP_METHOD_MAP = [
+  'GET',
+  'POST',
+  'PUT',
+  'DELETE',
+  'HEAD',
+  'OPTIONS',
+  'CONNECT',
+  'TRACE',
+  'PATCH',
 ];

@@ -121,6 +121,20 @@ const ajax_tools_space = {
           this._openArgs = args;
           const [method, requestUrl] = args;
           this._matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: requestUrl, thisMethod: method});
+          const matchedInterface = this._matchedInterface;
+          // modify request url
+          if (matchedInterface) {
+            console.groupCollapsed(`%c Matched XHR Path/Rule：${matchedInterface.request}`, 'background-color: #fa8c16; color: white; padding: 4px');
+            if (matchedInterface.replacementUrl) {
+              args[1] = matchedInterface.replacementUrl;
+              console.info(`%cReplacement Url：`, 'background-color: #ff8040; color: white;', matchedInterface.replacementUrl);
+            }
+            if (matchedInterface.replacementMethod) {
+              args[0] = matchedInterface.replacementMethod;
+              console.info(`%cReplacement Method：`, 'background-color: #ff8040; color: white;', matchedInterface.replacementMethod);
+            }
+            console.groupEnd();
+          }
           xhr.open && xhr.open.apply(xhr, args);
         }
         continue;

@@ -105,7 +105,8 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
     <div
       ref={editorRef}
       style={{
-        height: editorHeight
+        height: editorHeight,
+        minHeight: 100
       }}
     />
   </div>;
