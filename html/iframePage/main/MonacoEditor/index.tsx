@@ -1,5 +1,6 @@
 import React, { ForwardedRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { Select } from 'antd';
+import { Select, Space } from 'antd';
+import { AlignLeftOutlined } from '@ant-design/icons';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 // @ts-ignore
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
@@ -49,6 +50,7 @@ interface MonacoEditorProps {
   editorHeight?: number | string;
   language?: string;
   text?: string;
+  examples?: { egText: string }[];
 }
 const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstance: any }>) => {
   const editorRef = useRef(null);
@@ -58,6 +60,7 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
   const {
     languageSelectOptions = ['json', 'javascript'],
     editorHeight = document.body.offsetHeight - 300,
+    examples = [{ egText: 'e.g.' }]
   } = props;
   const [editor, setEditor] = useState<any>(null);
   const [language, setLanguage] = useState<string>(props.language || 'json');
@@ -78,10 +81,15 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
       editor.getModel().setValue(props.text);
       setTimeout(() => {
         // 格式化代码
-        editor.getAction('editor.action.formatDocument').run();
+        formatDocumentAction();
       }, 300);
     }
   }, [editor, props.text]);
+
+  // 格式化代码
+  const formatDocumentAction = () => {
+    if (editor) editor.getAction('editor.action.formatDocument').run();
+  };
 
   const onLanguageChange = (_language: string) => {
     if (editor) {
@@ -89,6 +97,11 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
       monaco.editor.setModelLanguage(editor.getModel(), _language); // 切换语言
     }
   };
+
+  const onAddExampleClick = (egText: string) => {
+    if (editor) editor.getModel().setValue(egText);
+  };
+
   return <div className="ajax-tools-monaco-editor-container">
     <header className="ajax-tools-monaco-editor-header">
       <Select
@@ -101,6 +114,20 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
           languageSelectOptions.map((lang) => <Select.Option key={lang} value={lang}>{lang}</Select.Option>)
         }
       </Select>
+      <div>
+        <Space>
+          <a
+            title="Example Case"
+            onClick={() => onAddExampleClick(examples[0].egText)}
+          >
+            Example
+          </a>
+          <AlignLeftOutlined
+            title="Format Document"
+            onClick={formatDocumentAction}
+          />
+        </Space>
+      </div>
     </header>
     <div
       ref={editorRef}

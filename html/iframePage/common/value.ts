@@ -58,3 +58,26 @@ export const HTTP_METHOD_MAP = [
   'TRACE',
   'PATCH',
 ];
+
+export const HEADERS_EXAMPLES = [{
+  egText: `{
+  "Content-Type": "application/json"
+}
+`
+}];
+
+export const RESPONSE_EXAMPLES = [{
+  egText: `
+// e.g. json   
+{
+  "status": 200,
+  "response": "OK"
+}
+
+// e.g. javascript
+return {
+  "status": 200,
+  "response": "OK"
+}
+`
+}];

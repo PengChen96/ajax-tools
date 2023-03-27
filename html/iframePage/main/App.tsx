@@ -390,7 +390,7 @@ function App() {
                           rows={4}
                           value={v.responseText}
                           onChange={(e) => onInterfaceListChange(index, i, 'responseText', e.target.value)}
-                          placeholder='Response.  eg: { "status": 200, "response": "OK" }'
+                          placeholder='Response  e.g. { "status": 200, "response": "OK" }'
                         />
                         <FormOutlined
                           className="ajax-tools-textarea-edit"
@@ -429,7 +429,8 @@ function App() {
             icon={<DropboxOutlined style={{ color: '#c1d0dd' }}/>}
             title={'Ohhh... nothing here'}
             subTitle={<>
-                Create a rule by clicking the <Button size="small" type="primary" onClick={onGroupAdd}>Add Group</Button> button
+                Create a rule by clicking the <Button size="small" type="primary" onClick={onGroupAdd}>Add Group</Button> button <br/>
+                Or F12 opens devtools and selects the U-Network panel to get started quickly.
             </>}
           />
         }

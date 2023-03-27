@@ -1,7 +1,7 @@
 import { Modal, Tabs, Input, Card, Space, Select } from 'antd';
 import React, { ForwardedRef, useImperativeHandle, useRef, useState } from 'react';
 import MonacoEditor from '../MonacoEditor';
-import { HTTP_METHOD_MAP } from '../../common/value';
+import { HEADERS_EXAMPLES, RESPONSE_EXAMPLES, HTTP_METHOD_MAP } from '../../common/value';
 
 import './index.css';
 
@@ -118,7 +118,7 @@ const ModifyDataModal = (
                       value={replacementMethod}
                       onChange={(value) => setReplacementMethod(value)}
                     >
-                      <Select.Option value="">*(any)</Select.Option>
+                      <Select.Option value="">*(same)</Select.Option>
                       { HTTP_METHOD_MAP.map((method) => <Select.Option key={method} value={method}>{method}</Select.Option>) }
                     </Select>
                     <Input
@@ -128,13 +128,14 @@ const ModifyDataModal = (
                     />
                   </Space.Compact>
                 </Card>
-                <Card title="Request Headers" type="inner" size="small">
+                <Card title="Replacement Request Headers" type="inner" size="small">
                   <MonacoEditor
                     ref={monacoEditorHeadersRef}
                     language={'json'}
                     languageSelectOptions={['json']}
                     text={headersText}
                     editorHeight={'calc(100vh - 300px - 168px)'}
+                    examples={HEADERS_EXAMPLES}
                   />
                 </Card>
               </Space>
@@ -157,6 +158,7 @@ const ModifyDataModal = (
               ref={monacoEditorResponseRef}
               language={responseLanguage}
               text={responseText}
+              examples={RESPONSE_EXAMPLES}
             />,
           },
         ]}
