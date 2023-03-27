@@ -201,10 +201,22 @@ const ajax_tools_space = {
     }
     const [requestUrl, data] = args;
     const matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: requestUrl, thisMethod: data && data.method});
-    if (matchedInterface && matchedInterface.headers && args && args[1]) {
-      const overrideHeaders = ajax_tools_space.getOverrideText(matchedInterface.headers, data, true);
-      args[1].headers = Object.assign(args[1].headers, overrideHeaders);
-      // args[0] = requestUrl.replace('api.', '');
+    if (matchedInterface && args) {
+      console.groupCollapsed(`%c Matched XHR Path/Rule：${matchedInterface.request}`, 'background-color: #fa8c16; color: white; padding: 4px');
+      if (matchedInterface.replacementUrl && args[0]) {
+        args[0] = matchedInterface.replacementUrl;
+        console.info(`%cReplacement Url：`, 'background-color: #ff8040; color: white;', matchedInterface.replacementUrl);
+      }
+      if (matchedInterface.replacementMethod && args[1]) {
+        args[1].method = matchedInterface.replacementMethod;
+        console.info(`%cReplacement Method：`, 'background-color: #ff8040; color: white;', matchedInterface.replacementMethod);
+      }
+      if (matchedInterface.headers && args[1]) {
+        const overrideHeaders = ajax_tools_space.getOverrideText(matchedInterface.headers, data, true);
+        args[1].headers = Object.assign(args[1].headers, overrideHeaders);
+        console.info(`%cReplacement Headers：`, 'background-color: #ff8040; color: white;', overrideHeaders);
+      }
+      console.groupEnd();
     }
     return ajax_tools_space.originalFetch(...args).then(async (response) => {
       let overrideText = undefined;
