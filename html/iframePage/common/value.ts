@@ -66,18 +66,58 @@ export const HEADERS_EXAMPLES = [{
 `
 }];
 
-export const RESPONSE_EXAMPLES = [{
-  egText: `
-// e.g. json   
-{
-  "status": 200,
-  "response": "OK"
-}
-
-// e.g. javascript
-return {
+export const RESPONSE_EXAMPLES = [
+  {
+    egTitle: 'e.g. json Basic',
+    egText: `{
   "status": 200,
   "response": "OK"
 }
 `
-}];
+  },
+  {
+    egTitle: 'e.g. javascript Basic',
+    egText: `const data = [];
+for (let i = 0; i < 10; i++) {
+  data.push({ id: i });
+}
+
+return {
+  "status": 200,
+  "response": data
+}
+`
+  },
+  {
+    egTitle: 'e.g. javascript Mock.js',
+    egText: `const data = Mock.mock({
+  'list|1-10': [{
+    'id|+1': 1
+  }]
+});
+
+return {
+  "status": 200,
+  "response": data
+}
+
+// Mock.js: https://github.com/nuysoft/Mock/wiki/Getting-Started
+`
+  },
+  {
+    egTitle: 'e.g. javascript Create Scene',
+    egText: `const { method, payload, originalResponse } = arguments[0];
+if (method === 'get') { // Method
+  // do something 
+}
+if (payload) { // parameters { queryStringParameters，requestPayload }
+  // do something
+}
+
+return {
+  "status": 200,
+  "response": originalResponse
+}
+`
+  }
+];

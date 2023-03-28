@@ -1,6 +1,6 @@
 import React, { ForwardedRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { Select, Space } from 'antd';
-import { AlignLeftOutlined } from '@ant-design/icons';
+import { Select, Space, Dropdown, MenuProps } from 'antd';
+import { AlignLeftOutlined, DownOutlined } from '@ant-design/icons';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 // @ts-ignore
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
@@ -50,7 +50,7 @@ interface MonacoEditorProps {
   editorHeight?: number | string;
   language?: string;
   text?: string;
-  examples?: { egText: string }[];
+  examples?: { egTitle?: string, egText: string }[];
 }
 const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstance: any }>) => {
   const editorRef = useRef(null);
@@ -60,7 +60,7 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
   const {
     languageSelectOptions = ['json', 'javascript'],
     editorHeight = document.body.offsetHeight - 300,
-    examples = [{ egText: 'e.g.' }]
+    examples = [{ egTitle: '', egText: 'e.g.' }]
   } = props;
   const [editor, setEditor] = useState<any>(null);
   const [language, setLanguage] = useState<string>(props.language || 'json');
@@ -102,6 +102,12 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
     if (editor) editor.getModel().setValue(egText);
   };
 
+  const items: MenuProps['items'] = examples.map((eg: {egTitle?: string, egText: string}, index) => {
+    return {
+      key: index,
+      label: <div onClick={()=>onAddExampleClick(eg.egText)}>{eg.egTitle}</div>,
+    };
+  });
   return <div className="ajax-tools-monaco-editor-container">
     <header className="ajax-tools-monaco-editor-header">
       <Select
@@ -115,13 +121,22 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
         }
       </Select>
       <div>
-        <Space>
-          <a
-            title="Example Case"
-            onClick={() => onAddExampleClick(examples[0].egText)}
-          >
-            Example
-          </a>
+        <Space size={16}>
+          {
+            examples.length > 1 ? <Dropdown menu={{ items }}>
+              <a onClick={(e) => e.preventDefault()}>
+                <Space size={4}>
+                  Example
+                  <DownOutlined />
+                </Space>
+              </a>
+            </Dropdown> : <a
+              title="Example Case"
+              onClick={() => onAddExampleClick(examples[0].egText)}
+            >
+              Example
+            </a>
+          }
           <AlignLeftOutlined
             title="Format Document"
             onClick={formatDocumentAction}

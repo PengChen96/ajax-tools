@@ -125,11 +125,11 @@ const ajax_tools_space = {
           // modify request url
           if (matchedInterface) {
             console.groupCollapsed(`%c Matched XHR Path/Rule：${matchedInterface.request}`, 'background-color: #fa8c16; color: white; padding: 4px');
-            if (matchedInterface.replacementUrl) {
+            if (matchedInterface.replacementUrl && args[1]) {
               args[1] = matchedInterface.replacementUrl;
               console.info(`%cReplacement Url：`, 'background-color: #ff8040; color: white;', matchedInterface.replacementUrl);
             }
-            if (matchedInterface.replacementMethod) {
+            if (matchedInterface.replacementMethod && args[0]) {
               args[0] = matchedInterface.replacementMethod;
               console.info(`%cReplacement Method：`, 'background-color: #ff8040; color: white;', matchedInterface.replacementMethod);
             }
