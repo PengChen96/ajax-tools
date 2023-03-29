@@ -16,6 +16,7 @@ export interface DefaultInterfaceObject {
   replacementMethod: string,
   replacementUrl: string,
   headers: string,
+  requestPayloadText: string,
   responseText: string,
   language: string, // json javascript
   [key: string]: any;
@@ -32,6 +33,7 @@ export const defaultInterface: DefaultInterfaceObject = {
   replacementMethod: '',
   replacementUrl: '',
   headers: '',
+  requestPayloadText: '',
   responseText: '',
   language: 'json',
 };
@@ -65,6 +67,46 @@ export const HEADERS_EXAMPLES = [{
 }
 `
 }];
+export const REQUEST_PAYLOAD_EXAMPLES = [
+  {
+    egTitle: 'e.g. GET',
+    egText: `const { requestUrl, queryStringParameters } = arguments[0];
+
+let newRequestUrl = requestUrl.split('?')[0] + '?';
+const queryParams = Object.assign(queryStringParameters, {
+  // Add or replace the input parameters
+  test: 'test123'
+})
+Object.keys(queryParams).forEach((key, index) => {
+  if (index !== 0) newRequestUrl += '&';
+  newRequestUrl += key+'='+queryParams[key];
+});
+
+return newRequestUrl;
+`
+  },
+  {
+    egTitle: 'e.g. POST Json',
+    egText: `// if args is Json
+const args = arguments[0];
+
+const params = JSON.parse(args);
+params.test = 'test123';
+
+return JSON.stringify(params);
+`
+  },
+  {
+    egTitle: 'e.g. POST FormData',
+    egText: `// if args is FormData Object
+const args = arguments[0];
+
+args.append('test', 'test123');
+
+return args;
+`
+  }
+];
 
 export const RESPONSE_EXAMPLES = [
   {

@@ -1,7 +1,7 @@
 import { Modal, Tabs, Input, Card, Space, Select } from 'antd';
 import React, { ForwardedRef, useImperativeHandle, useRef, useState } from 'react';
 import MonacoEditor from '../MonacoEditor';
-import { HEADERS_EXAMPLES, RESPONSE_EXAMPLES, HTTP_METHOD_MAP } from '../../common/value';
+import { HEADERS_EXAMPLES, REQUEST_PAYLOAD_EXAMPLES, RESPONSE_EXAMPLES, HTTP_METHOD_MAP } from '../../common/value';
 
 import './index.css';
 
@@ -11,12 +11,14 @@ export interface ModifyDataModalOnSaveProps {
   replacementMethod: string,
   replacementUrl: string,
   headersEditorValue: string,
+  requestPayloadEditorValue: string,
   responseEditorValue:string,
   language: string
 }
 interface ModifyDataModalProps {
   onSave: (
-    { groupIndex, interfaceIndex, replacementMethod, replacementUrl, headersEditorValue, responseEditorValue, language } : ModifyDataModalOnSaveProps
+    { groupIndex, interfaceIndex, replacementMethod, replacementUrl, headersEditorValue,
+      requestPayloadEditorValue, responseEditorValue, language } : ModifyDataModalOnSaveProps
   ) => void;
 }
 interface OpenModalProps {
@@ -27,6 +29,7 @@ interface OpenModalProps {
   replacementMethod: string;
   replacementUrl: string;
   headersText: string;
+  requestPayloadText: string;
   responseLanguage: string;
   responseText: string;
 }
@@ -42,6 +45,7 @@ const ModifyDataModal = (
   ref: ForwardedRef<{ openModal: (props: OpenModalProps)=>void }>
 ) => {
   const monacoEditorHeadersRef = useRef<any>({});
+  const monacoEditorRequestPayloadRef = useRef<any>({});
   const monacoEditorResponseRef = useRef<any>({});
 
   const { onSave = () => {} } = props;
@@ -53,6 +57,7 @@ const ModifyDataModal = (
   const [replacementMethod, setReplacementMethod] = useState('');
   const [replacementUrl, setReplacementUrl] = useState('');
   const [headersText, setHeadersText] = useState('');
+  const [requestPayloadText, setRequestPayloadText] = useState('');
   const [responseLanguage, setResponseLanguage] = useState('json');
   const [responseText, setResponseText] = useState('');
 
@@ -61,7 +66,8 @@ const ModifyDataModal = (
   }));
 
   const openModal = (
-    { groupIndex, interfaceIndex, activeTab, request, replacementMethod, replacementUrl, headersText, responseLanguage, responseText } : OpenModalProps
+    { groupIndex, interfaceIndex, activeTab, request, replacementMethod, replacementUrl,
+      headersText, requestPayloadText, responseLanguage, responseText } : OpenModalProps
   ) => {
     setGroupIndex(groupIndex);
     setInterfaceIndex(interfaceIndex);
@@ -71,6 +77,7 @@ const ModifyDataModal = (
     setReplacementMethod(replacementMethod);
     setReplacementUrl(replacementUrl);
     setHeadersText(headersText);
+    setRequestPayloadText(requestPayloadText);
     setResponseLanguage(responseLanguage);
     setResponseText(responseText);
     setVisible(true);
@@ -78,11 +85,14 @@ const ModifyDataModal = (
 
   const handleOk = () => {
     const { editorInstance:headersEditorInstance } = monacoEditorHeadersRef.current;
+    const { editorInstance:requestPayloadEditorInstance } = monacoEditorRequestPayloadRef.current;
     const { editorInstance:responseEditorInstance } = monacoEditorResponseRef.current;
     const headersEditorValue = headersEditorInstance?.getValue();
+    const requestPayloadEditorValue = requestPayloadEditorInstance?.getValue();
     const responseEditorValue = responseEditorInstance?.getValue();
     const language = responseEditorInstance?.getModel()?.getLanguageId();
-    onSave({ groupIndex, interfaceIndex, replacementMethod, replacementUrl, headersEditorValue, responseEditorValue, language });
+    onSave({ groupIndex, interfaceIndex, replacementMethod, replacementUrl, headersEditorValue,
+      requestPayloadEditorValue, responseEditorValue, language });
     setVisible(false);
   };
 
@@ -141,16 +151,17 @@ const ModifyDataModal = (
               </Space>
             </Wrapper>,
           },
-          // {
-          //   label: `Request Payload`,
-          //   key: 'RequestPayload',
-          //   children: <MonacoEditor
-          //     ref={monacoEditorHeadersRef}
-          //     language={'json'}
-          //     languageSelectOptions={['json']}
-          //     text={headersText}
-          //   />,
-          // },
+          {
+            label: `Request Payload`,
+            key: 'RequestPayload',
+            children: <MonacoEditor
+              ref={monacoEditorRequestPayloadRef}
+              language={'javascript'}
+              languageSelectOptions={['javascript']}
+              text={requestPayloadText}
+              examples={REQUEST_PAYLOAD_EXAMPLES}
+            />,
+          },
           {
             label: `Response`,
             key: 'Response',

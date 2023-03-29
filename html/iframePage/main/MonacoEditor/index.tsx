@@ -78,7 +78,7 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
   }, []);
   useEffect(() => {
     if (editor) {
-      editor.getModel().setValue(props.text);
+      editor.getModel().setValue(props.text || '');
       setTimeout(() => {
         // 格式化代码
         formatDocumentAction();

@@ -38,6 +38,12 @@ const ajax_tools_space = {
     }
     return overrideText;
   },
+  executeStringFunction: (stringFunction, args) => {
+    try {
+      stringFunction = (new Function(stringFunction))(args);
+    } catch (e) {}
+    return stringFunction;
+  },
   getRequestParams: (requestUrl) => {
     if (!requestUrl) {
       return null;
@@ -122,7 +128,7 @@ const ajax_tools_space = {
           const [method, requestUrl] = args;
           this._matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: requestUrl, thisMethod: method});
           const matchedInterface = this._matchedInterface;
-          // modify request url
+          // modify request
           if (matchedInterface) {
             console.groupCollapsed(`%c Matched XHR Path/Rule：${matchedInterface.request}`, 'background-color: #fa8c16; color: white; padding: 4px');
             if (matchedInterface.replacementUrl && args[1]) {
@@ -133,6 +139,15 @@ const ajax_tools_space = {
               args[0] = matchedInterface.replacementMethod;
               console.info(`%cReplacement Method：`, 'background-color: #ff8040; color: white;', matchedInterface.replacementMethod);
             }
+            if (matchedInterface.requestPayloadText && args[0] && args[1] && args[0].toUpperCase() === 'GET') {
+              const queryStringParameters = ajax_tools_space.getRequestParams(args[1]);
+              const data = {
+                requestUrl: args[1],
+                queryStringParameters
+              }
+              args[1] = ajax_tools_space.executeStringFunction(matchedInterface.requestPayloadText, data);
+              console.info(`%cReplacement Request Payload, GET：`, 'background-color: #ff8040; color: white;', args[1]);
+            }
             console.groupEnd();
           }
           xhr.open && xhr.open.apply(xhr, args);
@@ -140,15 +155,20 @@ const ajax_tools_space = {
         continue;
       } else if (attr === 'send') {
         this.send = (...args) => {
-          this._sendArgs = args;
           const matchedInterface = this._matchedInterface;
-          if (matchedInterface && matchedInterface.headers) {
-            const overrideHeaders = ajax_tools_space.getOverrideText(matchedInterface.headers, this._openArgs, true);
-            const headers = this._headerArgs ? Object.assign(this._headerArgs, overrideHeaders) : overrideHeaders;
-            Object.keys(headers).forEach((key) => {
-              xhr.setRequestHeader && xhr.setRequestHeader.apply(xhr, [key, headers[key]]);
-            })
+          if (matchedInterface) {
+            if (matchedInterface.headers) {
+              const overrideHeaders = ajax_tools_space.getOverrideText(matchedInterface.headers, this._openArgs, true);
+              const headers = this._headerArgs ? Object.assign(this._headerArgs, overrideHeaders) : overrideHeaders;
+              Object.keys(headers).forEach((key) => {
+                xhr.setRequestHeader && xhr.setRequestHeader.apply(xhr, [key, headers[key]]);
+              })
+            }
+            if (matchedInterface.requestPayloadText) {
+              args[0] = ajax_tools_space.executeStringFunction(matchedInterface.requestPayloadText, args[0]);
+            }
           }
+          this._sendArgs = args;
           xhr.send && xhr.send.apply(xhr, args);
         }
         continue;
@@ -215,6 +235,20 @@ const ajax_tools_space = {
         const overrideHeaders = ajax_tools_space.getOverrideText(matchedInterface.headers, data, true);
         args[1].headers = Object.assign(args[1].headers, overrideHeaders);
         console.info(`%cReplacement Headers：`, 'background-color: #ff8040; color: white;', overrideHeaders);
+      }
+      if (matchedInterface.requestPayloadText && args[0] && args[1]) {
+        if (['GET', 'HEAD'].includes(args[1].method.toUpperCase())) {
+          const queryStringParameters = ajax_tools_space.getRequestParams(args[0]);
+          const data = {
+            requestUrl: args[0],
+            queryStringParameters
+          }
+          args[0] = ajax_tools_space.executeStringFunction(matchedInterface.requestPayloadText, data);
+          console.info(`%cReplacement Request Payload, GET：`, 'background-color: #ff8040; color: white;', args[0]);
+        } else {
+          data.body = ajax_tools_space.executeStringFunction(matchedInterface.requestPayloadText, data.body);
+          console.info(`%cReplacement Request Payload, NOT GET|HEAD：`, 'background-color: #ff8040; color: white;', data.body);
+        }
       }
       console.groupEnd();
     }
