@@ -1,6 +1,6 @@
 {
   "name": "Ajax Interceptor Tools",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Modify the response text of Ajax requests",
   "manifest_version": 3,
   "permissions": [

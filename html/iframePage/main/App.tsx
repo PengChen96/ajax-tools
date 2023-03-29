@@ -440,7 +440,11 @@ function App() {
         }
       </main>
       <footer className="ajax-tools-iframe-footer">
-        Copyright © 2022-{(new Date()).getFullYear()} Ajax Interceptor Tools. ( 🌟 if you find it helpful, give me a star on
+        Copyright © 2022-{(new Date()).getFullYear()}
+        <a href="https://github.com/PengChen96/ajax-tools" target="_blank" rel="noreferrer" style={{ color: '#666' }}>
+          &nbsp;Ajax Interceptor Tools&nbsp;
+        </a>
+        ( 🌟 if you find it helpful, give me a star on
         <a href="https://github.com/PengChen96/ajax-tools" target="_blank" rel="noreferrer" style={{ margin: '0 4px' }}>
           <GithubOutlined style={{ color: '#333' }} title="GitHub"/>
         </a>
