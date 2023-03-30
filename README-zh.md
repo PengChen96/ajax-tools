@@ -13,6 +13,7 @@
 - [x] 支持以JSON或JavaScript格式编辑响应结果（支持使用Mock.js语法）
 - [x] 支持在JavaScript编程中从arguments参数获取原始请求信息，轻松创建mock场景
 - [x] 在DevTools中新增U-Network面板，快速实现请求拦截和响应结果修改【0.0.4版本新增】
+- [x] 支持更改请求的URL、请求体和请求头【0.0.5版本新增】
 
 ## 安装
 谷歌商店：https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm  
