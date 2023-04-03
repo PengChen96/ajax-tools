@@ -1,11 +1,18 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Checkbox, Collapse, Input, Select, Switch, Result, Dropdown, Space, MenuProps } from 'antd';
-import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined, DropboxOutlined, MoreOutlined } from '@ant-design/icons';
+import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined, DropboxOutlined, MoreOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import ModifyDataModal, { ModifyDataModalOnSaveProps } from './ModifyDataModal';
-import { defaultInterface, defaultAjaxDataList, DefaultInterfaceObject, HTTP_METHOD_MAP } from '../common/value';
+import {
+  defaultInterface,
+  defaultAjaxDataList,
+  DefaultInterfaceObject,
+  HTTP_METHOD_MAP,
+} from '../common/value';
 import 'antd/dist/antd.css';
 import './App.css';
+import { exportJSON } from './utils/exportJson';
+import { openImportJsonModal } from './utils/importJson';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -268,7 +275,35 @@ function App() {
         </div>
       </header>
       <nav className="ajax-tools-iframe-action">
-        <Button size="small" type="primary" onClick={onGroupAdd}>Add Group</Button>
+        <Space>
+          <Dropdown.Button size="small" type="primary" menu={{
+            items: [
+              {
+                key: '1',
+                label: 'Import',
+                icon: <UploadOutlined />,
+                onClick: async () => {
+                  const importJsonData = await openImportJsonModal();
+                  let newAjaxDataList = ajaxDataList;
+                  if (Array.isArray(importJsonData)) {
+                    newAjaxDataList = [...ajaxDataList, ...importJsonData];
+                  }
+                  setAjaxDataList(newAjaxDataList);
+                  chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
+                }
+              },
+              {
+                key: '2',
+                label: 'Export',
+                icon: <DownloadOutlined />,
+                onClick: () => exportJSON(`AjaxInterceptorData_${JSON.stringify(new Date())}`, ajaxDataList),
+                disabled: ajaxDataList.length < 1
+              },
+            ]
+          }}>
+            Add Group
+          </Dropdown.Button>
+        </Space>
         <div>
           <Checkbox
             defaultChecked
