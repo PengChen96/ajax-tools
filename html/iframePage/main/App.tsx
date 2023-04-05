@@ -196,12 +196,26 @@ function App() {
     if (responseEditorValue !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'responseText', responseEditorValue);
     if (language !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'language', language);
   };
+  // placement: top|bottom
+  const onInterfaceMove = (groupIndex: number, interfaceIndex: number, placement: string ) => {
+    const { interfaceList = [] } = ajaxDataList[groupIndex];
+    const movedItem = interfaceList.splice(interfaceIndex, 1)[0];
+    if (placement === 'top') {
+      interfaceList.unshift(movedItem);
+    } else if (placement === 'bottom') {
+      interfaceList.push(movedItem);
+    }
+    ajaxDataList[groupIndex].interfaceList = interfaceList;
+    setAjaxDataList([...ajaxDataList]);
+    chrome.storage.local.set({ ajaxDataList });
+  };
 
   const genExtra = (
     groupIndex: number,
     interfaceIndex: number,
     v: DefaultInterfaceObject,
   ) => {
+    const { interfaceList = [] } = ajaxDataList[groupIndex];
     const items: MenuProps['items'] = [
       {
         key: '0',
@@ -219,6 +233,20 @@ function App() {
           responseLanguage: v.language,
           responseText: v.responseText
         })
+      },
+      {
+        key: '1',
+        label: 'Move to top',
+        icon: <ToTopOutlined style={{ fontSize: 14 }} />,
+        onClick: () => onInterfaceMove( groupIndex, interfaceIndex, 'top'),
+        disabled: interfaceIndex === 0
+      },
+      {
+        key: '2',
+        label: 'Move to bottom',
+        icon: <ToTopOutlined style={{ transform: 'rotateZ(180deg)', fontSize: 14 }}/>,
+        onClick: () => onInterfaceMove(groupIndex, interfaceIndex, 'bottom'),
+        disabled: interfaceIndex === interfaceList.length - 1
       },
     ];
     return <div onClick={(event) => event.stopPropagation()} style={{ display: 'flex', alignItems: 'center', height: 24 }}>
