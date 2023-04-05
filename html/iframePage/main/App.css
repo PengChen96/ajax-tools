@@ -34,7 +34,7 @@
 }
 
 .ajax-tools-iframe-body-header {
-  padding: 8px 16px;
+  padding: 8px 12px 8px 10px;
   border: 1px solid #d1d3d8;
   border-bottom: none;
   border-top-left-radius: 3px;
@@ -49,7 +49,7 @@
   border: none;
   outline: none;
   box-shadow: none !important;
-  padding: 0 8px 0 0;
+  padding: 0 8px;
 }
 
 .ajax-tools-iframe-collapse .ant-collapse-header {

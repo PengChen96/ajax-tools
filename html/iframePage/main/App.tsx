@@ -1,7 +1,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Checkbox, Collapse, Input, Select, Switch, Result, Dropdown, Space, MenuProps } from 'antd';
-import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined, DropboxOutlined, MoreOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined,
+  DropboxOutlined, MoreOutlined, UploadOutlined, DownloadOutlined, DoubleRightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
 import ModifyDataModal, { ModifyDataModalOnSaveProps } from './ModifyDataModal';
 import {
   defaultInterface,
@@ -123,15 +124,33 @@ function App() {
     setAjaxDataList([...newAjaxDataList]);
     chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
   };
+  // placement: top|bottom
+  const onGroupMove = (groupIndex: number, placement: string) => {
+    const movedItem = ajaxDataList.splice(groupIndex, 1)[0];
+    if (placement === 'top') {
+      ajaxDataList.unshift(movedItem);
+    } else if (placement === 'bottom') {
+      ajaxDataList.push(movedItem);
+    }
+    setAjaxDataList([...ajaxDataList]);
+    chrome.storage.local.set({ ajaxDataList });
+  };
   const onGroupSummaryTextChange = (e: React.ChangeEvent<HTMLInputElement>, groupIndex: number) => {
     ajaxDataList[groupIndex].summaryText = e.target.value;
     setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ ajaxDataList });
   };
-
-  // 收缩分组
+  // 收缩分组 折叠全部keys传[]
   const onCollapseChange = (groupIndex: number, keys: string | string[]) => {
     ajaxDataList[groupIndex].collapseActiveKeys = Array.isArray(keys) ? keys : [keys];
+    setAjaxDataList([...ajaxDataList]);
+    chrome.storage.local.set({ ajaxDataList });
+  };
+  const onGroupOpenChange = (groupIndex: number, open: boolean) => {
+    ajaxDataList[groupIndex].interfaceList = ajaxDataList[groupIndex].interfaceList.map((v) => {
+      v.open = open;
+      return v;
+    });
     setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ ajaxDataList });
   };
@@ -186,8 +205,8 @@ function App() {
     const items: MenuProps['items'] = [
       {
         key: '0',
-        label: 'Edit Data',
-        icon: <FormOutlined />,
+        label: 'Edit data',
+        icon: <FormOutlined style={{ fontSize: 14 }} />,
         onClick: () => modifyDataModalRef.current.openModal({
           groupIndex,
           interfaceIndex,
@@ -204,6 +223,7 @@ function App() {
     ];
     return <div onClick={(event) => event.stopPropagation()} style={{ display: 'flex', alignItems: 'center', height: 24 }}>
       <Switch
+        title={v.open ? 'Disable Extension' : 'Enable Extension'}
         checked={v.open}
         onChange={(value) => onInterfaceListChange(groupIndex, interfaceIndex, 'open', value)}
         size="small"
@@ -223,7 +243,7 @@ function App() {
         menu={{ items }}
         trigger={['click']}
       >
-        <MoreOutlined style={{ marginLeft: 4, fontSize: 18 }}/>
+        <MoreOutlined title="More" style={{ marginLeft: 4, fontSize: 18 }}/>
       </Dropdown>
     </div>;
   };
@@ -285,7 +305,7 @@ function App() {
                 {
                   key: '1',
                   label: 'Import',
-                  icon: <UploadOutlined />,
+                  icon: <UploadOutlined style={{ fontSize: 14 }} />,
                   onClick: async () => {
                     const importJsonData = await openImportJsonModal();
                     let newAjaxDataList = ajaxDataList;
@@ -299,7 +319,7 @@ function App() {
                 {
                   key: '2',
                   label: 'Export',
-                  icon: <DownloadOutlined />,
+                  icon: <DownloadOutlined style={{ fontSize: 14 }} />,
                   onClick: () => exportJSON(`AjaxInterceptorData_${JSON.stringify(new Date())}`, ajaxDataList),
                   disabled: ajaxDataList.length < 1
                 },
@@ -339,18 +359,65 @@ function App() {
         {
           ajaxDataList.map((item, index) => {
             const { summaryText, headerClass, interfaceList = [] } = item;
+            const groupOpen = !!interfaceList.find(v => v.open);
             return <div key={index}>
               <div className={`ajax-tools-iframe-body-header ${headerClass}`}>
+                <Button
+                  type="text"
+                  shape="circle"
+                  size="small"
+                  title="Collapse All"
+                  icon={<DoubleRightOutlined/>}
+                  onClick={() => onCollapseChange(index, [])}
+                />
                 <Input
                   value={summaryText}
                   className={`ajax-tools-iframe-body-header-input ${headerClass}`}
                   onChange={(e) => onGroupSummaryTextChange(e, index)}
                 />
-                <CloseOutlined
-                  title="Delete group"
-                  style={{ fontSize: 12 }}
-                  onClick={() => onGroupDelete(index)}
+                <Switch
+                  title={groupOpen ? 'Disable group' : 'Enable group'}
+                  checked={groupOpen}
+                  onChange={(open) => onGroupOpenChange(index, open)}
+                  size="small"
+                  style={{ margin: '0 22px 0 4px' }}
                 />
+                <Dropdown
+                  menu={{
+                    items: [
+                      {
+                        key: '0',
+                        label: 'Move to top',
+                        icon: <ToTopOutlined style={{ fontSize: 14 }} />,
+                        onClick: () => onGroupMove(index, 'top'),
+                        disabled: index === 0
+                      },
+                      {
+                        key: '1',
+                        label: 'Move to bottom',
+                        icon: <ToTopOutlined style={{ transform: 'rotateZ(180deg)', fontSize: 14 }}/>,
+                        onClick: () => onGroupMove(index, 'bottom'),
+                        disabled: index === ajaxDataList.length - 1
+                      },
+                      {
+                        key: '99',
+                        danger: true,
+                        label: 'Delete group',
+                        icon: <DeleteOutlined style={{ fontSize: 14 }}/>,
+                        onClick: () => onGroupDelete(index)
+                      },
+                    ]
+                  }}
+                  trigger={['click']}
+                >
+                  <Button
+                    type="text"
+                    shape="circle"
+                    size="small"
+                    title="More"
+                    icon={<MoreOutlined style={{ fontSize: 22 }}/>}
+                  />
+                </Dropdown>
               </div>
               <Collapse
                 className="ajax-tools-iframe-collapse"
@@ -435,6 +502,7 @@ function App() {
                           placeholder='Response  e.g. { "status": 200, "response": "OK" }'
                         />
                         <FormOutlined
+                          title="Edit"
                           className="ajax-tools-textarea-edit"
                           onClick={() => modifyDataModalRef.current.openModal({
                             groupIndex: index,
