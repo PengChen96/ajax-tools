@@ -276,31 +276,35 @@ function App() {
       </header>
       <nav className="ajax-tools-iframe-action">
         <Space>
-          <Dropdown.Button size="small" type="primary" menu={{
-            items: [
-              {
-                key: '1',
-                label: 'Import',
-                icon: <UploadOutlined />,
-                onClick: async () => {
-                  const importJsonData = await openImportJsonModal();
-                  let newAjaxDataList = ajaxDataList;
-                  if (Array.isArray(importJsonData)) {
-                    newAjaxDataList = [...ajaxDataList, ...importJsonData];
+          <Dropdown.Button
+            size="small"
+            type="primary"
+            onClick={onGroupAdd}
+            menu={{
+              items: [
+                {
+                  key: '1',
+                  label: 'Import',
+                  icon: <UploadOutlined />,
+                  onClick: async () => {
+                    const importJsonData = await openImportJsonModal();
+                    let newAjaxDataList = ajaxDataList;
+                    if (Array.isArray(importJsonData)) {
+                      newAjaxDataList = [...ajaxDataList, ...importJsonData];
+                    }
+                    setAjaxDataList(newAjaxDataList);
+                    chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
                   }
-                  setAjaxDataList(newAjaxDataList);
-                  chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
-                }
-              },
-              {
-                key: '2',
-                label: 'Export',
-                icon: <DownloadOutlined />,
-                onClick: () => exportJSON(`AjaxInterceptorData_${JSON.stringify(new Date())}`, ajaxDataList),
-                disabled: ajaxDataList.length < 1
-              },
-            ]
-          }}>
+                },
+                {
+                  key: '2',
+                  label: 'Export',
+                  icon: <DownloadOutlined />,
+                  onClick: () => exportJSON(`AjaxInterceptorData_${JSON.stringify(new Date())}`, ajaxDataList),
+                  disabled: ajaxDataList.length < 1
+                },
+              ]
+            }}>
             Add Group
           </Dropdown.Button>
         </Space>
