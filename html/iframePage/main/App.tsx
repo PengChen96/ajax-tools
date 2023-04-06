@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Checkbox, Collapse, Input, Select, Switch, Result, Dropdown, Space, MenuProps } from 'antd';
 import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined,
-  DropboxOutlined, MoreOutlined, UploadOutlined, DownloadOutlined, DoubleRightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
+  DropboxOutlined, MoreOutlined, UploadOutlined, DownloadOutlined, RightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
 import ModifyDataModal, { ModifyDataModalOnSaveProps } from './ModifyDataModal';
 import {
   defaultInterface,
@@ -386,8 +386,9 @@ function App() {
       >
         {
           ajaxDataList.map((item, index) => {
-            const { summaryText, headerClass, interfaceList = [] } = item;
+            const { summaryText, headerClass, interfaceList = [], collapseActiveKeys = [] } = item;
             const groupOpen = !!interfaceList.find(v => v.open);
+            const fold = collapseActiveKeys.length < 1;
             return <div key={index}>
               <div className={`ajax-tools-iframe-body-header ${headerClass}`}>
                 <Button
@@ -395,8 +396,15 @@ function App() {
                   shape="circle"
                   size="small"
                   title="Collapse All"
-                  icon={<DoubleRightOutlined/>}
-                  onClick={() => onCollapseChange(index, [])}
+                  icon={<RightOutlined style={{ transform: fold ? undefined : 'rotateZ(90deg)', transition: '.3s' }}/>}
+                  onClick={() => {
+                    if (fold) { // 当前折叠要展开
+                      const allKeys = interfaceList.map(v => v.key);
+                      onCollapseChange(index, allKeys);
+                    } else {
+                      onCollapseChange(index, []);
+                    }
+                  }}
                 />
                 <Input
                   value={summaryText}
