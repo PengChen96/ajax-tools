@@ -14,6 +14,7 @@ async function toggleIframeVisibility() {
 }
 function setSwitchBadge (switchValue) {
   chrome.action.setBadgeText({text: switchValue ? 'ON' : 'OFF'});
+  chrome.action.setBadgeTextColor({ color: switchValue ? '#ffffff' : '#333333' });
   chrome.action.setBadgeBackgroundColor({color: switchValue ? '#4480f7' : '#bfbfbf'});
 }
 
