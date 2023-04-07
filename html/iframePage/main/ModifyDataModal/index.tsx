@@ -117,6 +117,16 @@ const ModifyDataModal = (
         onChange={(v) => setActiveTab(v)}
         items={[
           {
+            label: `Response`,
+            key: 'Response',
+            children: <MonacoEditor
+              ref={monacoEditorResponseRef}
+              language={responseLanguage}
+              text={responseText}
+              examples={RESPONSE_EXAMPLES}
+            />,
+          },
+          {
             label: `Request`,
             key: 'Request',
             children: <Wrapper>
@@ -160,16 +170,6 @@ const ModifyDataModal = (
               languageSelectOptions={['javascript']}
               text={requestPayloadText}
               examples={REQUEST_PAYLOAD_EXAMPLES}
-            />,
-          },
-          {
-            label: `Response`,
-            key: 'Response',
-            children: <MonacoEditor
-              ref={monacoEditorResponseRef}
-              language={responseLanguage}
-              text={responseText}
-              examples={RESPONSE_EXAMPLES}
             />,
           },
         ]}

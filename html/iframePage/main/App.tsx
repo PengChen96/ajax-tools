@@ -224,7 +224,7 @@ function App() {
         onClick: () => modifyDataModalRef.current.openModal({
           groupIndex,
           interfaceIndex,
-          activeTab: 'Request',
+          activeTab: 'Response',
           request: v.request,
           replacementMethod: v.replacementMethod,
           replacementUrl: v.replacementUrl,
@@ -509,27 +509,6 @@ function App() {
                       }
                       extra={genExtra(index, i, v)}
                     >
-
-                      {/*<div style={{ position: 'relative', marginBottom: 8 }}>*/}
-                      {/*  <TextArea*/}
-                      {/*    rows={2}*/}
-                      {/*    value={v.headers}*/}
-                      {/*    onChange={(e) => onInterfaceListChange(index, i, 'headers', e.target.value)}*/}
-                      {/*    placeholder='Request Headers.  eg: { "Content-Type": "application/json" }'*/}
-                      {/*  />*/}
-                      {/*  <FormOutlined*/}
-                      {/*    className="ajax-tools-textarea-edit"*/}
-                      {/*    onClick={() => modifyDataModalRef.current.openModal({*/}
-                      {/*      groupIndex: index,*/}
-                      {/*      interfaceIndex: i,*/}
-                      {/*      activeTab: 'RequestHeaders',*/}
-                      {/*      request: v.request,*/}
-                      {/*      headersText: v.headers,*/}
-                      {/*      responseLanguage: v.language,*/}
-                      {/*      responseText: v.responseText*/}
-                      {/*    })}*/}
-                      {/*  />*/}
-                      {/*</div>*/}
                       <div style={{ position: 'relative' }}>
                         <TextArea
                           rows={4}
