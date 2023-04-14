@@ -27,7 +27,9 @@ const ajax_tools_space = {
         if (returnText) {
           overrideText = typeof returnText === 'object' ? JSON.stringify(returnText) : returnText;
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error('【Executing your function reports an error】\n', e);
+      }
     }
     if (toJson) {
       try {
