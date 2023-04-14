@@ -106,7 +106,15 @@ function App() {
       }
     );
   };
-
+  const onImportClick = async () => {
+    const importJsonData = await openImportJsonModal();
+    let newAjaxDataList = ajaxDataList;
+    if (Array.isArray(importJsonData)) {
+      newAjaxDataList = [...ajaxDataList, ...importJsonData];
+    }
+    setAjaxDataList(newAjaxDataList);
+    chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
+  };
   // 新增分组
   const onGroupAdd = () => {
     const len = ajaxDataList.length;
@@ -334,15 +342,7 @@ function App() {
                   key: '1',
                   label: 'Import',
                   icon: <UploadOutlined style={{ fontSize: 14 }} />,
-                  onClick: async () => {
-                    const importJsonData = await openImportJsonModal();
-                    let newAjaxDataList = ajaxDataList;
-                    if (Array.isArray(importJsonData)) {
-                      newAjaxDataList = [...ajaxDataList, ...importJsonData];
-                    }
-                    setAjaxDataList(newAjaxDataList);
-                    chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
-                  }
+                  onClick: onImportClick
                 },
                 {
                   key: '2',
@@ -556,6 +556,7 @@ function App() {
             title={'Ohhh... nothing here'}
             subTitle={<>
                 Create a rule by clicking the <Button size="small" type="primary" onClick={onGroupAdd}>Add Group</Button> button <br/>
+                Or importing a <strong>.json</strong> file by clicking the <Button size="small" style={{ marginTop: 6 }} onClick={onImportClick}><UploadOutlined/>Import</Button> button<br/>
                 Or F12 opens devtools and selects the U-Network panel to get started quickly.
             </>}
           />

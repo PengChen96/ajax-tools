@@ -22,7 +22,6 @@ export const openImportJsonModal = () => new Promise((resolve: (val: AjaxDataLis
           setFileList([file]);
           props.onFileChange(file);
         }
-        console.log(file);
         setFileList([file]);
         props.onFileChange(file);
         return false;
