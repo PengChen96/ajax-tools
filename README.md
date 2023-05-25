@@ -12,8 +12,10 @@ An extension plugin for Chrome that modifies the response of AJAX requests.
 - [x] Match requests based on regular expressions and HTTP request methods.
 - [x] Edit response results in JSON or JavaScript format, with support for mock.js syntax.
 - [x] Easily create mock scenarios in JavaScript programming by accessing original request information from the arguments parameter.
-- [x] New U-Network panel in DevTools for quickly intercepting requests and modifying response results [added in version 0.0.4].
-- [x] Support change the request URL, body and request headers [added in version 0.0.5].
+- [x] New U-Network panel in DevTools for quickly intercepting requests and modifying response results.
+- [x] Support change the request URL, request headers and body.
+- [x] Support importing/exporting rule configurations.
+- [x] Support adjusting the order of groups and rules.
 
 ## Install
 https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm  
