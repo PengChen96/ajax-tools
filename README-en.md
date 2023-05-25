@@ -28,8 +28,8 @@ Video: [https://www.youtube.com/watch?v=HPtQO0Fyb7I](https://www.youtube.com/wat
 
 ### Modify Response Results
 In the Response editor, you have the following options:  
-1、Edit the response results using JSON/JavaScript format.   
-2、Forward the original response results if the Response editor is cleared.  
+1. Edit the response results using JSON/JavaScript format.   
+2. Forward the original response results if the Response editor is cleared.  
 <img width="500" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4912b1318dbc4266a8a0781567ed0676~tplv-k3u1fbpfcp-watermark.image?"/>
 
 #### 1. Edit Response Results in JSON Format
@@ -119,7 +119,7 @@ In the example below, the `Content-Type` header in the request will be replaced 
 <img width="500" src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63750565f4b04d38b1f3bdb5b1b75bdd~tplv-k3u1fbpfcp-watermark.image?" />  
 
 #### 3. Modify Request Payload
-In the example below, `test: test123` will be added to the request payload. You can open the DevTools and check the modified request body in the Network panel.
+In the example below, `test: test123` will be added to the request payload. You can open the DevTools and check the modified request body in the Network panel.  
 <img width="500" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd3322e0367b44b799c3a4ad745eb6e8~tplv-k3u1fbpfcp-watermark.image?" />  
 
 ### Quickly Add Requests for Modification
