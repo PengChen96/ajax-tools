@@ -115,7 +115,7 @@ return {
 在Request面板中，您可以选择修改请求URL、method、headers和payload。
 <img width="500" src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ecb0b5fa7f240198940ae6274ffba93~tplv-k3u1fbpfcp-watermark.image?" />
 #### 1. 修改请求URL和method
-例下图中，将会把匹配到的`/auth/login`请求路径替换为`/auth/login2`，并把请求方法改为POST，您可以打开devtools在Network面板中看到替换后的请求。
+例下图中，将会把匹配到的`/auth/login`请求路径替换为`/auth/login2`，并把请求方法改为POST，您可以打开devtools在Network面板中看到替换后的请求。  
 <img width="500" src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03960d6f0fb245a8b3c02357857f8322~tplv-k3u1fbpfcp-watermark.image?" />  
 
 #### 2. 修改请求headers
