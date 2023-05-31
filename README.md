@@ -111,7 +111,7 @@ return {
 In the Request panel, you can modify the request URL, method, headers, and payload.  
 <img width="500" src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ecb0b5fa7f240198940ae6274ffba93~tplv-k3u1fbpfcp-watermark.image?" />
 #### 1. Modify Request URL and Method
-In the example below, any matched `/auth/login` request path will be replaced with `/auth/login2`, and the request method will be changed to POST. You can open the DevTools and check the modified request in the Network panel.
+In the example below, any matched `/auth/login` request path will be replaced with `/auth/login2`, and the request method will be changed to POST. You can open the DevTools and check the modified request in the Network panel.  
 <img width="500" src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03960d6f0fb245a8b3c02357857f8322~tplv-k3u1fbpfcp-watermark.image?" />  
 
 #### 2. Modify Request Headers
@@ -123,11 +123,10 @@ In the example below, `test: test123` will be added to the request payload. You 
 <img width="500" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd3322e0367b44b799c3a4ad745eb6e8~tplv-k3u1fbpfcp-watermark.image?" />  
 
 ### Quickly Add Requests for Modification
-<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ff85299eb4f5441eabbf9a41faa752e9~tplv-k3u1fbpfcp-watermark.image?"> 
+![66ee3acd-702f-4e09-bbb9-f05a2ad14dad.gif](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3cc16f06f1224b9ebf9acabd6f8a01ff~tplv-k3u1fbpfcp-watermark.image?)
 
 ### Support Import/Export of Rule Configurations
-<img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/66e1d75c7cf74bf1924e435171115c08~tplv-k3u1fbpfcp-watermark.image?"> 
-
+![7ff8760b-e9c5-4753-8ed4-4f6d3ec6b80d.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4247d03568a4f5bba0ef5c3c014a0e5~tplv-k3u1fbpfcp-watermark.image?)
 
 ## License
 MIT License.
