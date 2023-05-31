@@ -123,10 +123,10 @@ In the example below, `test: test123` will be added to the request payload. You 
 <img width="500" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd3322e0367b44b799c3a4ad745eb6e8~tplv-k3u1fbpfcp-watermark.image?" />  
 
 ### Quickly Add Requests for Modification
-![66ee3acd-702f-4e09-bbb9-f05a2ad14dad.gif](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3cc16f06f1224b9ebf9acabd6f8a01ff~tplv-k3u1fbpfcp-watermark.image?)
+![QuicklyAddRequestsForModification.gif](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3cc16f06f1224b9ebf9acabd6f8a01ff~tplv-k3u1fbpfcp-watermark.image?)
 
 ### Support Import/Export of Rule Configurations
-![7ff8760b-e9c5-4753-8ed4-4f6d3ec6b80d.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4247d03568a4f5bba0ef5c3c014a0e5~tplv-k3u1fbpfcp-watermark.image?)
+![SupportImportExportOfRuleConfigurations.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4247d03568a4f5bba0ef5c3c014a0e5~tplv-k3u1fbpfcp-watermark.image?)
 
 ## License
 MIT License.
