@@ -1,9 +1,7 @@
-import { Divider, Drawer, Input, Tabs } from 'antd';
+import { Divider, Drawer, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FilterOutlined } from '@ant-design/icons';
 import './RequestDrawer.css';
-
-const { TextArea } = Input;
 
 interface RequestDrawerProps {
   drawerOpen: boolean;
@@ -103,14 +101,7 @@ export default (props: RequestDrawerProps) => {
       </div>
       <div className="ajax-tools-devtools-text" style={{ display: 'flex' }}>
         <strong style={{ flex: 'none' }}>text:&nbsp;</strong>
-        <TextArea
-          value={formatText(postData.text)}
-          bordered={false}
-          autoSize={{
-            minRows: 1,
-            // maxRows: 10,
-          }}
-        />
+        <pre>{formatText(postData.text)}</pre>
       </div>
       {
         postData.params && <div className="ajax-tools-devtools-text">
@@ -130,21 +121,14 @@ export default (props: RequestDrawerProps) => {
   const Response = () => {
     const [response, setResponse] = useState('');
     useEffect(() => {
-      if (drawerOpen) {
+      if (drawerOpen && record.getContent) {
         record.getContent((content: string) => {
           setResponse(content);
         });
       }
     }, []);
     return <>
-      <TextArea
-        value={formatText(response)}
-        bordered={false}
-        autoSize={{
-          minRows: 1,
-          maxRows: Math.floor((window.innerHeight - 180) / 22),
-        }}
-      />
+      <pre>{formatText(response)}</pre>
     </>;
   };
 
