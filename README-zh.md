@@ -127,12 +127,10 @@ return {
 <img width="500" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd3322e0367b44b799c3a4ad745eb6e8~tplv-k3u1fbpfcp-watermark.image?" />  
 
 ### 三、快速添加请求进行修改
-<img width="500" src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e61728a4f0334f8696ff1c14eb46143e~tplv-k3u1fbpfcp-watermark.image?" />  
+<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ff85299eb4f5441eabbf9a41faa752e9~tplv-k3u1fbpfcp-watermark.image?"> 
 
 ### 四、支持导入/导出规则配置
-<img width="100" src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/629825d5d5bf48318027b78b8fbd1d8a~tplv-k3u1fbpfcp-watermark.image?" />   <br />
-<img width="500" src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/850cf4b3b9e7448b984d7d2f6f5669b1~tplv-k3u1fbpfcp-watermark.image?" />  
-
+<img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/66e1d75c7cf74bf1924e435171115c08~tplv-k3u1fbpfcp-watermark.image?"> 
 
 
 ## License
