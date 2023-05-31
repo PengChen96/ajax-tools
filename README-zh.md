@@ -127,10 +127,10 @@ return {
 <img width="500" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd3322e0367b44b799c3a4ad745eb6e8~tplv-k3u1fbpfcp-watermark.image?" />  
 
 ### 三、快速添加请求进行修改
-![快速添加请求进行修改.gif](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3cc16f06f1224b9ebf9acabd6f8a01ff~tplv-k3u1fbpfcp-watermark.image?)
+![快速添加请求进行修改.gif](./assets/QuicklyAddRequestsForModification.gif)
 
 ### 四、支持导入/导出规则配置
-![导入导出规则配置.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4247d03568a4f5bba0ef5c3c014a0e5~tplv-k3u1fbpfcp-watermark.image?)
+![导入导出规则配置.gif](./assets/SupportImportExportOfRuleConfigurations.gif)
 
 
 ## License
