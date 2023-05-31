@@ -95,6 +95,17 @@ const getColumns = ({
   ];
 };
 
+// "/^t.*$/" or "^t.*$" => new RegExp
+const strToRegExp = (regStr: string) => {
+  let regexp = null;
+  const regParts = regStr.match(new RegExp('^/(.*?)/([gims]*)$'));
+  if (regParts) {
+    regexp = new RegExp(regParts[1], regParts[2]);
+  } else {
+    regexp = new RegExp(regStr);
+  }
+  return regexp;
+};
 export default () => {
   const requestFinishedRef = useRef<any>(null);
   const [recording, setRecording] = useState(false);
@@ -285,7 +296,7 @@ export default () => {
         onClick={() => setUNetwork([])}
       />
       <Input
-        placeholder="Filter"
+        placeholder="Filter RegExp"
         size="small"
         style={{ width: 160, marginLeft: 16 }}
         onChange={(e) => setFilterKey(e.target.value)}
@@ -295,7 +306,7 @@ export default () => {
       bordered
       headerNotSticky
       columns={columns}
-      dataSource={uNetwork.filter((v: { request: { url: string; }; }) => v.request.url.toLocaleLowerCase().includes(filterKey.toLocaleLowerCase()))}
+      dataSource={uNetwork.filter((v: { request: { url: string; }; }) => v.request.url.match(strToRegExp(filterKey)))}
       visibleHeight={window.innerHeight - 50}
       rowHeight={24}
       estimatedRowHeight={24}

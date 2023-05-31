@@ -6,7 +6,7 @@ const ajax_tools_space = {
   originalXHR: window.XMLHttpRequest,
   // "/^t.*$/" or "^t.*$" => new RegExp
   strToRegExp: (regStr) => {
-    let regexp = '';
+    let regexp = null;
     const regParts = regStr.match(new RegExp('^/(.*?)/([gims]*)$'));
     if (regParts) {
       regexp = new RegExp(regParts[1], regParts[2]);
