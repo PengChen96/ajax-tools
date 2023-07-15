@@ -97,12 +97,16 @@ const getColumns = ({
 
 // "/^t.*$/" or "^t.*$" => new RegExp
 const strToRegExp = (regStr: string) => {
-  let regexp = null;
-  const regParts = regStr.match(new RegExp('^/(.*?)/([gims]*)$'));
-  if (regParts) {
-    regexp = new RegExp(regParts[1], regParts[2]);
-  } else {
-    regexp = new RegExp(regStr);
+  let regexp = new RegExp('');
+  try {
+    const regParts = regStr.match(new RegExp('^/(.*?)/([gims]*)$'));
+    if (regParts) {
+      regexp = new RegExp(regParts[1], regParts[2]);
+    } else {
+      regexp = new RegExp(regStr);
+    }
+  } catch (error) {
+    console.error(error);
   }
   return regexp;
 };
