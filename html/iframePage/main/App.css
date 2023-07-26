@@ -6,17 +6,6 @@
   background: #fff;
 }
 
-.ajax-tools-iframe-header {
-  height: 40px;
-  padding: 0 12px 0 8px;
-  border-bottom: 1px solid #d1d3d8;
-  font-size: 18px;
-  color: #00000073;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .ajax-tools-iframe-action {
   /* height: 40px */
   padding: 8px 12px;
@@ -28,7 +17,7 @@
 
 .ajax-tools-iframe-body {
   padding: 12px 12px 20px;
-  height: calc(100vh - 40px - 40px - 20px);
+  height: calc(100vh - 40px - 20px);
   overflow: auto;
   background: #fff;
 }

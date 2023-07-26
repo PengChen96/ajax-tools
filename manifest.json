@@ -42,7 +42,11 @@
       "resources": [
         "html/iframePage/dist/index.html",
         "pageScripts/index.js",
-        "html/iframePage/mock.js"
+        "html/iframePage/mock.js",
+        "icons/iconfont/iconfont.css",
+        "icons/iconfont/iconfont.woff2",
+        "icons/iconfont/iconfont.woff",
+        "icons/iconfont/iconfont.ttf"
       ],
       "matches": [
         "<all_urls>"

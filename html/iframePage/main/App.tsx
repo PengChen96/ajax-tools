@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Checkbox, Collapse, Input, Select, Switch, Result, Dropdown, Space, MenuProps } from 'antd';
-import { CloseOutlined, CodeOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined,
+import { MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined,
   DropboxOutlined, MoreOutlined, UploadOutlined, DownloadOutlined, RightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
 import ModifyDataModal, { ModifyDataModalOnSaveProps } from './ModifyDataModal';
 import {
@@ -14,6 +14,7 @@ import 'antd/dist/antd.css';
 import './App.css';
 import { exportJSON } from './utils/exportJson';
 import { openImportJsonModal } from './utils/importJson';
+import { popup } from './utils/pictureInPicture';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -28,16 +29,15 @@ const colorMap = [
 function App() {
   const modifyDataModalRef = useRef<any>({});
 
-  const [ajaxToolsSkin, setAjaxToolsSkin] = useState(false);
+  const [ajaxToolsSkin, setAjaxToolsSkin] = useState('light');
   const [ajaxToolsSwitchOn, setAjaxToolsSwitchOn] = useState(true); // 默认开启
   const [ajaxToolsSwitchOnNot200, setAjaxToolsSwitchOnNot200] = useState(true); // 默认开启
-  const [zoom, setZoom] = useState('out'); // 默认缩小
   const [ajaxDataList, setAjaxDataList] = useState(defaultAjaxDataList);
 
   useEffect(() => {
     if (chrome.storage) {
       chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxToolsSkin'], (result) => {
-        const { ajaxDataList = [], ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxToolsSkin = false } = result;
+        const { ajaxDataList = [], ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxToolsSkin = 'light' } = result;
         if (ajaxDataList.length > 0) {
           setAjaxDataList(ajaxDataList);
         }
@@ -59,53 +59,6 @@ function App() {
     }
   }, []);
 
-  const openTabs = () => {
-    chrome.tabs.create({
-      url: 'html/iframePage/dist/index.html'
-    });
-  };
-  // 关闭
-  const onCloseClick = () => {
-    chrome.storage.local.get('iframeVisible', ({ iframeVisible }) => {
-      chrome.tabs.query(
-        { active: true, currentWindow: true },
-        function (tabs) {
-          const tabId = tabs[0]?.id;
-          if (tabId) {
-            // 发送消息到content.js
-            chrome.tabs.sendMessage(
-              tabId,
-              { type: 'iframeToggle', iframeVisible },
-              function (response) {
-                console.log('【main/App.jsx】->【content】【ajax-tools-iframe-show】Return message:', response);
-                chrome.storage.local.set({ iframeVisible: response.nextIframeVisible });
-              }
-            );
-          }
-        }
-      );
-    });
-  };
-  // 放大缩小
-  const onZoomClick = () => {
-    chrome.tabs.query(
-      { active: true, currentWindow: true },
-      function (tabs) {
-        const tabId = tabs[0]?.id;
-        // 发送消息到content.js
-        if (tabId != null) {
-          chrome.tabs.sendMessage(
-            tabId,
-            { type: 'iframeZoom', iframeZoom: zoom },
-            function (response) {
-              console.log('【main/App.jsx】->【content】【ajax-tools-iframe-show】Return message:', response);
-              setZoom(zoom === 'out' ? 'in' : 'out');
-            }
-          );
-        }
-      }
-    );
-  };
   const onImportClick = async () => {
     const importJsonData = await openImportJsonModal();
     let newAjaxDataList = ajaxDataList;
@@ -289,47 +242,9 @@ function App() {
     <div
       className="ajax-tools-iframe-container"
       style={{
-        filter: ajaxToolsSkin ? 'invert(1)' : undefined
+        filter: ajaxToolsSkin === 'dark' ? 'invert(1)' : undefined
       }}
     >
-      <header className="ajax-tools-iframe-header">
-        <div style={{ display: 'flex' }}>
-          {
-            inIframe && <>
-              <CloseOutlined
-                title="Close"
-                onClick={onCloseClick}
-                style={{ marginRight: 12 }}
-              />
-              {
-                zoom === 'out' ? <MinusOutlined
-                  title="Zoom Out"
-                  onClick={onZoomClick}
-                /> : <FullscreenOutlined
-                  title="Zoom In"
-                  onClick={onZoomClick}
-                />
-              }
-            </>
-          }
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Switch
-            checkedChildren="Light Mode"
-            unCheckedChildren="Dark Mode"
-            checked={ajaxToolsSkin}
-            onChange={(value) => {
-              setAjaxToolsSkin(value);
-              chrome.storage.local.set({ ajaxToolsSkin: value });
-            }}
-          />
-          <CodeOutlined
-            title="Open a new tab"
-            onClick={openTabs}
-            style={{ marginLeft: 8 }}
-          />
-        </div>
-      </header>
       <nav className="ajax-tools-iframe-action">
         <Space>
           <Dropdown.Button
@@ -378,6 +293,16 @@ function App() {
               chrome.storage.local.set({ ajaxToolsSwitchOn: value });
             }}
           />
+          {
+            inIframe ? null : <i
+              className="c-iconfont c-icon-zoomout"
+              title="Picture in picture"
+              style={{ marginLeft: 12, cursor: 'pointer' }}
+              onClick={() => popup({
+                el: document.querySelector('.ajax-tools-iframe-container') as HTMLElement
+              })}
+            />
+          }
         </div>
       </nav>
       <main
