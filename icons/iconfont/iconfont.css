@@ -1,0 +1,47 @@
+@font-face {
+  font-family: "c-iconfont"; /* Project id 4181413 */
+  src: url('iconfont.woff2?t=1690351386774') format('woff2'),
+       url('iconfont.woff?t=1690351386774') format('woff'),
+       url('iconfont.ttf?t=1690351386774') format('truetype');
+}
+
+.c-iconfont {
+  font-family: "c-iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.c-icon-taiyang:before {
+  content: "\e603";
+}
+
+.c-icon-heiyemoshi:before {
+  content: "\e68f";
+}
+
+.c-icon-codelibrary:before {
+  content: "\e793";
+}
+
+.c-icon-fullscreen:before {
+  content: "\e7ec";
+}
+
+.c-icon-zoomout:before {
+  content: "\e6e1";
+}
+
+.c-icon-zoom:before {
+  content: "\e6e2";
+}
+
+.c-icon-close:before {
+  content: "\e839";
+}
+
+.c-icon-reduce:before {
+  content: "\e840";
+}
+
