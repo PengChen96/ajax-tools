@@ -20,6 +20,7 @@ import 'monaco-editor/esm/vs/editor/contrib/folding/browser/folding.js'; // 折�
 import 'monaco-editor/esm/vs/editor/contrib/format/browser/formatActions.js'; // 格式化代码
 import 'monaco-editor/esm/vs/editor/contrib/suggest/browser/suggestController.js'; // 代码联想提示
 import 'monaco-editor/esm/vs/editor/contrib/tokenization/browser/tokenization.js'; // 代码联想提示
+import 'monaco-editor/esm/vs/editor/contrib/comment/browser/comment.js'; // 注释
 
 import './index.css';
 
