@@ -14,7 +14,7 @@ import 'antd/dist/antd.css';
 import './App.css';
 import { exportJSON } from './utils/exportJson';
 import { openImportJsonModal } from './utils/importJson';
-import { popup } from './utils/pictureInPicture';
+import { popupWindow } from './utils/pictureInPicture';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -298,9 +298,7 @@ function App() {
               className="c-iconfont c-icon-zoomout"
               title="Picture in picture"
               style={{ marginLeft: 12, cursor: 'pointer' }}
-              onClick={() => popup({
-                el: document.querySelector('.ajax-tools-iframe-container') as HTMLElement
-              })}
+              onClick={() => popupWindow()}
             />
           }
         </div>
