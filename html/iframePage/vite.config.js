@@ -21,6 +21,7 @@ export default defineConfig({
       input: {
         index: path.resolve(__dirname, './index.html'),
         uNetwork: path.resolve(__dirname, './uNetwork.html'),
+        declarativeNetRequest: path.resolve(__dirname, './declarativeNetRequest.html'),
       },
       output: {
         chunkFileNames: 'static/js/[name]-[hash].js',

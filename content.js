@@ -54,8 +54,8 @@ injectedStyle(`
   .ajax-interceptor-icon {
     cursor: pointer;
   }
-  .ajax-interceptor-mr-12 {
-    margin-right: 12px;
+  .ajax-interceptor-mr-8 {
+    margin-right: 8px;
   }
 `);
 injectedCss('icons/iconfont/iconfont.css');
@@ -74,7 +74,7 @@ injectedScript('pageScripts/index.js').addEventListener('load', () => {
 function closeButton (container) {
   const closeIcon = document.createElement('i');
   closeIcon.title = 'Close';
-  closeIcon.className='c-iconfont c-icon-close ajax-interceptor-icon ajax-interceptor-mr-12';
+  closeIcon.className='c-iconfont c-icon-close ajax-interceptor-icon ajax-interceptor-mr-8';
   closeIcon.addEventListener('click', function () {
     container.style.setProperty('transform', 'translateX(calc(100% + 20px))', 'important');
     chrome.storage.local.set({iframeVisible: true});
@@ -84,7 +84,7 @@ function closeButton (container) {
 function zoomButton (container) {
   let zoomOut = true;
   const zoomIcon = document.createElement('i');
-  zoomIcon.className='c-iconfont c-icon-reduce ajax-interceptor-icon';
+  zoomIcon.className='c-iconfont c-icon-reduce ajax-interceptor-icon ajax-interceptor-mr-8';
   zoomIcon.addEventListener('click', function () {
     if (zoomOut) { // 缩小
       container.style.setProperty('height', '40px', 'important');
@@ -94,7 +94,7 @@ function zoomButton (container) {
       }, 400);
       zoomOut = false;
       zoomIcon.title = 'Zoom in';
-      zoomIcon.className='c-iconfont c-icon-fullscreen ajax-interceptor-icon';
+      zoomIcon.className='c-iconfont c-icon-fullscreen ajax-interceptor-icon ajax-interceptor-mr-8';
     } else { // 放大
       container.style.setProperty('width', '580px', 'important');
       let timer = setTimeout(() => {
@@ -103,7 +103,7 @@ function zoomButton (container) {
       }, 400);
       zoomOut = true;
       zoomIcon.title = 'Zoom out';
-      zoomIcon.className='c-iconfont c-icon-reduce ajax-interceptor-icon';
+      zoomIcon.className='c-iconfont c-icon-reduce ajax-interceptor-icon ajax-interceptor-mr-8';
     }
   })
   return zoomIcon;
@@ -115,13 +115,13 @@ function themeModeButton (container) {
     if (mode === 'dark') {
       mode = 'light';
       themeIcon.title = 'Dark';
-      themeIcon.className = 'c-iconfont c-icon-heiyemoshi ajax-interceptor-icon ajax-interceptor-mr-12';
+      themeIcon.className = 'c-iconfont c-icon-heiyemoshi ajax-interceptor-icon ajax-interceptor-mr-8';
       container.style.setProperty('filter', 'none');
       chrome.storage.local.set({ ajaxToolsSkin: 'light' });
     } else {
       mode = 'dark';
       themeIcon.title = 'Light';
-      themeIcon.className = 'c-iconfont c-icon-taiyang ajax-interceptor-icon ajax-interceptor-mr-12';
+      themeIcon.className = 'c-iconfont c-icon-taiyang ajax-interceptor-icon ajax-interceptor-mr-8';
       container.style.setProperty('filter', 'invert(1)');
       chrome.storage.local.set({ ajaxToolsSkin: 'dark' });
     }
@@ -131,11 +131,11 @@ function themeModeButton (container) {
     mode = result.ajaxToolsSkin || 'light';
     if (mode === 'dark') {
       themeIcon.title = 'Light';
-      themeIcon.className = 'c-iconfont c-icon-taiyang ajax-interceptor-icon ajax-interceptor-mr-12';
+      themeIcon.className = 'c-iconfont c-icon-taiyang ajax-interceptor-icon ajax-interceptor-mr-8';
       container.style.setProperty('filter', 'invert(1)');
     } else {
       themeIcon.title = 'Dark';
-      themeIcon.className = 'c-iconfont c-icon-heiyemoshi ajax-interceptor-icon ajax-interceptor-mr-12';
+      themeIcon.className = 'c-iconfont c-icon-heiyemoshi ajax-interceptor-icon ajax-interceptor-mr-8';
       container.style.setProperty('filter', 'none');
     }
   });
@@ -144,7 +144,7 @@ function themeModeButton (container) {
 function pipButton (container) {
   const pipIcon = document.createElement('i');
   pipIcon.title = 'Picture in picture';
-  pipIcon.className='c-iconfont c-icon-zoomout ajax-interceptor-icon ajax-interceptor-mr-12';
+  pipIcon.className='c-iconfont c-icon-zoomout ajax-interceptor-icon';
   pipIcon.addEventListener('click', async function() {
     if (!('documentPictureInPicture' in window)) {
       alert('Your browser does not currently support documentPictureInPicture. You can go to chrome://flags/#document-picture-in-picture-api to enable it.');
@@ -191,6 +191,15 @@ function pipButton (container) {
   });
   return pipIcon;
 }
+function codeNetButton () {
+  const codeNetIcon = document.createElement('i');
+  codeNetIcon.title = 'Open the Declarative Network Request Configuration page';
+  codeNetIcon.className='c-iconfont c-icon-code ajax-interceptor-icon ajax-interceptor-mr-8';
+  codeNetIcon.addEventListener('click', function () {
+    window.open(chrome.runtime.getURL('html/iframePage/dist/declarativeNetRequest.html'));
+  })
+  return codeNetIcon;
+}
 function newTabButton () {
   const newTabIcon = document.createElement('i');
   newTabIcon.title = 'Open a new tab';
@@ -209,13 +218,15 @@ function actionBar (container) {
   left.appendChild(closeBtn);
   const zoomBtn = zoomButton(container);
   left.appendChild(zoomBtn);
+  const pipBtn = pipButton(container);
+  left.appendChild(pipBtn);
   header.appendChild(left);
   // right
   const right = document.createElement('div');
   const themeModeBtn = themeModeButton(container);
   right.appendChild(themeModeBtn);
-  const pipBtn = pipButton(container);
-  right.appendChild(pipBtn);
+  const codeNetBtn = codeNetButton();
+  right.appendChild(codeNetBtn);
   const newTabBtn = newTabButton();
   right.appendChild(newTabBtn);
   header.appendChild(right);

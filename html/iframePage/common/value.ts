@@ -163,3 +163,31 @@ return {
 `
   }
 ];
+
+export const DECLARATIVE_NET_REQUEST_EXAMPLES = [
+  {
+    egTitle: 'e.g. redirect url',
+    egText: `[
+  {
+    "action": {
+      "redirect": {
+        "transform": {
+          "host": "new.example.com",
+          "scheme": "https"
+        }
+      },
+      "type": "redirect"
+    },
+    "condition": {
+      "resourceTypes": [
+        "script"
+      ],
+      "urlFilter": "example.com"
+    },
+    "id": 1,
+    "priority": 1
+  }
+]
+`
+  },
+];

@@ -91,17 +91,21 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
   useEffect(() => {
     if (editor) {
       if (onDidChangeContent) {
-        editor.getModel()?.onDidChangeContent(() => {
-          onDidChangeContent(editor.getModel()?.getValue());
-        });
+        const timer = setTimeout(() => {
+          clearTimeout(timer);
+          editor.getModel()?.onDidChangeContent(() => {
+            onDidChangeContent(editor.getModel()?.getValue());
+          });
+        }, 500);
       }
     }
-  }, [onDidChangeContent]);
+  }, [editor, onDidChangeContent]);
 
   useEffect(() => {
     if (editor) {
       editor.getModel().setValue(props.text || '');
-      setTimeout(() => {
+      const timer = setTimeout(() => {
+        clearTimeout(timer);
         // 格式化代码
         formatDocumentAction();
       }, 300);
