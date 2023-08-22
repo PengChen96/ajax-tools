@@ -52,6 +52,11 @@ interface MonacoEditorProps {
   language?: string;
   text?: string;
   examples?: { egTitle?: string, egText: string }[];
+  theme?: string;
+  headerLeftNode?: React.ReactNode,
+  headerRightNode?: React.ReactNode,
+  headerStyle?: object
+  onDidChangeContent?: (arg0: string) => void
 }
 const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstance: any }>) => {
   const editorRef = useRef(null);
@@ -61,7 +66,12 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
   const {
     languageSelectOptions = ['json', 'javascript'],
     editorHeight = document.body.offsetHeight - 300,
-    examples = [{ egTitle: '', egText: 'e.g.' }]
+    examples = [{ egTitle: '', egText: 'e.g.' }],
+    theme = 'vs-dark',
+    headerStyle,
+    headerLeftNode,
+    headerRightNode,
+    onDidChangeContent,
   } = props;
   const [editor, setEditor] = useState<any>(null);
   const [language, setLanguage] = useState<string>(props.language || 'json');
@@ -70,13 +80,24 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
       const editor = monaco.editor.create(editorRef.current!, {
         value: '',
         language,
-        theme: 'vs-dark',
+        theme,
         scrollBeyondLastLine: false,
         tabSize: 2
       });
       setEditor(editor);
     }
   }, []);
+
+  useEffect(() => {
+    if (editor) {
+      if (onDidChangeContent) {
+        editor.getModel()?.onDidChangeContent(() => {
+          onDidChangeContent(editor.getModel()?.getValue());
+        });
+      }
+    }
+  }, [onDidChangeContent]);
+
   useEffect(() => {
     if (editor) {
       editor.getModel().setValue(props.text || '');
@@ -110,19 +131,25 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
     };
   });
   return <div className="ajax-tools-monaco-editor-container">
-    <header className="ajax-tools-monaco-editor-header">
-      <Select
-        size="small"
-        value={language}
-        onChange={onLanguageChange}
-        className="ajax-tools-monaco-language-select"
-      >
+    <header className="ajax-tools-monaco-editor-header" style={headerStyle}>
+      <div>
+        { headerLeftNode }
         {
-          languageSelectOptions.map((lang) => <Select.Option key={lang} value={lang}>{lang}</Select.Option>)
+          languageSelectOptions.length > 0 ? <Select
+            size="small"
+            value={language}
+            onChange={onLanguageChange}
+            className="ajax-tools-monaco-language-select"
+          >
+            {
+              languageSelectOptions.map((lang) => <Select.Option key={lang} value={lang}>{lang}</Select.Option>)
+            }
+          </Select> : null
         }
-      </Select>
+      </div>
       <div>
         <Space size={16}>
+          { headerRightNode }
           {
             examples.length > 1 ? <Dropdown menu={{ items }}>
               <a onClick={(e) => e.preventDefault()}>
