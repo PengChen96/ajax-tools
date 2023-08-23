@@ -62,7 +62,7 @@ export default () => {
       >
         Docs
       </a>}
-      language={'javascript'}
+      language={'json'}
       languageSelectOptions={[]}
       text={text}
       examples={DECLARATIVE_NET_REQUEST_EXAMPLES}
