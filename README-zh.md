@@ -128,7 +128,8 @@ return {
 例下图中，将会在入参中新增`test: test123`，您可以打开devtools在Network面板中看到请求体的修改。  
 <img width="500" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd3322e0367b44b799c3a4ad745eb6e8~tplv-k3u1fbpfcp-watermark.image?" />  
 
-### 三、支持通过chrome.declarativeNetRequest使用指定声明性规则来阻止或修改网络请求
+### 三、支持通过chrome.declarativeNetRequest使用指定声明性规则来阻止或修改网络请求  
+![声明性规则网络](./assets/DeclareNetRequestHtml.png)  
 #### 1. 阻止请求规则示例：
 下面的规则将会阻止所有来自域名为“react.docschina.org”且 URL 中包含“main”子字符串的脚本请求
 ```js
@@ -294,7 +295,6 @@ return {
 
 ### 六、文档画中画
 ![文档画中画](./assets/PictureInPicture.png)
-
 
 ## License
 MIT License.
