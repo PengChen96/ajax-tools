@@ -96,7 +96,7 @@ return {
 ```
 
 ##### 2.3. 从arguments获取原始数据，简单编程创建场景 
-<img width="800" src="https://user-images.githubusercontent.com/16712630/224018668-be15df22-17f8-419b-83cb-99e553972589.png">   
+<img width="500" src="https://user-images.githubusercontent.com/16712630/224018668-be15df22-17f8-419b-83cb-99e553972589.png" />   
 
 示例： 
 ```js
@@ -129,7 +129,8 @@ return {
 <img width="500" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd3322e0367b44b799c3a4ad745eb6e8~tplv-k3u1fbpfcp-watermark.image?" />  
 
 ### 三、支持通过chrome.declarativeNetRequest使用指定声明性规则来阻止或修改网络请求  
-![声明性规则网络](./assets/DeclareNetRequestHtml.png)  
+<img width="500" src="./assets/DeclareNetRequestHtml.png" />  
+
 #### 1. 阻止请求规则示例：
 下面的规则将会阻止所有来自域名为“react.docschina.org”且 URL 中包含“main”子字符串的脚本请求
 ```js
