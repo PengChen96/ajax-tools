@@ -16,6 +16,8 @@ An extension plugin for Chrome that modifies the response of AJAX requests.
 - [x] Support change the request URL, request headers and body.
 - [x] Support importing/exporting rule configurations.
 - [x] Support adjusting the order of groups and rules.
+- [x] Support picture-in-picture option for opening the configuration page.
+- [x] Support intercepting network configuration pages using declarativeNetRequest.
 
 ## Install
 https://chrome.google.com/webstore/detail/ajax-interceptor-tools/kphegobalneikdjnboeiheiklpbbhncm  
