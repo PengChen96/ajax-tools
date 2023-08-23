@@ -175,6 +175,9 @@ return {
 更多详细可查看文档
 [declarativeNetRequest官方文档](https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/#build-rules)
 [declarativeNetRequest中文文档](https://doc.yilijishu.info/chrome/declarativeNetRequest.html)
+<details>
+  <summary><b>完整配置</b> (点击展开)</summary>
+
 ```js
 [
   {
@@ -287,6 +290,7 @@ return {
   }
 ]
 ```
+</details>
 
 ### 四、快速添加请求进行修改
 ![快速添加请求进行修改.gif](./assets/QuicklyAddRequestsForModification.gif)
