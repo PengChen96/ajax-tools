@@ -53,6 +53,17 @@ injectedStyle(`
   }
   .ajax-interceptor-icon {
     cursor: pointer;
+    position: relative;
+  }
+  .ajax-interceptor-new::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ff0000;
+    position: absolute;
+    right: -2px;
+    top: -2px;
   }
   .ajax-interceptor-mr-8 {
     margin-right: 8px;
@@ -108,48 +119,21 @@ function zoomButton (container) {
   })
   return zoomIcon;
 }
-function themeModeButton (container) {
-  let mode = 'light'; // 'light|dark'
-  const themeIcon = document.createElement('i');
-  themeIcon.addEventListener('click', function() {
-    if (mode === 'dark') {
-      mode = 'light';
-      themeIcon.title = 'Dark';
-      themeIcon.className = 'c-iconfont c-icon-heiyemoshi ajax-interceptor-icon ajax-interceptor-mr-8';
-      container.style.setProperty('filter', 'none');
-      chrome.storage.local.set({ ajaxToolsSkin: 'light' });
-    } else {
-      mode = 'dark';
-      themeIcon.title = 'Light';
-      themeIcon.className = 'c-iconfont c-icon-taiyang ajax-interceptor-icon ajax-interceptor-mr-8';
-      container.style.setProperty('filter', 'invert(1)');
-      chrome.storage.local.set({ ajaxToolsSkin: 'dark' });
-    }
-  });
-  // 设置初始主题
-  chrome.storage.local.get(['ajaxToolsSkin'], (result) => {
-    mode = result.ajaxToolsSkin || 'light';
-    if (mode === 'dark') {
-      themeIcon.title = 'Light';
-      themeIcon.className = 'c-iconfont c-icon-taiyang ajax-interceptor-icon ajax-interceptor-mr-8';
-      container.style.setProperty('filter', 'invert(1)');
-    } else {
-      themeIcon.title = 'Dark';
-      themeIcon.className = 'c-iconfont c-icon-heiyemoshi ajax-interceptor-icon ajax-interceptor-mr-8';
-      container.style.setProperty('filter', 'none');
-    }
-  });
-  return themeIcon;
-}
 function pipButton (container) {
   const pipIcon = document.createElement('i');
   pipIcon.title = 'Picture in picture';
-  pipIcon.className='c-iconfont c-icon-zoomout ajax-interceptor-icon';
+  const className ='c-iconfont c-icon-zoomout ajax-interceptor-icon';
+  pipIcon.className = className;
+  chrome.storage.local.get(['ajaxToolsPipBtnNewHideFlag'], ({ ajaxToolsPipBtnNewHideFlag }) => {
+    pipIcon.className = ajaxToolsPipBtnNewHideFlag ? pipIcon.className : `${pipIcon.className} ajax-interceptor-new`;
+  });
   pipIcon.addEventListener('click', async function() {
     if (!('documentPictureInPicture' in window)) {
       alert('Your browser does not currently support documentPictureInPicture. You can go to chrome://flags/#document-picture-in-picture-api to enable it.');
       return;
     }
+    pipIcon.className = className;
+    chrome.storage.local.set({ ajaxToolsPipBtnNewHideFlag: true });
     const iframe = document.querySelector('.ajax-interceptor-iframe');
     const pipWindow = await documentPictureInPicture.requestWindow({width: 580, height: 680});
     // css
@@ -191,12 +175,60 @@ function pipButton (container) {
   });
   return pipIcon;
 }
+function themeModeButton (container) {
+  let mode = 'light'; // 'light|dark'
+  const themeIcon = document.createElement('i');
+  themeIcon.addEventListener('click', function() {
+    if (mode === 'dark') {
+      mode = 'light';
+      themeIcon.title = 'Dark';
+      themeIcon.className = 'c-iconfont c-icon-heiyemoshi ajax-interceptor-icon ajax-interceptor-mr-8';
+      container.style.setProperty('filter', 'none');
+      chrome.storage.local.set({ ajaxToolsSkin: 'light' });
+    } else {
+      mode = 'dark';
+      themeIcon.title = 'Light';
+      themeIcon.className = 'c-iconfont c-icon-taiyang ajax-interceptor-icon ajax-interceptor-mr-8';
+      container.style.setProperty('filter', 'invert(1)');
+      chrome.storage.local.set({ ajaxToolsSkin: 'dark' });
+    }
+  });
+  // 设置初始主题
+  chrome.storage.local.get(['ajaxToolsSkin'], (result) => {
+    mode = result.ajaxToolsSkin || 'light';
+    if (mode === 'dark') {
+      themeIcon.title = 'Light';
+      themeIcon.className = 'c-iconfont c-icon-taiyang ajax-interceptor-icon ajax-interceptor-mr-8';
+      container.style.setProperty('filter', 'invert(1)');
+    } else {
+      themeIcon.title = 'Dark';
+      themeIcon.className = 'c-iconfont c-icon-heiyemoshi ajax-interceptor-icon ajax-interceptor-mr-8';
+      container.style.setProperty('filter', 'none');
+    }
+  });
+  return themeIcon;
+}
+function issuesButton () {
+  const issuesIcon = document.createElement('i');
+  issuesIcon.title = 'Issues';
+  issuesIcon.className='c-iconfont c-icon-xiaoxi ajax-interceptor-icon ajax-interceptor-mr-8';
+  issuesIcon.addEventListener('click', function () {
+    window.open('https://github.com/PengChen96/ajax-tools/issues');
+  })
+  return issuesIcon;
+}
 function codeNetButton () {
   const codeNetIcon = document.createElement('i');
   codeNetIcon.title = 'Open the Declarative Network Request Configuration page';
-  codeNetIcon.className='c-iconfont c-icon-code ajax-interceptor-icon ajax-interceptor-mr-8';
+  const className = 'c-iconfont c-icon-code ajax-interceptor-icon ajax-interceptor-mr-8';
+  codeNetIcon.className = className;
+  chrome.storage.local.get(['ajaxToolsCodeNetBtnNewHideFlag'], ({ ajaxToolsCodeNetBtnNewHideFlag }) => {
+    codeNetIcon.className = ajaxToolsCodeNetBtnNewHideFlag ? className : `${className} ajax-interceptor-new`;
+  });
   codeNetIcon.addEventListener('click', function () {
     window.open(chrome.runtime.getURL('html/iframePage/dist/declarativeNetRequest.html'));
+    codeNetIcon.className = className;
+    chrome.storage.local.set({ ajaxToolsCodeNetBtnNewHideFlag: true });
   })
   return codeNetIcon;
 }
@@ -225,6 +257,8 @@ function actionBar (container) {
   const right = document.createElement('div');
   const themeModeBtn = themeModeButton(container);
   right.appendChild(themeModeBtn);
+  const issuesBtn = issuesButton();
+  right.appendChild(issuesBtn);
   const codeNetBtn = codeNetButton();
   right.appendChild(codeNetBtn);
   const newTabBtn = newTabButton();

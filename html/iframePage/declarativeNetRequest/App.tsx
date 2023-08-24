@@ -56,7 +56,7 @@ export default () => {
       />}
       headerRightNode={<a
         title="Document"
-        href="https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/#build-rules"
+        href="https://github.com/PengChen96/ajax-tools#support-blocking-or-modifying-network-requests-using-specified-declarative-rules-through-chromedeclarativenetrequest"
         target="_blank"
         rel="noreferrer"
       >
