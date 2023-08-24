@@ -298,7 +298,7 @@ function App() {
               className="c-iconfont c-icon-zoomout"
               title="Picture in picture"
               style={{ marginLeft: 12, cursor: 'pointer' }}
-              onClick={() => popupWindow()}
+              onClick={() => popupWindow({ url: chrome.runtime.getURL('html/iframePage/dist/index.html') })}
             />
           }
         </div>

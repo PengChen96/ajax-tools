@@ -55,6 +55,7 @@ interface MonacoEditorProps {
   theme?: string;
   headerLeftNode?: React.ReactNode,
   headerRightNode?: React.ReactNode,
+  headerRightRightNode?: React.ReactNode,
   headerStyle?: object
   onDidChangeContent?: (arg0: string) => void
 }
@@ -71,6 +72,7 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
     headerStyle,
     headerLeftNode,
     headerRightNode,
+    headerRightRightNode,
     onDidChangeContent,
   } = props;
   const [editor, setEditor] = useState<any>(null);
@@ -173,6 +175,7 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
             title="Format Document"
             onClick={formatDocumentAction}
           />
+          { headerRightRightNode }
         </Space>
       </div>
     </header>

@@ -129,7 +129,8 @@ function pipButton (container) {
   });
   pipIcon.addEventListener('click', async function() {
     if (!('documentPictureInPicture' in window)) {
-      alert('Your browser does not currently support documentPictureInPicture. You can go to chrome://flags/#document-picture-in-picture-api to enable it.');
+      alert('Your browser does not currently support documentPictureInPicture. You can go to chrome://flags/#document-picture-in-picture-api to enable it.\n' +
+        'If you have enabled documentPictureInPicture, please use the HTTPS protocol, or localhost/127.0.0.1, or open the configuration page in a new tab and use picture-in-picture there.');
       return;
     }
     pipIcon.className = className;
