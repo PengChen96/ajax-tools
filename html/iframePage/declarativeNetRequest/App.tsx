@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import MonacoEditor from '../common/MonacoEditor';
 import { DECLARATIVE_NET_REQUEST_EXAMPLES } from '../common/value';
 import { SaveOutlined } from '@ant-design/icons';
@@ -16,10 +16,30 @@ function debounce<T extends (...args: any[]) => void>(func: T, delay: number): T
     }, delay);
   } as T;
 }
+const Countdown = (props: { seconds: number; }) => {
+  let intervalTimer: any = null;
+  const [timeRemaining, setTimeRemaining] = useState(props.seconds);
+
+  useEffect(() => {
+    if (timeRemaining > 0) {
+      intervalTimer = setInterval(() => {
+        setTimeRemaining((prevTime: number) => prevTime - 1);
+      }, 1000);
+
+      return () => {
+        clearInterval(intervalTimer);
+      };
+    }
+  }, [timeRemaining]);
+
+  return <>{timeRemaining}</>;
+};
 
 export default () => {
+  const delayDoUpdateRulesTimer = useRef<any>({});
   const monacoEditorRef = useRef<any>({});
   const [text, setText] = useState('[]');
+  const [saveTextTips, setSaveTextTips] = useState<ReactElement>(<></>);
   useEffect(() => {
     chrome.declarativeNetRequest && chrome.declarativeNetRequest.getDynamicRules( (rulesList)=>{
       setText(JSON.stringify(rulesList, null, 2));
@@ -27,20 +47,38 @@ export default () => {
   }, []);
 
   const updateRules = (rulesStr: string) => {
+    clearTimeout(delayDoUpdateRulesTimer.current);
     try {
+      setSaveTextTips(<span style={{ color: '#999' }}>Saving ...</span>);
       const rules = JSON.parse(rulesStr);
       chrome.declarativeNetRequest.getDynamicRules(async (rulesList)=>{
         await chrome.declarativeNetRequest.updateDynamicRules({
           removeRuleIds: rulesList.map(v => v.id),
           addRules: rules
         });
+        setSaveTextTips(<span style={{ color: '#999' }}>Saved success !</span>);
       });
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.log(err);
+      setSaveTextTips(<span style={{ color: '#ff0000' }}>Save failed !</span>);
     }
   };
 
-  const debounceUpdateRules = debounce(updateRules, 2000);
+  const delayDoUpdateRules = (rulesStr: string, seconds = 6) => {
+    setSaveTextTips(<span style={{ color: '#999' }}>Save in <Countdown seconds={seconds}/> seconds.</span>);
+    const timeout = seconds * 1000;
+    delayDoUpdateRulesTimer.current = setTimeout(() => {
+      updateRules(rulesStr);
+    }, timeout);
+  };
+  const debounceUpdateRules = debounce(delayDoUpdateRules, 2000);
+  const onDidChangeContent = useCallback((v: string) => {
+    if (delayDoUpdateRulesTimer) {
+      clearTimeout(delayDoUpdateRulesTimer.current);
+    }
+    setSaveTextTips(<span style={{ color: '#999' }}>Content is changed. </span>);
+    debounceUpdateRules(v);
+  }, []);
   return <div>
     <MonacoEditor
       ref={monacoEditorRef}
@@ -50,13 +88,14 @@ export default () => {
         <>
           <SaveOutlined
             title="save"
-            style={{ fontSize: 18 }}
+            style={{ fontSize: 18, marginRight: 12 }}
             onClick={() => {
               const { editorInstance } = monacoEditorRef.current;
               const editorValue = editorInstance.getValue();
               updateRules(editorValue);
             }}
           />
+          { saveTextTips }
         </>
       }
       headerRightNode={<a
@@ -78,7 +117,7 @@ export default () => {
       text={text}
       examples={DECLARATIVE_NET_REQUEST_EXAMPLES}
       editorHeight={document.body.offsetHeight}
-      onDidChangeContent={(v) => { debounceUpdateRules(v); }}
+      onDidChangeContent={onDidChangeContent}
     />
   </div>;
 };

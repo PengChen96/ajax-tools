@@ -166,22 +166,6 @@ return {
 
 export const DECLARATIVE_NET_REQUEST_EXAMPLES = [
   {
-    egTitle: 'e.g. block url',
-    egText: `[
-  {
-    "id" : 1,
-    "priority": 1,
-    "action" : { "type" : "block" },
-    "condition" : {
-      "urlFilter" : "main",
-      "domains" : ["react.docschina.org"],
-      "resourceTypes" : ["script"]
-    }
-  }
-]
-`
-  },
-  {
     egTitle: 'e.g. redirect url',
     egText: `[
   {
@@ -200,6 +184,22 @@ export const DECLARATIVE_NET_REQUEST_EXAMPLES = [
       "urlFilter": "main",
       "domains" : ["react.docschina.org"],
       "resourceTypes": ["script"]
+    }
+  }
+]
+`
+  },
+  {
+    egTitle: 'e.g. block url',
+    egText: `[
+  {
+    "id" : 1,
+    "priority": 1,
+    "action" : { "type" : "block" },
+    "condition" : {
+      "urlFilter" : "main",
+      "domains" : ["react.docschina.org"],
+      "resourceTypes" : ["script"]
     }
   }
 ]
