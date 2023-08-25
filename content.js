@@ -209,14 +209,14 @@ function themeModeButton (container) {
   });
   return themeIcon;
 }
-function issuesButton () {
-  const issuesIcon = document.createElement('i');
-  issuesIcon.title = 'Issues';
-  issuesIcon.className='c-iconfont c-icon-xiaoxi ajax-interceptor-icon ajax-interceptor-mr-8';
-  issuesIcon.addEventListener('click', function () {
-    window.open('https://github.com/PengChen96/ajax-tools/issues');
+function discussionsButton () {
+  const discussionsIcon = document.createElement('i');
+  discussionsIcon.title = 'Discussions';
+  discussionsIcon.className='c-iconfont c-icon-xiaoxi ajax-interceptor-icon ajax-interceptor-mr-8';
+  discussionsIcon.addEventListener('click', function () {
+    window.open('https://github.com/PengChen96/ajax-tools/discussions');
   })
-  return issuesIcon;
+  return discussionsIcon;
 }
 function codeNetButton () {
   const codeNetIcon = document.createElement('i');
@@ -258,8 +258,8 @@ function actionBar (container) {
   const right = document.createElement('div');
   const themeModeBtn = themeModeButton(container);
   right.appendChild(themeModeBtn);
-  const issuesBtn = issuesButton();
-  right.appendChild(issuesBtn);
+  const discussionsBtn = discussionsButton();
+  right.appendChild(discussionsBtn);
   const codeNetBtn = codeNetButton();
   right.appendChild(codeNetBtn);
   const newTabBtn = newTabButton();
