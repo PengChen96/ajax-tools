@@ -237,7 +237,7 @@ return {
           // 要修改的标头的名称。
           "header": "",
           // 要对标头执行的操作。 append、set、remove
-          "operation": [""],
+          "operation": "",
           // 标头的新值。必须为 和 set 操作 append 指定。
           "value": "",
         } 
@@ -248,7 +248,7 @@ return {
           // 要修改的标头的名称。
           "header": "",
           // 要对标头执行的操作。 append、set、remove
-          "operation": [""],
+          "operation": "",
           // 标头的新值。必须为 和 set 操作 append 指定。
           "value": "",
         } 
