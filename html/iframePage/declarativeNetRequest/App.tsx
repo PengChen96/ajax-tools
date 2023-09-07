@@ -52,14 +52,19 @@ export default () => {
       setSaveTextTips(<span style={{ color: '#999' }}>Saving ...</span>);
       const rules = JSON.parse(rulesStr);
       chrome.declarativeNetRequest.getDynamicRules(async (rulesList)=>{
-        await chrome.declarativeNetRequest.updateDynamicRules({
-          removeRuleIds: rulesList.map(v => v.id),
-          addRules: rules
-        });
-        setSaveTextTips(<span style={{ color: '#999' }}>Saved success !</span>);
+        try {
+          await chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: rulesList.map(v => v.id),
+            addRules: rules
+          });
+          setSaveTextTips(<span style={{ color: '#999' }}>Saved success !</span>);
+        } catch (err) {
+          console.error(err);
+          setSaveTextTips(<span style={{ color: '#ff0000' }}>Save failed !</span>);
+        }
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
       setSaveTextTips(<span style={{ color: '#ff0000' }}>Save failed !</span>);
     }
   };
@@ -116,7 +121,7 @@ export default () => {
       languageSelectOptions={[]}
       text={text}
       examples={DECLARATIVE_NET_REQUEST_EXAMPLES}
-      editorHeight={document.body.offsetHeight}
+      editorHeight={document.body.offsetHeight - 50}
       onDidChangeContent={onDidChangeContent}
     />
   </div>;
