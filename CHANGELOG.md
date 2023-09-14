@@ -1,4 +1,7 @@
-## 0.0.7
+## 0.0.9
+1、declarativeNetReques配置页新增Ctrl+S快捷键保存
+
+## 0.0.7-0.0.8
 1、新增画中画打开配置页面
 2、新增使用declarativeNetRequest拦截网络配置页面
 

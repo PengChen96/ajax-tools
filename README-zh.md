@@ -268,7 +268,7 @@ return {
       "excludedDomains" : [""],
       // 【new】Chrome 101+ 该规则将不匹配源自 列表 excludedInitiatorDomains 的网络请求。如果列表为空或省略，则不排除任何域。这优先于 initiatorDomains 。
       "excludedInitiatorDomains": [""],
-      // 规则可以匹配的资源类型列表。不允许使用空列表。
+      // 规则可以匹配的资源类型列表。不允许使用空列表。 "main_frame", "sub_frame", "stylesheet", "script", "image", "font", "object", "xmlhttprequest", "ping", "csp_report", "media", "websocket", "webtransport", "webbundle", or "other"
       "resourceTypes": ["script"],
       // 指定网络请求是其来源域的第一方还是第三方。如果省略，则接受所有请求。 firstParty、thirdParty
       "domainType": "",
