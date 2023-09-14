@@ -58,6 +58,7 @@ interface MonacoEditorProps {
   headerRightRightNode?: React.ReactNode,
   headerStyle?: object
   onDidChangeContent?: (arg0: string) => void
+  onSaveKeyword?: (arg0: any) => void
 }
 const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstance: any }>) => {
   const editorRef = useRef(null);
@@ -74,6 +75,7 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
     headerRightNode,
     headerRightRightNode,
     onDidChangeContent,
+    onSaveKeyword,
   } = props;
   const [editor, setEditor] = useState<any>(null);
   const [language, setLanguage] = useState<string>(props.language || 'json');
@@ -85,6 +87,20 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
         theme,
         scrollBeyondLastLine: false,
         tabSize: 2
+      });
+      // 添加保存快捷键
+      editor.addAction({
+        id: 'save',
+        label: 'Save',
+        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS], // Ctrl+S 快捷键
+        contextMenuGroupId: 'navigation',
+        contextMenuOrder: 1.5,
+        run: function(editor) {
+          if (onSaveKeyword) {
+            onSaveKeyword(editor);
+          }
+          return undefined;
+        }
       });
       setEditor(editor);
     }

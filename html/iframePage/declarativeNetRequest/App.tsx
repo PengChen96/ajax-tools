@@ -76,14 +76,20 @@ export default () => {
       updateRules(rulesStr);
     }, timeout);
   };
-  const debounceUpdateRules = debounce(delayDoUpdateRules, 2000);
+  const debounceUpdateRules = debounce(delayDoUpdateRules, 1000);
   const onDidChangeContent = useCallback((v: string) => {
-    if (delayDoUpdateRulesTimer) {
+    if (delayDoUpdateRulesTimer.current) {
       clearTimeout(delayDoUpdateRulesTimer.current);
     }
     setSaveTextTips(<span style={{ color: '#999' }}>Content is changed. </span>);
     debounceUpdateRules(v);
   }, []);
+
+  const onSave = useCallback(() => {
+    const { editorInstance } = monacoEditorRef.current;
+    updateRules(editorInstance.getValue());
+  }, []);
+
   return <div>
     <MonacoEditor
       ref={monacoEditorRef}
@@ -94,11 +100,7 @@ export default () => {
           <SaveOutlined
             title="save"
             style={{ fontSize: 18, marginRight: 12 }}
-            onClick={() => {
-              const { editorInstance } = monacoEditorRef.current;
-              const editorValue = editorInstance.getValue();
-              updateRules(editorValue);
-            }}
+            onClick={onSave}
           />
           { saveTextTips }
         </>
@@ -123,6 +125,7 @@ export default () => {
       examples={DECLARATIVE_NET_REQUEST_EXAMPLES}
       editorHeight={document.body.offsetHeight - 50}
       onDidChangeContent={onDidChangeContent}
+      onSaveKeyword={onSave}
     />
   </div>;
 };
