@@ -100,7 +100,7 @@ function zoomButton (container) {
     if (zoomOut) { // 缩小
       container.style.setProperty('height', '40px', 'important');
       let timer = setTimeout(() => {
-        container.style.setProperty('width', '160px', 'important');
+        container.style.setProperty('width', '180px', 'important');
         clearTimeout(timer);
       }, 400);
       zoomOut = false;
