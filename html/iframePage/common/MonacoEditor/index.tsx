@@ -21,6 +21,7 @@ import 'monaco-editor/esm/vs/editor/contrib/format/browser/formatActions.js'; //
 import 'monaco-editor/esm/vs/editor/contrib/suggest/browser/suggestController.js'; // 代码联想提示
 import 'monaco-editor/esm/vs/editor/contrib/tokenization/browser/tokenization.js'; // 代码联想提示
 import 'monaco-editor/esm/vs/editor/contrib/comment/browser/comment.js'; // 注释
+import 'monaco-editor/esm/vs/editor/contrib/find/browser/findController.js'; // 搜索
 
 import './index.css';
 
