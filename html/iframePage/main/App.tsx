@@ -51,7 +51,7 @@ function App() {
       chrome.runtime.onMessage.addListener((request) => {
         const { type, to, ajaxDataList } = request;
         if (type === 'ajaxTools_updatePage' && to === 'mainSettingSidePage') {
-          console.log('【main/App.jsx】<-【uNetwork】Receive message:', request);
+          // console.log('【main/App.jsx】<-【uNetwork】Receive message:', request);
           setAjaxDataList(ajaxDataList);
           chrome.storage.local.set({ ajaxDataList });
         }

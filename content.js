@@ -73,7 +73,7 @@ injectedCss('icons/iconfont/iconfont.css');
 injectedScript('html/iframePage/mock.js');
 injectedScript('pageScripts/index.js').addEventListener('load', () => {
   chrome.storage.local.get(['iframeVisible', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxDataList', 'ajaxToolsSkin'], (result) => {
-    console.log('【ajaxTools content.js】【storage】', result);
+    // console.log('【ajaxTools content.js】【storage】', result);
     const {ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxDataList = []} = result;
     postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxDataList', value: ajaxDataList});
     postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxToolsSwitchOn', value: ajaxToolsSwitchOn});
@@ -282,7 +282,7 @@ if (window.self === window.top) {
       container.appendChild(iframe);
       if (document.body) document.body.appendChild(container);
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        console.log('【content】【ajax-tools-iframe-show】receive message', request);
+        // console.log('【content】【ajax-tools-iframe-show】receive message', request);
         const {type, iframeVisible} = request;
         if (type === 'iframeToggle') {
           container.style.setProperty('transform', iframeVisible ? 'translateX(0)' : 'translateX(calc(100% + 20px))', 'important');

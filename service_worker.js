@@ -1,7 +1,7 @@
 function sendMessageToContentScript(tabId, message) {
   return new Promise((resolve) => {
     chrome.tabs.sendMessage(tabId, message, (response) => {
-      console.log('【service_worker.js】->【content】【ajax-tools-iframe-show】Return message:', response);
+      // console.log('【service_worker.js】->【content】【ajax-tools-iframe-show】Return message:', response);
       resolve(response);
     });
   });

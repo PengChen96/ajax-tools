@@ -332,7 +332,7 @@ const ajax_tools_space = {
 window.addEventListener("message", function (event) {
   const data = event.data;
   if (data.type === 'ajaxTools' && data.to === 'pageScript') {
-    console.log('【pageScripts/index.js】', data);
+    // console.log('【pageScripts/index.js】', data);
     ajax_tools_space[data.key] = data.value;
   }
   if (ajax_tools_space.ajaxToolsSwitchOn) {
