@@ -1,5 +1,7 @@
 ## 0.0.9
-1、declarativeNetReques配置页新增Ctrl+S快捷键保存
+1、declarativeNetRequest配置页新增Ctrl+S快捷键保存
+2、monaco-editor编辑面板支持Ctrl+F搜索
+3、设置permissions:unlimitedStorage权限
 
 ## 0.0.7-0.0.8
 1、新增画中画打开配置页面
