@@ -147,11 +147,12 @@ function App() {
     chrome.storage.local.set({ ajaxDataList });
   };
   const onInterfaceListSave = (
-    { groupIndex, interfaceIndex, replacementMethod, replacementUrl, headersEditorValue,
+    { groupIndex, interfaceIndex, replacementMethod, replacementUrl, replacementStatusCode, headersEditorValue,
       requestPayloadEditorValue, responseEditorValue, language } : ModifyDataModalOnSaveProps
   ) => {
     if (replacementMethod !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'replacementMethod', replacementMethod);
     if (replacementUrl !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'replacementUrl', replacementUrl);
+    if (replacementStatusCode !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'replacementStatusCode', replacementStatusCode);
     if (headersEditorValue !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'headers', headersEditorValue);
     if (requestPayloadEditorValue !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'requestPayloadText', requestPayloadEditorValue);
     if (responseEditorValue !== undefined) onInterfaceListChange(groupIndex, interfaceIndex, 'responseText', responseEditorValue);
@@ -189,6 +190,7 @@ function App() {
           request: v.request,
           replacementMethod: v.replacementMethod,
           replacementUrl: v.replacementUrl,
+          replacementStatusCode: v.replacementStatusCode,
           headersText: v.headers,
           requestPayloadText: v.requestPayloadText,
           responseLanguage: v.language,
@@ -449,6 +451,7 @@ function App() {
                             request: v.request,
                             replacementMethod: v.replacementMethod,
                             replacementUrl: v.replacementUrl,
+                            replacementStatusCode: v.replacementStatusCode,
                             headersText: v.headers,
                             requestPayloadText: v.requestPayloadText,
                             responseLanguage: v.language,

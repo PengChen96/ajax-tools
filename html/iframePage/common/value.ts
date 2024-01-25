@@ -15,6 +15,7 @@ export interface DefaultInterfaceObject {
   // modify ⬇️
   replacementMethod: string,
   replacementUrl: string,
+  replacementStatusCode: string,
   headers: string,
   requestPayloadText: string,
   responseText: string,
@@ -32,6 +33,7 @@ export const defaultInterface: DefaultInterfaceObject = {
   // modify ⬇️
   replacementMethod: '',
   replacementUrl: '',
+  replacementStatusCode: '200',
   headers: '',
   requestPayloadText: '',
   responseText: '',

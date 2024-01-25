@@ -10,6 +10,7 @@ export interface ModifyDataModalOnSaveProps {
   interfaceIndex: number,
   replacementMethod: string,
   replacementUrl: string,
+  replacementStatusCode: string,
   headersEditorValue: string,
   requestPayloadEditorValue: string,
   responseEditorValue:string,
@@ -28,6 +29,7 @@ interface OpenModalProps {
   request: string;
   replacementMethod: string;
   replacementUrl: string;
+  replacementStatusCode: string;
   headersText: string;
   requestPayloadText: string;
   responseLanguage: string;
@@ -56,6 +58,7 @@ const ModifyDataModal = (
   const [request, setRequest] = useState(''); // matched url
   const [replacementMethod, setReplacementMethod] = useState('');
   const [replacementUrl, setReplacementUrl] = useState('');
+  const [replacementStatusCode, setReplacementStatusCode] = useState('200');
   const [headersText, setHeadersText] = useState('');
   const [requestPayloadText, setRequestPayloadText] = useState('');
   const [responseLanguage, setResponseLanguage] = useState('json');
@@ -66,7 +69,7 @@ const ModifyDataModal = (
   }));
 
   const openModal = (
-    { groupIndex, interfaceIndex, activeTab, request, replacementMethod, replacementUrl,
+    { groupIndex, interfaceIndex, activeTab, request, replacementMethod, replacementUrl, replacementStatusCode,
       headersText, requestPayloadText, responseLanguage, responseText } : OpenModalProps
   ) => {
     setGroupIndex(groupIndex);
@@ -76,6 +79,7 @@ const ModifyDataModal = (
     // modify ⬇️
     setReplacementMethod(replacementMethod);
     setReplacementUrl(replacementUrl);
+    setReplacementStatusCode(replacementStatusCode);
     setHeadersText(headersText);
     setRequestPayloadText(requestPayloadText);
     setResponseLanguage(responseLanguage);
@@ -91,8 +95,8 @@ const ModifyDataModal = (
     const requestPayloadEditorValue = requestPayloadEditorInstance?.getValue();
     const responseEditorValue = responseEditorInstance?.getValue();
     const language = responseEditorInstance?.getModel()?.getLanguageId();
-    onSave({ groupIndex, interfaceIndex, replacementMethod, replacementUrl, headersEditorValue,
-      requestPayloadEditorValue, responseEditorValue, language });
+    onSave({ groupIndex, interfaceIndex, replacementMethod, replacementUrl, replacementStatusCode,
+      headersEditorValue, requestPayloadEditorValue, responseEditorValue, language });
     setVisible(false);
   };
 
@@ -119,12 +123,23 @@ const ModifyDataModal = (
           {
             label: `Response`,
             key: 'Response',
-            children: <MonacoEditor
-              ref={monacoEditorResponseRef}
-              language={responseLanguage}
-              text={responseText}
-              examples={RESPONSE_EXAMPLES}
-            />,
+            children: <Wrapper>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
+                <div style={{ width: 100 }}>Status Code</div>
+                <Input
+                  value={replacementStatusCode}
+                  maxLength={3}
+                  placeholder="Please enter the Status Code you want to replace with."
+                  onChange={(e) => setReplacementStatusCode(e.target.value)}
+                />
+              </div>
+              <MonacoEditor
+                ref={monacoEditorResponseRef}
+                language={responseLanguage}
+                text={responseText}
+                examples={RESPONSE_EXAMPLES}
+              />
+            </Wrapper>,
           },
           {
             label: `Request`,

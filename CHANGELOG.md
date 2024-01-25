@@ -1,3 +1,6 @@
+## 0.0.10
+1、新增可以修改状态码status
+
 ## 0.0.9
 1、declarativeNetRequest配置页新增Ctrl+S快捷键保存
 2、monaco-editor编辑面板支持Ctrl+F搜索

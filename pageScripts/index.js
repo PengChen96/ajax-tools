@@ -98,6 +98,9 @@ const ajax_tools_space = {
         if (ajax_tools_space.ajaxToolsSwitchOnNot200 && this.status !== 200) {
           this.status = 200;
         }
+        if (matchedInterface.replacementStatusCode) {
+          this.status = matchedInterface.replacementStatusCode;
+        }
         // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
         console.groupCollapsed(`%cMatched XHR Response modified：${matchedInterface.request}`, 'background-color: #108ee9; color: white; padding: 4px');
         console.info(`%cOriginal Request Url：`, 'background-color: #ff8040; color: white;', this.responseURL);
@@ -300,7 +303,7 @@ const ajax_tools_space = {
         });
         const newResponse = new Response(stream, {
           headers: response.headers,
-          status: response.status,
+          status: matchedInterface && matchedInterface.replacementStatusCode || response.status,
           statusText: response.statusText,
         });
         const responseProxy = new Proxy(newResponse, {
