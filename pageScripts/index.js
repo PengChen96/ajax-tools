@@ -339,6 +339,7 @@ window.addEventListener("message", function (event) {
     ajax_tools_space[data.key] = data.value;
   }
   if (ajax_tools_space.ajaxToolsSwitchOn) {
+    // https://github.com/PengChen96/ajax-tools/pull/14
     for (const k in ajax_tools_space.originalXHR) {
       ajax_tools_space.myXHR[k] = ajax_tools_space.originalXHR[k]
     }
