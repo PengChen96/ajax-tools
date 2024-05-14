@@ -1,6 +1,7 @@
 ## 0.0.10 (未发布)
 1、新增可以修改状态码status
 2、新增绑定原生ajax属性（https://github.com/PengChen96/ajax-tools/pull/14）
+3、修复keylol.com中报错的问题（https://github.com/PengChen96/ajax-tools/issues/18）
 
 ## 0.0.9
 1、declarativeNetRequest配置页新增Ctrl+S快捷键保存

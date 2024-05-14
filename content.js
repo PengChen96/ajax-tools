@@ -3,23 +3,30 @@
 chrome.storage.local.set({iframeVisible: true});
 
 function injectedScript (path) {
-  const scriptNode = document.createElement('script');
-  scriptNode.src= chrome.runtime.getURL(path);
-  document.documentElement.appendChild(scriptNode);
-  return scriptNode;
+  // 只在最顶层嵌入  https://github.com/PengChen96/ajax-tools/issues/18
+  if (window.self === window.top) {
+    const scriptNode = document.createElement('script');
+    scriptNode.src= chrome.runtime.getURL(path);
+    document.documentElement.appendChild(scriptNode);
+    return scriptNode;
+  }
 }
 function injectedCss(path) {
-  const linkElement = document.createElement('link');
-  linkElement.rel = 'stylesheet';
-  linkElement.href = chrome.runtime.getURL(path);
-  document.documentElement.appendChild(linkElement);
-  return linkElement;
+  if (window.self === window.top) {
+    const linkElement = document.createElement('link');
+    linkElement.rel = 'stylesheet';
+    linkElement.href = chrome.runtime.getURL(path);
+    document.documentElement.appendChild(linkElement);
+    return linkElement;
+  }
 }
 function injectedStyle(styleContent) {
-  const styleElement = document.createElement('style');
-  styleElement.textContent = styleContent;
-  document.documentElement.appendChild(styleElement);
-  return styleElement;
+  if (window.self === window.top) {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = styleContent;
+    document.documentElement.appendChild(styleElement);
+    return styleElement;
+  }
 }
 injectedStyle(`
   .ajax-interceptor-container {
@@ -71,15 +78,18 @@ injectedStyle(`
 `);
 injectedCss('icons/iconfont/iconfont.css');
 injectedScript('html/iframePage/mock.js');
-injectedScript('pageScripts/index.js').addEventListener('load', () => {
-  chrome.storage.local.get(['iframeVisible', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxDataList', 'ajaxToolsSkin'], (result) => {
-    // console.log('【ajaxTools content.js】【storage】', result);
-    const {ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxDataList = []} = result;
-    postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxDataList', value: ajaxDataList});
-    postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxToolsSwitchOn', value: ajaxToolsSwitchOn});
-    postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxToolsSwitchOnNot200', value: ajaxToolsSwitchOnNot200});
+const pageScripts = injectedScript('pageScripts/index.js');
+if (pageScripts) {
+  pageScripts.addEventListener('load', () => {
+    chrome.storage.local.get(['iframeVisible', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxDataList', 'ajaxToolsSkin'], (result) => {
+      // console.log('【ajaxTools content.js】【storage】', result);
+      const {ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxDataList = []} = result;
+      postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxDataList', value: ajaxDataList});
+      postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxToolsSwitchOn', value: ajaxToolsSwitchOn});
+      postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxToolsSwitchOnNot200', value: ajaxToolsSwitchOnNot200});
+    });
   });
-});
+}
 
 
 function closeButton (container) {
