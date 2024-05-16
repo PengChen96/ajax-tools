@@ -235,7 +235,7 @@ const ajax_tools_space = {
       };
       return await reader.read().then(processData);
     }
-    const [requestUrl, data] = args;
+    const [requestUrl, data={}] = args;
     const matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: requestUrl, thisMethod: data && data.method});
     if (matchedInterface && args) {
       const { replacementUrl, replacementMethod, headers, requestPayloadText } = matchedInterface;
@@ -256,8 +256,8 @@ const ajax_tools_space = {
         args[1].headers = Object.assign(args[1].headers, overrideHeaders);
         console.info(`%cModified Headers：`, 'background-color: #ff8040; color: white;', overrideHeaders);
       }
-      if (matchedInterface.requestPayloadText && args[0] && args[1]) {
-        const {method} = args[1];
+      if (matchedInterface.requestPayloadText && args[0] && data) {
+        const {method='GET'} = data;
         if (['GET', 'HEAD'].includes(method.toUpperCase())) {
           const queryStringParameters = ajax_tools_space.getRequestParams(args[0]);
           const data = {
