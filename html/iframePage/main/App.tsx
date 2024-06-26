@@ -99,13 +99,13 @@ function App() {
   const onGroupSummaryTextChange = (e: React.ChangeEvent<HTMLInputElement>, groupIndex: number) => {
     ajaxDataList[groupIndex].summaryText = e.target.value;
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ ajaxDataList });
+    chrome.storage?.local.set({ ajaxDataList });
   };
   // 收缩分组 折叠全部keys传[]
   const onCollapseChange = (groupIndex: number, keys: string | string[]) => {
     ajaxDataList[groupIndex].collapseActiveKeys = Array.isArray(keys) ? keys : [keys];
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ ajaxDataList });
+    chrome.storage?.local.set({ ajaxDataList });
   };
   const onGroupOpenChange = (groupIndex: number, open: boolean) => {
     ajaxDataList[groupIndex].interfaceList = ajaxDataList[groupIndex].interfaceList.map((v) => {
@@ -113,7 +113,7 @@ function App() {
       return v;
     });
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ ajaxDataList });
+    chrome.storage?.local.set({ ajaxDataList });
   };
 
   // interfaceList值变化
@@ -129,7 +129,7 @@ function App() {
     }
     ajaxDataList[groupIndex].interfaceList[interfaceIndex][key]! = value;
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ ajaxDataList });
+    chrome.storage?.local.set({ ajaxDataList });
   };
   const onInterfaceListAdd = (groupIndex: number) => {
     const key = String(Date.now());
@@ -138,13 +138,13 @@ function App() {
     interfaceItem.key = key;
     ajaxDataList[groupIndex].interfaceList.push(interfaceItem);
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ ajaxDataList });
+    chrome.storage?.local.set({ ajaxDataList });
   };
   const onInterfaceListDelete = (groupIndex: number, key: string) => {
     ajaxDataList[groupIndex].collapseActiveKeys = ajaxDataList[groupIndex].collapseActiveKeys.filter((activeKey) => activeKey !== key);
     ajaxDataList[groupIndex].interfaceList = ajaxDataList[groupIndex].interfaceList.filter((v) => v.key !== key);
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ ajaxDataList });
+    chrome.storage?.local.set({ ajaxDataList });
   };
   const onInterfaceListSave = (
     { groupIndex, interfaceIndex, replacementMethod, replacementUrl, replacementStatusCode, headersEditorValue,
@@ -169,7 +169,7 @@ function App() {
     }
     ajaxDataList[groupIndex].interfaceList = interfaceList;
     setAjaxDataList([...ajaxDataList]);
-    chrome.storage.local.set({ ajaxDataList });
+    chrome.storage?.local.set({ ajaxDataList });
   };
 
   const genExtra = (
@@ -279,7 +279,7 @@ function App() {
             checked={ajaxToolsSwitchOnNot200}
             onChange={(e) => {
               setAjaxToolsSwitchOnNot200(e.target.checked);
-              chrome.storage.local.set({ ajaxToolsSwitchOnNot200: e.target.checked });
+              chrome.storage?.local.set({ ajaxToolsSwitchOnNot200: e.target.checked });
             }}
             style={{ filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)' }}
           >
@@ -292,7 +292,7 @@ function App() {
             checked={ajaxToolsSwitchOn}
             onChange={(value) => {
               setAjaxToolsSwitchOn(value);
-              chrome.storage.local.set({ ajaxToolsSwitchOn: value });
+              chrome.storage?.local.set({ ajaxToolsSwitchOn: value });
             }}
           />
           {
