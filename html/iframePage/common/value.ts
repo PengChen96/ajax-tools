@@ -112,7 +112,6 @@ return args;
 
 export const RESPONSE_EXAMPLES = [
   {
-    egType: 'json',
     egTitle: 'e.g. json Basic',
     egText: `{
   "status": 200,
@@ -121,7 +120,6 @@ export const RESPONSE_EXAMPLES = [
 `
   },
   {
-    egType: 'javascript',
     egTitle: 'e.g. javascript Basic',
     egText: `const data = [];
 for (let i = 0; i < 10; i++) {
@@ -135,7 +133,6 @@ return {
 `
   },
   {
-    egType: 'javascript',
     egTitle: 'e.g. javascript Mock.js',
     egText: `const data = Mock.mock({
   'list|1-10': [{
@@ -152,7 +149,6 @@ return {
 `
   },
   {
-    egType: 'javascript',
     egTitle: 'e.g. javascript Create Scene',
     egText: `const { method, payload, originalResponse } = arguments[0];
 if (method === 'get') { // Method
