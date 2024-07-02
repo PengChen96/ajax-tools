@@ -52,7 +52,7 @@ interface MonacoEditorProps {
   editorHeight?: number | string;
   language?: string;
   text?: string;
-  examples?: { egTitle?: string, egText: string }[];
+  examples?: { egTitle?: string, egText: string, egType?: string }[];
   theme?: string;
   headerLeftNode?: React.ReactNode,
   headerRightNode?: React.ReactNode,
@@ -61,6 +61,7 @@ interface MonacoEditorProps {
   onDidChangeContent?: (arg0: string) => void
   onSaveKeyword?: (arg0: any) => void
 }
+type ExamplesType = NonNullable<MonacoEditorProps['examples']>[number]
 const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstance: any }>) => {
   const editorRef = useRef(null);
   useImperativeHandle(ref, () => ({
@@ -69,7 +70,7 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
   const {
     languageSelectOptions = ['json', 'javascript'],
     editorHeight = document.body.offsetHeight - 300,
-    examples = [{ egTitle: '', egText: 'e.g.' }],
+    examples = [{ egTitle: '', egText: 'e.g.', egType: 'json' }],
     theme = 'vs-dark',
     headerStyle,
     headerLeftNode,
@@ -143,14 +144,16 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
     }
   };
 
-  const onAddExampleClick = (egText: string) => {
+  const onAddExampleClick = (eg: ExamplesType) => {
+    const { egText, egType } = eg;
+    if (egType) onLanguageChange(egType);
     if (editor) editor.getModel().setValue(egText);
   };
 
-  const items: MenuProps['items'] = examples.map((eg: {egTitle?: string, egText: string}, index) => {
+  const items: MenuProps['items'] = examples.map((eg: ExamplesType, index) => {
     return {
       key: index,
-      label: <div onClick={()=>onAddExampleClick(eg.egText)}>{eg.egTitle}</div>,
+      label: <div onClick={() => onAddExampleClick(eg)}>{eg.egTitle}</div>,
     };
   });
   return <div className="ajax-tools-monaco-editor-container">
@@ -183,7 +186,7 @@ const MonacoEditor = (props: MonacoEditorProps, ref: ForwardedRef<{ editorInstan
               </a>
             </Dropdown> : <a
               title="Example Case"
-              onClick={() => onAddExampleClick(examples[0].egText)}
+              onClick={() => onAddExampleClick(examples[0])}
             >
               Example
             </a>
