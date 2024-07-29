@@ -227,8 +227,14 @@ function App() {
                   checked={groupOpen}
                   onChange={(open) => onGroupOpenChange(index, open)}
                   size="small"
-                  style={{ margin: '0 22px 0 4px' }}
                 />
+
+                <Button 
+                  danger
+                  type="primary" size='small' shape="circle" 
+                  style={{ minWidth: 16, width: 16, height: 16, margin: '0 10px 0 4px' }}
+                  onClick= {() => onGroupDelete(index)}
+                  icon={<DeleteOutlined style={{ color: '#fff', fontSize: '12px' }}/>} />
                 <Dropdown
                   menu={{
                     items: [
@@ -245,13 +251,6 @@ function App() {
                         icon: <ToTopOutlined style={{ transform: 'rotateZ(180deg)', fontSize: 14 }}/>,
                         onClick: () => onGroupMove(index, 'bottom'),
                         disabled: index === ajaxDataList.length - 1
-                      },
-                      {
-                        key: '99',
-                        danger: true,
-                        label: 'Delete group',
-                        icon: <DeleteOutlined style={{ fontSize: 14 }}/>,
-                        onClick: () => onGroupDelete(index)
                       },
                     ]
                   }}
