@@ -4,7 +4,6 @@ const ajax_tools_space = {
   ajaxToolsSwitchOnNot200: true,
   ajaxDataList: [],
   originalXHR: window.XMLHttpRequest,
-  // "/^t.*$/" or "^t.*$" => new RegExp
   strToRegExp: (regStr) => {
     let regexp = new RegExp('');
     try {
@@ -25,8 +24,6 @@ const ajax_tools_space = {
       JSON.parse(responseText);
     } catch (e) {
       try {
-        // const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-        // const returnText = await (new AsyncFunction(responseText))();
         const returnText = (new Function(responseText))(args);
         if (returnText) {
           overrideText = typeof returnText === 'object' ? JSON.stringify(returnText) : returnText;
@@ -70,7 +67,6 @@ const ajax_tools_space = {
     ajax_tools_space.ajaxDataList.forEach((item) => {
       interfaceList.push(...(item.interfaceList || []));
     });
-    // const interfaceList = ajax_tools_space.ajaxDataList.flatMap(item => item.interfaceList || []);
     return interfaceList.find(({ open = true, matchType = 'normal', matchMethod, request }) => {
       const matchedMethod = !matchMethod || matchMethod === thisMethod.toUpperCase();
       const matchedRequest = request && (matchType === 'normal' ? thisRequestUrl.includes(request) : thisRequestUrl.match(ajax_tools_space.strToRegExp(request)));

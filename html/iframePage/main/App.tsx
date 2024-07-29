@@ -1,8 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Collapse, Input, Select, Switch, Result, Dropdown, Space, MenuProps } from 'antd';
-import {  PlusOutlined, FormOutlined,
-  DropboxOutlined, MoreOutlined, UploadOutlined, RightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
+import { Button, Collapse, Input, Select, Switch, Dropdown, Space } from 'antd';
+import {  PlusOutlined, FormOutlined, MoreOutlined, RightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
 import ModifyDataModal, { ModifyDataModalOnSaveProps } from './ModifyDataModal';
 import {
   defaultInterface,
@@ -15,6 +14,7 @@ import { openImportJsonModal } from './utils/importJson';
 import ModifyNav from '../components/ModifyNav';
 import Footer from '../components/Footer';
 import PanelExtra from '../components/PanelExtra';
+import Empty from '../components/Empty';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -374,15 +374,7 @@ function App() {
           })
         }
         {
-          ajaxDataList.length < 1 && <Result
-            icon={<DropboxOutlined style={{ color: '#c1d0dd' }}/>}
-            title={'Ohhh... nothing here'}
-            subTitle={<>
-                Create a rule by clicking the <Button size="small" type="primary" onClick={onGroupAdd}>Add Group</Button> button <br/>
-                Or importing a <strong>.json</strong> file by clicking the <Button size="small" style={{ marginTop: 6 }} onClick={onImportClick}><UploadOutlined/>Import</Button> button<br/>
-                Or F12 opens devtools and selects the U-Network panel to get started quickly.
-            </>}
-          />
+          ajaxDataList.length < 1 && <Empty onGroupAdd={onGroupAdd} onImportClick={onImportClick}/>
         }
       </main>
       <Footer/>

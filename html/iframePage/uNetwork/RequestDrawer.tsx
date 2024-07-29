@@ -36,11 +36,6 @@ export default (props: RequestDrawerProps) => {
         <strong>Remote Address:&nbsp;</strong>
         <span>{record.serverIPAddress}</span>
       </div>
-      {/*<div className="ajax-tools-devtools-text">*/}
-      {/*  <strong>Referrer Policy:&nbsp;</strong>*/}
-      {/*  <span>xxx</span>*/}
-      {/*</div>*/}
-
       <Divider orientation="left" style={{ margin: '12px 0 4px' }}/>
       <h4><strong>Response Headers</strong></h4>
       <div className="ajax-tools-devtools-text">
