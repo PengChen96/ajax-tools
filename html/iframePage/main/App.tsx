@@ -1,19 +1,20 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Collapse, Input, Select, Switch, Result, Dropdown, Space, MenuProps } from 'antd';
-import { MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined,
+import {  PlusOutlined, FormOutlined,
   DropboxOutlined, MoreOutlined, UploadOutlined, RightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
 import ModifyDataModal, { ModifyDataModalOnSaveProps } from './ModifyDataModal';
 import {
   defaultInterface,
   defaultAjaxDataList,
-  DefaultInterfaceObject,
   HTTP_METHOD_MAP,
 } from '../common/value';
 import 'antd/dist/antd.css';
 import './App.css';
 import { openImportJsonModal } from './utils/importJson';
 import ModifyNav from '../components/ModifyNav';
+import Footer from '../components/Footer';
+import PanelExtra from '../components/PanelExtra';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -180,73 +181,6 @@ function App() {
     chrome.storage.local.set({ ajaxDataList });
   };
 
-  const genExtra = (
-    groupIndex: number,
-    interfaceIndex: number,
-    v: DefaultInterfaceObject,
-  ) => {
-    const { interfaceList = [] } = ajaxDataList[groupIndex];
-    const items: MenuProps['items'] = [
-      {
-        key: '0',
-        label: 'Edit data',
-        icon: <FormOutlined style={{ fontSize: 14 }} />,
-        onClick: () => modifyDataModalRef.current.openModal({
-          groupIndex,
-          interfaceIndex,
-          activeTab: 'Response',
-          request: v.request,
-          replacementMethod: v.replacementMethod,
-          replacementUrl: v.replacementUrl,
-          replacementStatusCode: v.replacementStatusCode,
-          headersText: v.headers,
-          requestPayloadText: v.requestPayloadText,
-          responseLanguage: v.language,
-          responseText: v.responseText
-        })
-      },
-      {
-        key: '1',
-        label: 'Move to top',
-        icon: <ToTopOutlined style={{ fontSize: 14 }} />,
-        onClick: () => onInterfaceMove( groupIndex, interfaceIndex, 'top'),
-        disabled: interfaceIndex === 0
-      },
-      {
-        key: '2',
-        label: 'Move to bottom',
-        icon: <ToTopOutlined style={{ transform: 'rotateZ(180deg)', fontSize: 14 }}/>,
-        onClick: () => onInterfaceMove(groupIndex, interfaceIndex, 'bottom'),
-        disabled: interfaceIndex === interfaceList.length - 1
-      },
-    ];
-    return <div onClick={(event) => event.stopPropagation()} style={{ display: 'flex', alignItems: 'center', height: 24 }}>
-      <Switch
-        title={v.open ? 'Disable Extension' : 'Enable Extension'}
-        checked={v.open}
-        onChange={(value) => onInterfaceListChange(groupIndex, interfaceIndex, 'open', value)}
-        size="small"
-        style={{ margin: '0 4px' }}
-      />
-      <Button
-        danger
-        size="small"
-        type="primary"
-        shape="circle"
-        icon={<MinusOutlined/>}
-        title="Delete Interface"
-        onClick={() => onInterfaceListDelete(groupIndex, v.key)}
-        style={{ minWidth: 16, width: 16, height: 16 }}
-      />
-      <Dropdown
-        menu={{ items }}
-        trigger={['click']}
-      >
-        <MoreOutlined title="More" style={{ marginLeft: 4, fontSize: 18 }}/>
-      </Dropdown>
-    </div>;
-  };
-
   return (
     <div
       className="ajax-tools-iframe-container"
@@ -386,7 +320,15 @@ function App() {
                             </div>
                           </div>
                         }
-                        extra={genExtra(index, i, v)}
+                        extra={<PanelExtra 
+                          groupIndex={index} 
+                          interfaceIndex={i} 
+                          ajaxDataList={ajaxDataList} 
+                          modifyDataModalRef={modifyDataModalRef}
+                          onInterfaceMove={onInterfaceMove}
+                          onInterfaceListChange={onInterfaceListChange}
+                          onInterfaceListDelete={onInterfaceListDelete} 
+                          v={v}/>}
                       >
                         <div style={{ position: 'relative' }}>
                           <TextArea
@@ -443,17 +385,7 @@ function App() {
           />
         }
       </main>
-      <footer className="ajax-tools-iframe-footer">
-        Copyright © 2022-{(new Date()).getFullYear()}
-        <a href="https://github.com/PengChen96/ajax-tools" target="_blank" rel="noreferrer" style={{ color: '#666' }}>
-          &nbsp;Ajax Interceptor Tools&nbsp;
-        </a>
-        ( 🌟 if you find it helpful, give me a star on
-        <a href="https://github.com/PengChen96/ajax-tools" target="_blank" rel="noreferrer" style={{ margin: '0 4px' }}>
-          <GithubOutlined style={{ color: '#333' }} title="GitHub"/>
-        </a>
-        )
-      </footer>
+      <Footer/>
       <ModifyDataModal
         ref={modifyDataModalRef}
         onSave={onInterfaceListSave}

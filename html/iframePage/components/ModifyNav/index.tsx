@@ -67,6 +67,7 @@ const ModifyNav = (props: ModifyNavProps) => {
           defaultChecked
           checked={ajaxToolsSwitchOnNot200}
           onChange={(e) => {
+            if(!chrome.storage) return;
             setAjaxToolsSwitchOnNot200(e.target.checked);
             chrome.storage.local.set({ ajaxToolsSwitchOnNot200: e.target.checked });
           }}
@@ -80,6 +81,7 @@ const ModifyNav = (props: ModifyNavProps) => {
           unCheckedChildren="Turn off"
           checked={ajaxToolsSwitchOn}
           onChange={(value) => {
+            if(!chrome.storage) return;
             updateAjaxToolsSwitchOn(value);
             chrome.storage.local.set({ ajaxToolsSwitchOn: value });
           }}

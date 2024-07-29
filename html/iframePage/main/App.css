@@ -59,16 +59,6 @@
   border-bottom-right-radius: 3px;
 }
 
-.ajax-tools-iframe-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 20px;
-  font-size: 12px;
-  color: #222;
-  background: #f4f6f9;
-}
-
 .ajax-tools-textarea-edit {
   position: absolute;
   top: 6px;
