@@ -6,15 +6,6 @@
   background: #fff;
 }
 
-.ajax-tools-iframe-action {
-  /* height: 40px */
-  padding: 8px 12px;
-  background: #f4f6f9;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .ajax-tools-iframe-body {
   padding: 12px 12px 20px;
   height: calc(100vh - 40px - 20px);

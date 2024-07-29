@@ -1,0 +1,8 @@
+.ajax-tools-iframe-action {
+  /* height: 40px */
+  padding: 8px 12px;
+  background: #f4f6f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -1,8 +1,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Checkbox, Collapse, Input, Select, Switch, Result, Dropdown, Space, MenuProps } from 'antd';
+import { Button, Collapse, Input, Select, Switch, Result, Dropdown, Space, MenuProps } from 'antd';
 import { MinusOutlined, PlusOutlined, FormOutlined, GithubOutlined,
-  DropboxOutlined, MoreOutlined, UploadOutlined, DownloadOutlined, RightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
+  DropboxOutlined, MoreOutlined, UploadOutlined, RightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
 import ModifyDataModal, { ModifyDataModalOnSaveProps } from './ModifyDataModal';
 import {
   defaultInterface,
@@ -12,9 +12,8 @@ import {
 } from '../common/value';
 import 'antd/dist/antd.css';
 import './App.css';
-import { exportJSON } from './utils/exportJson';
 import { openImportJsonModal } from './utils/importJson';
-import { popupWindow } from './utils/pictureInPicture';
+import ModifyNav from '../components/ModifyNav';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -31,18 +30,16 @@ function App() {
 
   const [ajaxToolsSkin, setAjaxToolsSkin] = useState('light');
   const [ajaxToolsSwitchOn, setAjaxToolsSwitchOn] = useState(true); // 默认开启
-  const [ajaxToolsSwitchOnNot200, setAjaxToolsSwitchOnNot200] = useState(true); // 默认开启
   const [ajaxDataList, setAjaxDataList] = useState(defaultAjaxDataList);
 
   useEffect(() => {
     if (chrome.storage) {
-      chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxToolsSkin'], (result) => {
-        const { ajaxDataList = [], ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxToolsSkin = 'light' } = result;
+      chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn', 'ajaxToolsSkin'], (result) => {
+        const { ajaxDataList = [], ajaxToolsSwitchOn = true, ajaxToolsSkin = 'light' } = result;
         if (ajaxDataList.length > 0) {
           setAjaxDataList(ajaxDataList);
         }
         setAjaxToolsSwitchOn(ajaxToolsSwitchOn);
-        setAjaxToolsSwitchOnNot200(ajaxToolsSwitchOnNot200);
         setAjaxToolsSkin(ajaxToolsSkin);
       });
     }
@@ -60,6 +57,7 @@ function App() {
   }, []);
 
   const onImportClick = async () => {
+    if (!chrome.storage) return;
     const importJsonData = await openImportJsonModal();
     let newAjaxDataList = ajaxDataList;
     if (Array.isArray(importJsonData)) {
@@ -70,6 +68,7 @@ function App() {
   };
   // 新增分组
   const onGroupAdd = () => {
+    if (!chrome.storage) return;
     const len = ajaxDataList.length;
     const newAjaxDataList = [...ajaxDataList, {
       summaryText: 'Group Name (Editable)',
@@ -81,12 +80,14 @@ function App() {
     chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
   };
   const onGroupDelete = (groupIndex: number) => {
+    if (!chrome.storage) return;
     const newAjaxDataList = ajaxDataList.filter((_, i) => i !== groupIndex);
     setAjaxDataList([...newAjaxDataList]);
     chrome.storage.local.set({ ajaxDataList: newAjaxDataList });
   };
   // placement: top|bottom
   const onGroupMove = (groupIndex: number, placement: string) => {
+    if (!chrome.storage) return;
     const movedItem = ajaxDataList.splice(groupIndex, 1)[0];
     if (placement === 'top') {
       ajaxDataList.unshift(movedItem);
@@ -97,17 +98,20 @@ function App() {
     chrome.storage.local.set({ ajaxDataList });
   };
   const onGroupSummaryTextChange = (e: React.ChangeEvent<HTMLInputElement>, groupIndex: number) => {
+    if (!chrome.storage) return;
     ajaxDataList[groupIndex].summaryText = e.target.value;
     setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ ajaxDataList });
   };
   // 收缩分组 折叠全部keys传[]
   const onCollapseChange = (groupIndex: number, keys: string | string[]) => {
+    if (!chrome.storage) return;
     ajaxDataList[groupIndex].collapseActiveKeys = Array.isArray(keys) ? keys : [keys];
     setAjaxDataList([...ajaxDataList]);
     chrome.storage.local.set({ ajaxDataList });
   };
   const onGroupOpenChange = (groupIndex: number, open: boolean) => {
+    if (!chrome.storage) return;
     ajaxDataList[groupIndex].interfaceList = ajaxDataList[groupIndex].interfaceList.map((v) => {
       v.open = open;
       return v;
@@ -118,6 +122,7 @@ function App() {
 
   // interfaceList值变化
   const onInterfaceListChange = (groupIndex: number, interfaceIndex: number, key: string, value: string | boolean) => {
+    if (!chrome.storage) return;
     if (key === 'headers' || key === 'responseText') {
       try {
         const lastValue = ajaxDataList[groupIndex]?.interfaceList?.[interfaceIndex]?.[key];
@@ -132,6 +137,7 @@ function App() {
     chrome.storage.local.set({ ajaxDataList });
   };
   const onInterfaceListAdd = (groupIndex: number) => {
+    if (!chrome.storage) return;
     const key = String(Date.now());
     ajaxDataList[groupIndex].collapseActiveKeys.push(key);
     const interfaceItem = { ...defaultInterface };
@@ -141,6 +147,7 @@ function App() {
     chrome.storage.local.set({ ajaxDataList });
   };
   const onInterfaceListDelete = (groupIndex: number, key: string) => {
+    if (!chrome.storage) return;
     ajaxDataList[groupIndex].collapseActiveKeys = ajaxDataList[groupIndex].collapseActiveKeys.filter((activeKey) => activeKey !== key);
     ajaxDataList[groupIndex].interfaceList = ajaxDataList[groupIndex].interfaceList.filter((v) => v.key !== key);
     setAjaxDataList([...ajaxDataList]);
@@ -160,6 +167,7 @@ function App() {
   };
   // placement: top|bottom
   const onInterfaceMove = (groupIndex: number, interfaceIndex: number, placement: string ) => {
+    if (!chrome.storage) return;
     const { interfaceList = [] } = ajaxDataList[groupIndex];
     const movedItem = interfaceList.splice(interfaceIndex, 1)[0];
     if (placement === 'top') {
@@ -239,7 +247,6 @@ function App() {
     </div>;
   };
 
-  const inIframe = top?.location !== self.location;
   return (
     <div
       className="ajax-tools-iframe-container"
@@ -247,64 +254,9 @@ function App() {
         filter: ajaxToolsSkin === 'dark' ? 'invert(1)' : undefined
       }}
     >
-      <nav className="ajax-tools-iframe-action">
-        <Space>
-          <Dropdown.Button
-            size="small"
-            type="primary"
-            onClick={onGroupAdd}
-            menu={{
-              items: [
-                {
-                  key: '1',
-                  label: 'Import',
-                  icon: <UploadOutlined style={{ fontSize: 14 }} />,
-                  onClick: onImportClick
-                },
-                {
-                  key: '2',
-                  label: 'Export',
-                  icon: <DownloadOutlined style={{ fontSize: 14 }} />,
-                  onClick: () => exportJSON(`AjaxInterceptorData_${JSON.stringify(new Date())}`, ajaxDataList),
-                  disabled: ajaxDataList.length < 1
-                },
-              ]
-            }}>
-            Add Group
-          </Dropdown.Button>
-        </Space>
-        <div>
-          <Checkbox
-            defaultChecked
-            checked={ajaxToolsSwitchOnNot200}
-            onChange={(e) => {
-              setAjaxToolsSwitchOnNot200(e.target.checked);
-              chrome.storage.local.set({ ajaxToolsSwitchOnNot200: e.target.checked });
-            }}
-            style={{ filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)' }}
-          >
-            <span title="Change the request status from 404/500 to 200">Non-200</span>
-          </Checkbox>
-          <Switch
-            defaultChecked
-            checkedChildren="Turn on"
-            unCheckedChildren="Turn off"
-            checked={ajaxToolsSwitchOn}
-            onChange={(value) => {
-              setAjaxToolsSwitchOn(value);
-              chrome.storage.local.set({ ajaxToolsSwitchOn: value });
-            }}
-          />
-          {
-            inIframe ? null : <i
-              className="c-iconfont c-icon-zoomout"
-              title="Picture in picture"
-              style={{ marginLeft: 12, cursor: 'pointer' }}
-              onClick={() => popupWindow({ url: chrome.runtime.getURL('html/iframePage/dist/index.html') })}
-            />
-          }
-        </div>
-      </nav>
+      <ModifyNav ajaxDataList={ajaxDataList} onImportClick={onImportClick} ajaxToolsSwitchOn={ajaxToolsSwitchOn} updateAjaxToolsSwitchOn={(value) => {
+        setAjaxToolsSwitchOn(value);
+      }} onGroupAdd={onGroupAdd}/>
       <main
         className="ajax-tools-iframe-body"
         style={{ filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)' }}
