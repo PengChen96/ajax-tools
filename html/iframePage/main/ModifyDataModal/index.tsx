@@ -138,6 +138,7 @@ const ModifyDataModal = (
                 language={responseLanguage}
                 text={responseText}
                 examples={RESPONSE_EXAMPLES}
+                editorHeight={'calc(100vh - 300px - 40px)'}
               />
             </Wrapper>,
           },
