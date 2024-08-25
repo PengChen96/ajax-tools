@@ -26,7 +26,7 @@ export interface DefaultInterfaceObject {
 export const defaultInterface: DefaultInterfaceObject = {
   key: '1',
   open: true,
-  matchType: 'normal',
+  matchType: 'regex', // 默认正则
   matchMethod: '',
   request: '',
   requestDes: '',
