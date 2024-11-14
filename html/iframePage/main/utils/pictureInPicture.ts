@@ -7,7 +7,7 @@ export const popupWindow = async ({ url } : { url: string }) => {
   const pipWindow = await documentPictureInPicture.requestWindow({ width: 580, height: 680 });
   const iframe = document.createElement('iframe');
   iframe.src = url;
-  iframe.className = 'ajax-interceptor-iframe';
+  iframe.className = 'robbie-ajax-interceptor-iframe';
   iframe.style.setProperty('width', '100%');
   iframe.style.setProperty('height', '100%');
   iframe.style.setProperty('border', 'none');

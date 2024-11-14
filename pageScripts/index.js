@@ -80,6 +80,7 @@ const ajax_tools_space = {
       const [requestPayload] = this._sendArgs;
       const matchedInterface = this._matchedInterface;
       if (matchedInterface && matchedInterface.responseText) {
+        console.log("【mock match url】🟢 : "+"%c" + `${requestUrl}`, "color: #f50; font-weight: bold;");
         const funcArgs = {
           method,
           payload: {

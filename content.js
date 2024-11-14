@@ -29,7 +29,7 @@ function injectedStyle(styleContent) {
   }
 }
 injectedStyle(`
-  .ajax-interceptor-container {
+  .robbie-ajax-interceptor-container {
     display: flex;
     flex-direction: column;
     height: 100% !important;
@@ -52,7 +52,7 @@ injectedStyle(`
     justify-content: space-between;
     align-items: center;
   }
-  .ajax-interceptor-iframe {
+  .robbie-ajax-interceptor-iframe {
     border: none;
     height: calc(100% - 40px);
     width: 100%;
@@ -145,7 +145,7 @@ function pipButton (container) {
     }
     pipIcon.className = className;
     chrome.storage.local.set({ ajaxToolsPipBtnNewHideFlag: true });
-    const iframe = document.querySelector('.ajax-interceptor-iframe');
+    const iframe = document.querySelector('.robbie-ajax-interceptor-iframe');
     const pipWindow = await documentPictureInPicture.requestWindow({width: 580, height: 680});
     // css
     const allCSS = [...document.styleSheets]
@@ -280,19 +280,19 @@ function actionBar (container) {
 // 只在最顶层页面嵌入iframe
 if (window.self === window.top) {
   document.onreadystatechange = () => {
-    if (document.readyState === 'complete') {
+    if (document.readyState === 'interactive') {
       let container = document.createElement('div');
-      container.className = 'ajax-interceptor-container'
+      container.className = 'robbie-ajax-interceptor-container'
       container.style.setProperty('transform', 'translateX(calc(100% + 20px))', 'important'); // 470px
       const _actionBar = actionBar(container);
       container.appendChild(_actionBar);
       const iframe = document.createElement('iframe');
       iframe.src = chrome.runtime.getURL("html/iframePage/dist/index.html");
-      iframe.className='ajax-interceptor-iframe';
+      iframe.className='robbie-ajax-interceptor-iframe';
       container.appendChild(iframe);
       if (document.body) document.body.appendChild(container);
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        // console.log('【content】【ajax-tools-iframe-show】receive message', request);
+        console.log('【content】【robbie-ajax-tools-iframe-show】receive message', request);
         const {type, iframeVisible} = request;
         if (type === 'iframeToggle') {
           container.style.setProperty('transform', iframeVisible ? 'translateX(0)' : 'translateX(calc(100% + 20px))', 'important');

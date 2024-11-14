@@ -32,30 +32,29 @@ function App() {
   const [ajaxToolsSkin, setAjaxToolsSkin] = useState('light');
   const [ajaxToolsSwitchOn, setAjaxToolsSwitchOn] = useState(true); // 默认开启
   const [ajaxDataList, setAjaxDataList] = useState(defaultAjaxDataList);
+  const [isRegistry, setIsRegistry] = useState(false);
 
-  useEffect(() => {
-    if (chrome.storage) {
-      chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn', 'ajaxToolsSkin'], (result) => {
-        const { ajaxDataList = [], ajaxToolsSwitchOn = true, ajaxToolsSkin = 'light' } = result;
-        if (ajaxDataList.length > 0) {
-          setAjaxDataList(ajaxDataList);
-        }
-        setAjaxToolsSwitchOn(ajaxToolsSwitchOn);
-        setAjaxToolsSkin(ajaxToolsSkin);
-      });
-    }
-    if (chrome.runtime) {
-      // 接收uNetwork/App.jsx发来的数据（在uNetWork面板中可以添加拦截数据更新页面）
-      chrome.runtime.onMessage.addListener((request) => {
-        const { type, to, ajaxDataList } = request;
-        if (type === 'ajaxTools_updatePage' && to === 'mainSettingSidePage') {
-          // console.log('【main/App.jsx】<-【uNetwork】Receive message:', request);
-          setAjaxDataList(ajaxDataList);
-          chrome.storage.local.set({ ajaxDataList });
-        }
-      });
-    }
-  }, []);
+  if (chrome.storage && chrome.runtime && !isRegistry) {
+    setIsRegistry(true);
+    console.log('ajax interceptor iframe 已开启监听');
+    chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn', 'ajaxToolsSkin'], (result) => {
+      const { ajaxDataList = [], ajaxToolsSwitchOn = true, ajaxToolsSkin = 'light' } = result;
+      if (ajaxDataList.length > 0) {
+        setAjaxDataList(ajaxDataList);
+      }
+      setAjaxToolsSwitchOn(ajaxToolsSwitchOn);
+      setAjaxToolsSkin(ajaxToolsSkin);
+    });
+    // 接收uNetwork/App.jsx发来的数据（在uNetWork面板中可以添加拦截数据更新页面）
+    chrome.runtime.onMessage.addListener((request) => {
+      const { type, to, ajaxDataList } = request;
+      if (type === 'ajaxTools_updatePage' && to === 'mainSettingSidePage') {
+        // console.log('【main/App.jsx】<-【uNetwork】Receive message:', request);
+        setAjaxDataList(ajaxDataList);
+        chrome.storage.local.set({ ajaxDataList });
+      }
+    });
+  }
 
   const onImportClick = async () => {
     if (!chrome.storage) return;
