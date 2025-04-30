@@ -4,9 +4,9 @@ import {  Checkbox, Switch, Dropdown, Space } from 'antd';
 import {  UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './index.css';
-import { exportJSON } from './../../main/utils/exportJson';
-import { popupWindow } from './../../main/utils/pictureInPicture';
-import { AjaxDataListObject } from '../../common/value';
+import { exportJSON } from '../../utils/exportJson';
+import { AjaxDataListObject } from '../../../common/value';
+import { popupWindow } from '../../utils/pictureInPicture';
 
 
 interface ModifyNavProps {

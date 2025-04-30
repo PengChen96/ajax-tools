@@ -1,0 +1,120 @@
+
+.ajax-tools-iframe-container {
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+  background: #fff;
+}
+
+.ajax-tools-iframe-body {
+  padding: 12px 12px 20px;
+  height: calc(100vh - 40px - 20px);
+  overflow: auto;
+  background: #fff;
+}
+
+.ajax-tools-iframe-body-header {
+  margin-bottom: 4px;
+  padding: 4px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ajax-tools-iframe-body-header-input {
+  border: none;
+  outline: none;
+  box-shadow: none !important;
+  padding: 0 8px;
+}
+
+.ajax-tools-iframe-collapse .ant-collapse-header {
+  padding: 8px 16px 4px !important;
+}
+
+.ajax-tools-iframe-request-des-input {
+  height: 18px;
+  line-height: 18px;
+  font-size: 12px;
+  background: #fafafa;
+  color: #222;
+  border: none;
+  outline: none;
+  box-shadow: none !important;
+  padding: 0 8px;
+}
+
+.ajax-tools-iframe-body-footer {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.ajax-tools-textarea-edit {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  opacity: 0.5;
+}
+.ajax-tools-textarea-edit:hover {
+  opacity: 1;
+}
+
+.ajax-tools-color-volcano {
+  color: #d4380d;
+  background: #fff2e8;
+}
+
+.ajax-tools-color-magenta {
+  color: #c41d7f;
+  background: #fff0f6;
+}
+
+.ajax-tools-color-red {
+  color: #cf1322;
+  background: #fff1f0;
+}
+
+.ajax-tools-color-orange {
+  color: #d46b08;
+  background: #fff7e6;
+}
+
+.ajax-tools-color-gold {
+  color: #d48806;
+  background: #fffbe6;
+}
+
+.ajax-tools-color-green {
+  color: #389e0d;
+  background: #f6ffed;
+}
+
+.ajax-tools-color-cyan {
+  color: #08979c;
+  background: #e6fffb;
+}
+
+.ajax-tools-color-blue {
+  color: #096dd9;
+  background: #e6f7ff;
+}
+
+.ajax-tools-color-geekblue {
+  color: #1d39c4;
+  background: #f0f5ff;
+}
+
+.ajax-tools-color-purple {
+  color: #531dab;
+  background: #f9f0ff;
+}

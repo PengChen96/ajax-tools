@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Collapse, Input, Select, Switch, Dropdown, Space } from 'antd';
 import {  PlusOutlined, FormOutlined, MoreOutlined, RightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
-import ModifyDataModal, { ModifyDataModalOnSaveProps } from './ModifyDataModal';
+import ModifyDataModal, { ModifyDataModalOnSaveProps } from './components/ModifyDataModal';
 import {
   defaultInterface,
   defaultAjaxDataList,
@@ -11,10 +11,11 @@ import {
 import 'antd/dist/antd.css';
 import './App.css';
 import { openImportJsonModal } from './utils/importJson';
-import ModifyNav from '../components/ModifyNav';
-import Footer from '../components/Footer';
-import PanelExtra from '../components/PanelExtra';
-import Empty from '../components/Empty';
+import Footer from './components/Footer';
+import Empty from './components/Empty';
+import ModifyNav from './components/ModifyNav';
+import PanelExtra from './components/PanelExtra';
+import RenderWrapper from './components/RenderWrapper';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -190,6 +191,8 @@ function App() {
       <ModifyNav ajaxDataList={ajaxDataList} onImportClick={onImportClick} ajaxToolsSwitchOn={ajaxToolsSwitchOn} updateAjaxToolsSwitchOn={(value) => {
         setAjaxToolsSwitchOn(value);
       }} onGroupAdd={onGroupAdd}/>
+
+      <RenderWrapper ajaxDataList={ajaxDataList} onGroupAdd={onGroupAdd} onImportClick={onImportClick}>
       <main
         className="ajax-tools-iframe-body"
         style={{ filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)' }}
@@ -371,10 +374,8 @@ function App() {
             </div>;
           })
         }
-        {
-          ajaxDataList.length < 1 && <Empty onGroupAdd={onGroupAdd} onImportClick={onImportClick}/>
-        }
       </main>
+      </RenderWrapper>
       <Footer/>
       <ModifyDataModal
         ref={modifyDataModalRef}

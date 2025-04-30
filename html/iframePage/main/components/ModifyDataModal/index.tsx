@@ -1,7 +1,7 @@
 import { Modal, Tabs, Input, Card, Space, Select } from 'antd';
 import React, { ForwardedRef, useImperativeHandle, useRef, useState } from 'react';
-import MonacoEditor from '../../common/MonacoEditor';
-import { HEADERS_EXAMPLES, REQUEST_PAYLOAD_EXAMPLES, RESPONSE_EXAMPLES, HTTP_METHOD_MAP } from '../../common/value';
+import MonacoEditor from '../../../common/MonacoEditor';
+import { HEADERS_EXAMPLES, REQUEST_PAYLOAD_EXAMPLES, RESPONSE_EXAMPLES, HTTP_METHOD_MAP } from '../../../common/value';
 
 import './index.css';
 

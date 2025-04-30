@@ -1,6 +1,6 @@
-## forked from PengChen96/ajax-tools
+## Chrome Modify Http Tools
 
-> DIY a simple chrome plugin extends for ajax request.
+> DIY a simple chrome plugin extends for http request.
 
 ## dev
 

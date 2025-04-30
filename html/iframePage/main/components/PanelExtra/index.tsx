@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Dropdown, MenuProps, Switch } from 'antd';
 import { MinusOutlined, FormOutlined, ToTopOutlined, MoreOutlined } from '@ant-design/icons';
-import { AjaxDataListObject, DefaultInterfaceObject } from '../../common/value';
+import { AjaxDataListObject, DefaultInterfaceObject } from '../../../common/value';
 
 interface PanelExtraProps {
   groupIndex: number;
