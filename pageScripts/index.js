@@ -66,16 +66,21 @@ const ajax_tools_space = {
     return keyValueObj;
   },
   getMatchedInterface: ({thisRequestUrl = '', thisMethod = ''}) => {
-    const interfaceList = [];
-    ajax_tools_space.ajaxDataList.forEach((item) => {
-      interfaceList.push(...(item.interfaceList || []));
-    });
-    // const interfaceList = ajax_tools_space.ajaxDataList.flatMap(item => item.interfaceList || []);
-    return interfaceList.find(({ open = true, matchType = 'normal', matchMethod, request }) => {
-      const matchedMethod = !matchMethod || matchMethod === thisMethod.toUpperCase();
-      const matchedRequest = request && (matchType === 'normal' ? thisRequestUrl.includes(request) : thisRequestUrl.match(ajax_tools_space.strToRegExp(request)));
-      return open && matchedMethod && matchedRequest;
-    });
+    try {
+      const interfaceList = [];
+      ajax_tools_space.ajaxDataList.forEach((item) => {
+        interfaceList.push(...(item.interfaceList || []));
+      });
+      // const interfaceList = ajax_tools_space.ajaxDataList.flatMap(item => item.interfaceList || []);
+      return interfaceList.find(({ open = true, matchType = 'normal', matchMethod, request }) => {
+        const matchedMethod = !matchMethod || matchMethod === thisMethod.toUpperCase();
+        const matchedRequest = request && (matchType === 'normal' ? thisRequestUrl.includes(request) : thisRequestUrl.match(ajax_tools_space.strToRegExp(request)));
+        return open && matchedMethod && matchedRequest;
+      });
+    } catch (error) {
+      console.error('【Ajax Tools】getMatchedInterface error:', error, thisRequestUrl, thisMethod);
+      return null;
+    }
   },
   myXHR: function () {
     const modifyResponse = () => {
@@ -135,14 +140,15 @@ const ajax_tools_space = {
         this.open = (...args) => {
           this._openArgs = args;
           const [method, requestUrl] = args;
-          this._matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: requestUrl, thisMethod: method});
+          const url = requestUrl instanceof Request ? requestUrl.url : requestUrl;
+          this._matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: url, thisMethod: method});
           const matchedInterface = this._matchedInterface;
           // modify request
           if (matchedInterface) {
             const { replacementUrl, replacementMethod, headers, requestPayloadText } = matchedInterface;
             if (replacementUrl || replacementMethod || headers || requestPayloadText) {
               console.groupCollapsed(`%cMatched XHR Request modified：${matchedInterface.request}`, 'background-color: #fa8c16; color: white; padding: 4px');
-              console.info(`%cOriginal Request Url：`, 'background-color: #ff8040; color: white;', requestUrl);
+              console.info(`%cOriginal Request Url：`, 'background-color: #ff8040; color: white;', url);
             }
             if (matchedInterface.replacementUrl && args[1]) {
               args[1] = matchedInterface.replacementUrl;
@@ -236,12 +242,13 @@ const ajax_tools_space = {
       return await reader.read().then(processData);
     }
     const [requestUrl, data={}] = args;
-    const matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: requestUrl, thisMethod: data && data.method});
+    const url = requestUrl instanceof Request ? requestUrl.url : requestUrl;
+    const matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: url, thisMethod: data && data.method});
     if (matchedInterface && args) {
       const { replacementUrl, replacementMethod, headers, requestPayloadText } = matchedInterface;
       if (replacementUrl || replacementMethod || headers || requestPayloadText) {
         console.groupCollapsed(`%cMatched Fetch Request modified：${matchedInterface.request}`, 'background-color: #fa8c16; color: white; padding: 4px');
-        console.info(`%cOriginal Request Url：`, 'background-color: #ff8040; color: white;', requestUrl);
+        console.info(`%cOriginal Request Url：`, 'background-color: #ff8040; color: white;', url);
       }
       if (matchedInterface.replacementUrl && args[0]) {
         args[0] = matchedInterface.replacementUrl;
@@ -276,7 +283,7 @@ const ajax_tools_space = {
     return ajax_tools_space.originalFetch(...args).then(async (response) => {
       let overrideText = undefined;
       if (matchedInterface && matchedInterface.responseText) {
-        const queryStringParameters = ajax_tools_space.getRequestParams(requestUrl);
+        const queryStringParameters = ajax_tools_space.getRequestParams(url);
         const originalResponse = await getOriginalResponse(response.body);
         const funcArgs = {
           method: data.method,
