@@ -2,95 +2,162 @@
 // 设置iframeVisible默认值，刷新后重置storage
 chrome.storage.local.set({iframeVisible: true});
 
-function injectedScript (path) {
+async function injectedScript (path, root = document.documentElement) {
+  // 获取顶层插入开关设置
+  const result = await chrome.storage.local.get(['ajaxToolsTopLevelOnly']);
+  const { ajaxToolsTopLevelOnly = true } = result;
   // 只在最顶层嵌入  https://github.com/PengChen96/ajax-tools/issues/18
-  if (window.self === window.top) {
+  if (window.self === window.top || !ajaxToolsTopLevelOnly) {
     const scriptNode = document.createElement('script');
     scriptNode.src= chrome.runtime.getURL(path);
-    document.documentElement.appendChild(scriptNode);
+    root.appendChild(scriptNode);
     return scriptNode;
   }
 }
-function injectedCss(path) {
-  if (window.self === window.top) {
+async function injectedCss(path, root = document.documentElement) {
+  // 获取顶层插入开关设置
+  const result = await chrome.storage.local.get(['ajaxToolsTopLevelOnly']);
+  const { ajaxToolsTopLevelOnly = true } = result;
+  // 只在最顶层嵌入  https://github.com/PengChen96/ajax-tools/issues/18
+  if (window.self === window.top || !ajaxToolsTopLevelOnly) {
     const linkElement = document.createElement('link');
     linkElement.rel = 'stylesheet';
     linkElement.href = chrome.runtime.getURL(path);
-    document.documentElement.appendChild(linkElement);
+    root.appendChild(linkElement);
     return linkElement;
   }
 }
-function injectedStyle(styleContent) {
-  if (window.self === window.top) {
+async function injectedStyle(styleContent, root = document.documentElement) {
+  // 获取顶层插入开关设置
+  const result = await chrome.storage.local.get(['ajaxToolsTopLevelOnly']);
+  const { ajaxToolsTopLevelOnly = true } = result;
+  // 只在最顶层嵌入  https://github.com/PengChen96/ajax-tools/issues/18
+  if (window.self === window.top || !ajaxToolsTopLevelOnly) {
     const styleElement = document.createElement('style');
     styleElement.textContent = styleContent;
-    document.documentElement.appendChild(styleElement);
+    root.appendChild(styleElement);
     return styleElement;
   }
 }
-injectedStyle(`
-  .ajax-interceptor-container {
-    display: flex;
-    flex-direction: column;
-    height: 100% !important;
-    width: 580px !important;
-    min-width: 1px !important;
-    position: fixed !important;
-    inset: 0px 0px auto auto !important;
-    z-index: 2147483647 !important;
-    transform: translateX(0px) !important;
-    transition: all 0.4s ease 0s !important;
-    box-shadow: rgba(0, 0, 0, 0.12) 0px 0px 15px 2px !important;
-    background: #fff;
-    overflow: hidden;
-  }
-  .ajax-interceptor-action-bar {
-    height: 40px;
-    min-height: 40px;
-    padding: 0 12px 0 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .ajax-interceptor-iframe {
-    border: none;
-    height: calc(100% - 40px);
-    width: 100%;
-    border-top: 1px solid #d1d3d8;
-  }
-  .ajax-interceptor-icon {
-    cursor: pointer;
-    position: relative;
-  }
-  .ajax-interceptor-new::after {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #ff0000;
-    position: absolute;
-    right: -2px;
-    top: -2px;
-  }
-  .ajax-interceptor-mr-8 {
-    margin-right: 8px;
-  }
-`);
-injectedCss('icons/iconfont/iconfont.css');
-injectedScript('html/iframePage/mock.js');
-const pageScripts = injectedScript('pageScripts/index.js');
-if (pageScripts) {
-  pageScripts.addEventListener('load', () => {
-    chrome.storage.local.get(['iframeVisible', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxDataList', 'ajaxToolsSkin'], (result) => {
-      // console.log('【ajaxTools content.js】【storage】', result);
-      const {ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxDataList = []} = result;
-      postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxDataList', value: ajaxDataList});
-      postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxToolsSwitchOn', value: ajaxToolsSwitchOn});
-      postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxToolsSwitchOnNot200', value: ajaxToolsSwitchOnNot200});
+
+async function injectContent() {
+  injectedStyle(`
+    .ajax-interceptor-container {
+      display: flex;
+      flex-direction: column;
+      height: 100% !important;
+      width: 580px !important;
+      min-width: 1px !important;
+      position: fixed !important;
+      inset: 0px 0px auto auto !important;
+      z-index: 2147483647 !important;
+      transform: translateX(0px) !important;
+      transition: all 0.4s ease 0s !important;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 0px 15px 2px !important;
+      background: #fff;
+      overflow: hidden;
+    }
+    .ajax-interceptor-action-bar {
+      height: 40px;
+      min-height: 40px;
+      padding: 0 12px 0 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ajax-interceptor-iframe {
+      border: none;
+      height: calc(100% - 40px);
+      width: 100%;
+      border-top: 1px solid #d1d3d8;
+    }
+    .ajax-interceptor-icon {
+      cursor: pointer;
+      position: relative;
+    }
+    .ajax-interceptor-new::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ff0000;
+      position: absolute;
+      right: -2px;
+      top: -2px;
+    }
+    .ajax-interceptor-mr-8 {
+      margin-right: 8px;
+    }
+  `);
+  injectedCss('icons/iconfont/iconfont.css');
+  injectedScript('html/iframePage/mock.js');
+  const pageScripts = await injectedScript('pageScripts/index.js');
+  if (pageScripts) {
+    pageScripts.addEventListener('load', () => {
+      chrome.storage.local.get(['iframeVisible', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxDataList', 'ajaxToolsSkin'], (result) => {
+        // console.log('【ajaxTools content.js】【storage】', result);
+        const {ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxDataList = []} = result;
+        postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxDataList', value: ajaxDataList});
+        postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxToolsSwitchOn', value: ajaxToolsSwitchOn});
+        postMessage({type: 'ajaxTools', to: 'pageScript', key: 'ajaxToolsSwitchOnNot200', value: ajaxToolsSwitchOnNot200});
+      });
     });
-  });
+  }
+}
+injectContent();
+
+async function callbackIframeLoad(iframe) {
+  try {
+    await injectedScript('html/iframePage/mock.js', iframe.contentDocument.documentElement);
+    const pageScripts = await injectedScript('pageScripts/index.js', iframe.contentDocument.documentElement);
+    if (pageScripts) {
+      pageScripts.addEventListener('load', () => {
+        chrome.storage.local.get(['ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxDataList'], (result) => {
+          const {ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxDataList = []} = result;
+          iframe.contentWindow.postMessage({
+            type: 'ajaxTools',
+            to: 'pageScript',
+            key: 'ajaxDataList',
+            value: ajaxDataList
+          }, '*');
+          iframe.contentWindow.postMessage({
+            type: 'ajaxTools',
+            to: 'pageScript',
+            key: 'ajaxToolsSwitchOn',
+            value: ajaxToolsSwitchOn
+          }, '*');
+          iframe.contentWindow.postMessage({
+            type: 'ajaxTools',
+            to: 'pageScript',
+            key: 'ajaxToolsSwitchOnNot200',
+            value: ajaxToolsSwitchOnNot200
+          }, '*');
+        });
+      });
+    }
+  } catch (err) {
+    console.error('Failed to inject scripts into iframe:', err);
+  } 
 }
 
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    mutation.addedNodes.forEach((node) => {
+      if (node.nodeName === 'IFRAME') {
+        const iframe = node;
+        if (iframe.complete || (iframe.contentDocument && iframe.contentDocument.readyState === 'complete')) {
+          callbackIframeLoad(iframe);
+        } else {
+          iframe.addEventListener('load', () => {
+            callbackIframeLoad(iframe);
+          });
+        }
+      }
+    });
+  });
+});
+
+observer.observe(document, { childList: true, subtree: true });
 
 function closeButton (container) {
   const closeIcon = document.createElement('i');
