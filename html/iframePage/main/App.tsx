@@ -32,17 +32,19 @@ function App() {
   const [ajaxToolsSkin, setAjaxToolsSkin] = useState('light');
   const [ajaxToolsSwitchOn, setAjaxToolsSwitchOn] = useState(true); // 默认开启
   const [ajaxToolsSwitchOnNot200, setAjaxToolsSwitchOnNot200] = useState(true); // 默认开启
+  const [ajaxToolsTopLevelOnly, setAjaxToolsTopLevelOnly] = useState(true); // 默认开启
   const [ajaxDataList, setAjaxDataList] = useState(defaultAjaxDataList);
 
   useEffect(() => {
     if (chrome.storage) {
-      chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxToolsSkin'], (result) => {
-        const { ajaxDataList = [], ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxToolsSkin = 'light' } = result;
+      chrome.storage.local.get(['ajaxDataList', 'ajaxToolsSwitchOn', 'ajaxToolsSwitchOnNot200', 'ajaxToolsSkin', 'ajaxToolsTopLevelOnly'], (result) => {
+        const { ajaxDataList = [], ajaxToolsSwitchOn = true, ajaxToolsSwitchOnNot200 = true, ajaxToolsSkin = 'light', ajaxToolsTopLevelOnly = true } = result;
         if (ajaxDataList.length > 0) {
           setAjaxDataList(ajaxDataList);
         }
         setAjaxToolsSwitchOn(ajaxToolsSwitchOn);
         setAjaxToolsSwitchOnNot200(ajaxToolsSwitchOnNot200);
+        setAjaxToolsTopLevelOnly(ajaxToolsTopLevelOnly);
         setAjaxToolsSkin(ajaxToolsSkin);
       });
     }
@@ -274,6 +276,18 @@ function App() {
           </Dropdown.Button>
         </Space>
         <div>
+          <Checkbox
+            defaultChecked
+            checked={ajaxToolsTopLevelOnly}
+            onChange={(e) => {
+              setAjaxToolsTopLevelOnly(e.target.checked);
+              chrome.storage.local.set({ ajaxToolsTopLevelOnly: e.target.checked });
+            }}
+          >
+            <span title="Inject Ajax Tools plugin only at the top level. Disable this option when you need to hijack requests within an iframe.">
+              Top Level Only
+            </span>
+          </Checkbox>
           <Checkbox
             defaultChecked
             checked={ajaxToolsSwitchOnNot200}
