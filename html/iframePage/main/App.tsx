@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, Collapse, Input, Select, Switch, Dropdown, Space } from 'antd';
 import {  PlusOutlined, FormOutlined, MoreOutlined, RightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
 import ModifyDataModal, { ModifyDataModalOnSaveProps } from './components/ModifyDataModal';
@@ -12,8 +12,8 @@ import 'antd/dist/antd.css';
 import './App.css';
 import { openImportJsonModal } from './utils/importJson';
 import Footer from './components/Footer';
-import Empty from './components/Empty';
 import ModifyNav from './components/ModifyNav';
+  
 import PanelExtra from './components/PanelExtra';
 import RenderWrapper from './components/RenderWrapper';
 
@@ -188,86 +188,90 @@ function App() {
         filter: ajaxToolsSkin === 'dark' ? 'invert(1)' : undefined
       }}
     >
-      <ModifyNav ajaxDataList={ajaxDataList} onImportClick={onImportClick} ajaxToolsSwitchOn={ajaxToolsSwitchOn} updateAjaxToolsSwitchOn={(value) => {
-        setAjaxToolsSwitchOn(value);
-      }} onGroupAdd={onGroupAdd}/>
+      <ModifyNav 
+        ajaxToolsSwitchOn={ajaxToolsSwitchOn} 
+        updateAjaxToolsSwitchOn={(value) => {
+          setAjaxToolsSwitchOn(value);
+        }} 
+        onGroupAdd={onGroupAdd}
+      />
 
       <RenderWrapper ajaxDataList={ajaxDataList} onGroupAdd={onGroupAdd} onImportClick={onImportClick}>
-      <main
-        className="ajax-tools-iframe-body"
-        style={{ filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)' }}
-      >
-        {
-          ajaxDataList.map((item, index) => {
-            const { summaryText, headerClass, interfaceList = [], collapseActiveKeys = [] } = item;
-            const groupOpen = !!interfaceList.find(v => v.open);
-            const fold = collapseActiveKeys.length < 1;
-            return <div key={index}>
-              <div className={`ajax-tools-iframe-body-header ${headerClass}`}>
-                <Button
-                  type="text"
-                  shape="circle"
-                  size="small"
-                  title="Collapse All"
-                  icon={<RightOutlined style={{ transform: fold ? undefined : 'rotateZ(90deg)', transition: '.3s' }}/>}
-                  onClick={() => {
-                    if (fold) { // 当前折叠要展开
-                      const allKeys = interfaceList.map(v => v.key);
-                      onCollapseChange(index, allKeys);
-                    } else {
-                      onCollapseChange(index, []);
-                    }
-                  }}
-                />
-                <Input
-                  value={summaryText}
-                  className={`ajax-tools-iframe-body-header-input ${headerClass}`}
-                  onChange={(e) => onGroupSummaryTextChange(e, index)}
-                />
-                <Switch
-                  title={groupOpen ? 'Disable group' : 'Enable group'}
-                  checked={groupOpen}
-                  onChange={(open) => onGroupOpenChange(index, open)}
-                  size="small"
-                />
-
-                <Button 
-                  danger
-                  type="primary" size='small' shape="circle" 
-                  style={{ minWidth: 16, width: 16, height: 16, margin: '0 10px 0 4px' }}
-                  onClick= {() => onGroupDelete(index)}
-                  icon={<DeleteOutlined style={{ color: '#fff', fontSize: '12px' }}/>} />
-                <Dropdown
-                  menu={{
-                    items: [
-                      {
-                        key: '0',
-                        label: 'Move to top',
-                        icon: <ToTopOutlined style={{ fontSize: 14 }} />,
-                        onClick: () => onGroupMove(index, 'top'),
-                        disabled: index === 0
-                      },
-                      {
-                        key: '1',
-                        label: 'Move to bottom',
-                        icon: <ToTopOutlined style={{ transform: 'rotateZ(180deg)', fontSize: 14 }}/>,
-                        onClick: () => onGroupMove(index, 'bottom'),
-                        disabled: index === ajaxDataList.length - 1
-                      },
-                    ]
-                  }}
-                  trigger={['click']}
-                >
+        <main
+          className="ajax-tools-iframe-body"
+          style={{ filter: ajaxToolsSwitchOn ? undefined : 'opacity(0.5)' }}
+        >
+          {
+            ajaxDataList.map((item, index) => {
+              const { summaryText, headerClass, interfaceList = [], collapseActiveKeys = [] } = item;
+              const groupOpen = !!interfaceList.find(v => v.open);
+              const fold = collapseActiveKeys.length < 1;
+              return <div key={index}>
+                <div className={`ajax-tools-iframe-body-header ${headerClass}`}>
                   <Button
                     type="text"
                     shape="circle"
                     size="small"
-                    title="More"
-                    icon={<MoreOutlined style={{ fontSize: 22 }}/>}
+                    title="Collapse All"
+                    icon={<RightOutlined style={{ transform: fold ? undefined : 'rotateZ(90deg)', transition: '.3s' }}/>}
+                    onClick={() => {
+                      if (fold) { // 当前折叠要展开
+                        const allKeys = interfaceList.map(v => v.key);
+                        onCollapseChange(index, allKeys);
+                      } else {
+                        onCollapseChange(index, []);
+                      }
+                    }}
                   />
-                </Dropdown>
-              </div>
-              {!fold && 
+                  <Input
+                    value={summaryText}
+                    className={`ajax-tools-iframe-body-header-input ${headerClass}`}
+                    onChange={(e) => onGroupSummaryTextChange(e, index)}
+                  />
+                  <Switch
+                    title={groupOpen ? 'Disable group' : 'Enable group'}
+                    checked={groupOpen}
+                    onChange={(open) => onGroupOpenChange(index, open)}
+                    size="small"
+                  />
+
+                  <Button 
+                    danger
+                    type="primary" size='small' shape="circle" 
+                    style={{ minWidth: 16, width: 16, height: 16, margin: '0 10px 0 4px' }}
+                    onClick= {() => onGroupDelete(index)}
+                    icon={<DeleteOutlined style={{ color: '#fff', fontSize: '12px' }}/>} />
+                  <Dropdown
+                    menu={{
+                      items: [
+                        {
+                          key: '0',
+                          label: 'Move to top',
+                          icon: <ToTopOutlined style={{ fontSize: 14 }} />,
+                          onClick: () => onGroupMove(index, 'top'),
+                          disabled: index === 0
+                        },
+                        {
+                          key: '1',
+                          label: 'Move to bottom',
+                          icon: <ToTopOutlined style={{ transform: 'rotateZ(180deg)', fontSize: 14 }}/>,
+                          onClick: () => onGroupMove(index, 'bottom'),
+                          disabled: index === ajaxDataList.length - 1
+                        },
+                      ]
+                    }}
+                    trigger={['click']}
+                  >
+                    <Button
+                      type="text"
+                      shape="circle"
+                      size="small"
+                      title="More"
+                      icon={<MoreOutlined style={{ fontSize: 22 }}/>}
+                    />
+                  </Dropdown>
+                </div>
+                {!fold && 
               (<>
                 <Collapse
                   className="ajax-tools-iframe-collapse"
@@ -371,10 +375,10 @@ function App() {
                   />
                 </div>
               </>)}
-            </div>;
-          })
-        }
-      </main>
+              </div>;
+            })
+          }
+        </main>
       </RenderWrapper>
       <Footer/>
       <ModifyDataModal

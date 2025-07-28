@@ -1,82 +1,82 @@
-import React from 'react'
+import React from 'react';
 import { Button, Collapse, Dropdown, Input, Select, Space, Switch } from 'antd';
 import {  PlusOutlined, FormOutlined, MoreOutlined, RightOutlined, DeleteOutlined, ToTopOutlined } from '@ant-design/icons';
 
-import './index.css'
+import './index.css';
 import PanelExtra from '../PanelExtra';
 import { HTTP_METHOD_MAP } from '../../../common/value';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
-const PanelItem =    ({fold,index,groupOpen,summaryText,headerClass,interfaceList,ajaxDataList,collapseActiveKeys,modifyDataModalRef,onGroupMove,onGroupDelete,onCollapseChange,onInterfaceListAdd,onGroupOpenChange,onGroupSummaryTextChange,onInterfaceListDelete,onInterfaceMove,onInterfaceListChange}:any) => {
+const PanelItem =    ({ fold, index, groupOpen, summaryText, headerClass, interfaceList, ajaxDataList, collapseActiveKeys, modifyDataModalRef, onGroupMove, onGroupDelete, onCollapseChange, onInterfaceListAdd, onGroupOpenChange, onGroupSummaryTextChange, onInterfaceListDelete, onInterfaceMove, onInterfaceListChange }:any) => {
   return (
     <div key={index}>
-              <div className={`ajax-tools-iframe-body-header ${headerClass}`}>
-                <Button
-                  type="text"
-                  shape="circle"
-                  size="small"
-                  title="Collapse All"
-                  icon={<RightOutlined style={{ transform: fold ? undefined : 'rotateZ(90deg)', transition: '.3s' }}/>}
-                  onClick={() => {
-                    if (fold) { // 当前折叠要展开
-                      const allKeys = interfaceList.map((v:any) => v.key);
-                      onCollapseChange(index, allKeys);
-                    } else {
-                      onCollapseChange(index, []);
-                    }
-                  }}
-                />
-                <Input
-                  value={summaryText}
-                  className={`ajax-tools-iframe-body-header-input ${headerClass}`}
-                  onChange={(e) => onGroupSummaryTextChange(e, index)}
-                />
-                <Switch
-                  title={groupOpen ? 'Disable group' : 'Enable group'}
-                  checked={groupOpen}
-                  onChange={(open) => onGroupOpenChange(index, open)}
-                  size="small"
-                />
+      <div className={`ajax-tools-iframe-body-header ${headerClass}`}>
+        <Button
+          type="text"
+          shape="circle"
+          size="small"
+          title="Collapse All"
+          icon={<RightOutlined style={{ transform: fold ? undefined : 'rotateZ(90deg)', transition: '.3s' }}/>}
+          onClick={() => {
+            if (fold) { // 当前折叠要展开
+              const allKeys = interfaceList.map((v:any) => v.key);
+              onCollapseChange(index, allKeys);
+            } else {
+              onCollapseChange(index, []);
+            }
+          }}
+        />
+        <Input
+          value={summaryText}
+          className={`ajax-tools-iframe-body-header-input ${headerClass}`}
+          onChange={(e) => onGroupSummaryTextChange(e, index)}
+        />
+        <Switch
+          title={groupOpen ? 'Disable group' : 'Enable group'}
+          checked={groupOpen}
+          onChange={(open) => onGroupOpenChange(index, open)}
+          size="small"
+        />
 
-                <Button 
-                  danger
-                  type="primary" size='small' shape="circle" 
-                  style={{ minWidth: 16, width: 16, height: 16, margin: '0 10px 0 4px' }}
-                  onClick= {() => onGroupDelete(index)}
-                  icon={<DeleteOutlined style={{ color: '#fff', fontSize: '12px' }}/>} />
-                <Dropdown
-                  menu={{
-                    items: [
-                      {
-                        key: '0',
-                        label: 'Move to top',
-                        icon: <ToTopOutlined style={{ fontSize: 14 }} />,
-                        onClick: () => onGroupMove(index, 'top'),
-                        disabled: index === 0
-                      },
-                      {
-                        key: '1',
-                        label: 'Move to bottom',
-                        icon: <ToTopOutlined style={{ transform: 'rotateZ(180deg)', fontSize: 14 }}/>,
-                        onClick: () => onGroupMove(index, 'bottom'),
-                        disabled: index === ajaxDataList.length - 1
-                      },
-                    ]
-                  }}
-                  trigger={['click']}
-                >
-                  <Button
-                    type="text"
-                    shape="circle"
-                    size="small"
-                    title="More"
-                    icon={<MoreOutlined style={{ fontSize: 22 }}/>}
-                  />
-                </Dropdown>
-              </div>
-              {!fold && 
+        <Button 
+          danger
+          type="primary" size='small' shape="circle" 
+          style={{ minWidth: 16, width: 16, height: 16, margin: '0 10px 0 4px' }}
+          onClick= {() => onGroupDelete(index)}
+          icon={<DeleteOutlined style={{ color: '#fff', fontSize: '12px' }}/>} />
+        <Dropdown
+          menu={{
+            items: [
+              {
+                key: '0',
+                label: 'Move to top',
+                icon: <ToTopOutlined style={{ fontSize: 14 }} />,
+                onClick: () => onGroupMove(index, 'top'),
+                disabled: index === 0
+              },
+              {
+                key: '1',
+                label: 'Move to bottom',
+                icon: <ToTopOutlined style={{ transform: 'rotateZ(180deg)', fontSize: 14 }}/>,
+                onClick: () => onGroupMove(index, 'bottom'),
+                disabled: index === ajaxDataList.length - 1
+              },
+            ]
+          }}
+          trigger={['click']}
+        >
+          <Button
+            type="text"
+            shape="circle"
+            size="small"
+            title="More"
+            icon={<MoreOutlined style={{ fontSize: 22 }}/>}
+          />
+        </Dropdown>
+      </div>
+      {!fold && 
               (<>
                 <Collapse
                   className="ajax-tools-iframe-collapse"
@@ -180,8 +180,8 @@ const PanelItem =    ({fold,index,groupOpen,summaryText,headerClass,interfaceLis
                   />
                 </div>
               </>)}
-            </div>
-  )
-}
+    </div>
+  );
+};
 
-export default PanelItem
+export default PanelItem;

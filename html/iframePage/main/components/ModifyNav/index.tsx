@@ -1,24 +1,21 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Switch, Space, Button } from 'antd';
 import 'antd/dist/antd.css';
 import './index.css';
-import { AjaxDataListObject } from '../../../common/value';
 
 
 interface ModifyNavProps {
-  ajaxDataList: AjaxDataListObject[];
   ajaxToolsSwitchOn: boolean;
 
   onGroupAdd: () => void;
-  onImportClick: () => void;
   updateAjaxToolsSwitchOn: (value: boolean) => void;
 }
 
 /** 导航栏 */
 const ModifyNav = (props: ModifyNavProps) => {
 
-  const { onGroupAdd, ajaxToolsSwitchOn, updateAjaxToolsSwitchOn } = props;
+  const {  ajaxToolsSwitchOn, onGroupAdd, updateAjaxToolsSwitchOn } = props;
 
   return (
     <nav className="ajax-tools-iframe-action">

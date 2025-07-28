@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "stylelint-config-standard"
+  ],
+  "plugins": ["stylelint-order"],
+  "rules": {
+    "block-no-empty": true,
+    "color-hex-case": "lower",
+    "order/properties-alphabetical-order": true
+  }
+}
