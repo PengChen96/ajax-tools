@@ -9,7 +9,7 @@ async function toggleIframeVisibility() {
   const {iframeVisible} = await chrome.storage.local.get({iframeVisible: true});
   const tabs = await chrome.tabs.query({active: true, currentWindow: true});
   const response = await sendMessageToContentScript(tabs[0].id, {type: 'iframeToggle', iframeVisible});
-  await chrome.storage.local.set({iframeVisible: response.nextIframeVisible});
+  await chrome.storage.local.set({iframeVisible: Boolean(response?.nextIframeVisible)});
 }
 function setSwitchBadge (switchValue) {
   chrome.action.setBadgeText({text: switchValue ? 'ON' : 'OFF'});
