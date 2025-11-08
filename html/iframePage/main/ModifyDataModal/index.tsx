@@ -168,7 +168,7 @@ const ModifyDataModal = (
                   <MonacoEditor
                     ref={monacoEditorHeadersRef}
                     language={'json'}
-                    languageSelectOptions={['json']}
+                    languageSelectOptions={['json', 'javascript']}
                     text={headersText}
                     editorHeight={'calc(100vh - 300px - 168px)'}
                     examples={HEADERS_EXAMPLES}

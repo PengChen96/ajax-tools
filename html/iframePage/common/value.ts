@@ -63,12 +63,24 @@ export const HTTP_METHOD_MAP = [
   'PATCH',
 ];
 
-export const HEADERS_EXAMPLES = [{
-  egText: `{
+export const HEADERS_EXAMPLES = [
+  {
+    egType: 'json',
+    egTitle: 'e.g. json',
+    egText: `{
   "Content-Type": "application/json"
 }
 `
-}];
+  }, 
+  {
+    egType: 'javascript',
+    egTitle: 'e.g. javascript',
+    egText: `return {
+  "Content-Type": "application/json"
+}
+`
+  }
+];
 export const REQUEST_PAYLOAD_EXAMPLES = [
   {
     egTitle: 'e.g. GET',
