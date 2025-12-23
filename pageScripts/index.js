@@ -89,22 +89,42 @@ const ajax_tools_space = {
       const [requestPayload] = this._sendArgs;
       const matchedInterface = this._matchedInterface;
       if (matchedInterface && matchedInterface.responseText) {
+        // 当responseType为'json'时，不能访问responseText，需使用response属性
+        let originalResponse;
+        if (this.responseType === 'json') {
+          originalResponse = this.response ? JSON.stringify(this.response) : '';
+        } else {
+          originalResponse = this.responseText;
+        }
+        
         const funcArgs = {
           method,
           payload: {
             queryStringParameters,
             requestPayload
           },
-          originalResponse: this.responseText
+          originalResponse
         };
         const overrideText = ajax_tools_space.getOverrideText(matchedInterface.responseText, funcArgs);
         this.responseText = overrideText;
-        this.response = overrideText;
+
+        // 根据responseType设置response属性
+        if (this.responseType === 'json') {
+          try {
+            this.response = JSON.parse(overrideText);
+          } catch (e) {
+            // 如果解析失败，保持为文本格式
+            console.error('【Ajax Tools】Response parsing failed:', e);
+            this.response = overrideText;
+          }
+        } else {
+          this.response = overrideText;
+        }
         if (ajax_tools_space.ajaxToolsSwitchOnNot200 && this.status !== 200) {
           this.status = 200;
         }
         if (matchedInterface.replacementStatusCode) {
-          this.status = matchedInterface.replacementStatusCode;
+          this.status = +matchedInterface.replacementStatusCode;
         }
         // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
         console.groupCollapsed(`%cMatched XHR Response modified：${matchedInterface.request}`, 'background-color: #108ee9; color: white; padding: 4px');
