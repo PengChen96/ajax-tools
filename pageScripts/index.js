@@ -243,7 +243,8 @@ const ajax_tools_space = {
     }
     const [requestUrl, data={}] = args;
     const url = requestUrl instanceof Request ? requestUrl.url : requestUrl;
-    const matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: url, thisMethod: data && data.method});
+    const method = data.method || (requestUrl instanceof Request ? requestUrl.method : 'GET');
+    const matchedInterface = ajax_tools_space.getMatchedInterface({thisRequestUrl: url, thisMethod: method});
     if (matchedInterface && args) {
       const { replacementUrl, replacementMethod, headers, requestPayloadText } = matchedInterface;
       if (replacementUrl || replacementMethod || headers || requestPayloadText) {
@@ -264,7 +265,6 @@ const ajax_tools_space = {
         console.info(`%cModified Headers：`, 'background-color: #ff8040; color: white;', overrideHeaders);
       }
       if (matchedInterface.requestPayloadText && args[0] && data) {
-        const {method='GET'} = data;
         if (['GET', 'HEAD'].includes(method.toUpperCase())) {
           const queryStringParameters = ajax_tools_space.getRequestParams(args[0]);
           const data = {
@@ -286,7 +286,7 @@ const ajax_tools_space = {
         const queryStringParameters = ajax_tools_space.getRequestParams(url);
         const originalResponse = await getOriginalResponse(response.body);
         const funcArgs = {
-          method: data.method,
+          method,
           payload: {
             queryStringParameters,
             requestPayload: data.body
