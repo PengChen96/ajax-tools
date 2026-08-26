@@ -234,6 +234,9 @@ const ajax_tools_space = {
   originalFetch: window.fetch.bind(window),
   myFetch: function (...args) {
     const getOriginalResponse = async (stream) => {
+      if (!stream) {
+        return '';
+      }
       let text = '';
       const decoder = new TextDecoder('utf-8');
       const reader = stream.getReader();
