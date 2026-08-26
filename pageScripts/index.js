@@ -50,6 +50,13 @@ const ajax_tools_space = {
     } catch (e) {}
     return stringFunction;
   },
+  getResponseForLog: (responseText) => {
+    try {
+      return JSON.parse(responseText);
+    } catch (e) {
+      return responseText;
+    }
+  },
   getRequestParams: (requestUrl) => {
     if (!requestUrl) {
       return null;
@@ -109,7 +116,7 @@ const ajax_tools_space = {
         // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
         console.groupCollapsed(`%cMatched XHR Response modified：${matchedInterface.request}`, 'background-color: #108ee9; color: white; padding: 4px');
         console.info(`%cOriginal Request Url：`, 'background-color: #ff8040; color: white;', this.responseURL);
-        console.info('%cModified Response Payload：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
+        console.info('%cModified Response Payload：', 'background-color: #ff5500; color: white;', ajax_tools_space.getResponseForLog(overrideText));
         console.groupEnd();
         // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
       }
@@ -297,7 +304,7 @@ const ajax_tools_space = {
         // console.info('ⓢ ►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►► ⓢ');
         console.groupCollapsed(`%cMatched Fetch Response modified：${matchedInterface.request}`, 'background-color: #108ee9; color: white; padding: 4px');
         console.info(`%cOriginal Request Url：`, 'background-color: #ff8040; color: white;', response.url);
-        console.info('%cModified Response Payload：', 'background-color: #ff5500; color: white;', JSON.parse(overrideText));
+        console.info('%cModified Response Payload：', 'background-color: #ff5500; color: white;', ajax_tools_space.getResponseForLog(overrideText));
         console.groupEnd();
         // console.info('ⓔ ▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣ ⓔ')
       }
